@@ -50,9 +50,6 @@ namespace LanternTrip {
 			contactingPoints.Remove(collision.collider);
 		}
 
-		protected void FixedUpdate() {
-		}
-
 		protected void OnDrawGizmos() {
 			if(Application.isPlaying) {
 				// Standing point

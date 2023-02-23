@@ -6,15 +6,19 @@ namespace LanternTrip {
 		[Serializable]
 		public struct Movement {
 			public enum State {
-				Freefalling, Walking, Climbing
+				Passive,		// Character status is controlled externally.
+				Freefalling,	// Character is falling and doesn't receive player input.
+				Walking,		// Character is walking on ground.
+				Jumping,		// Character has just jumped.
+				Landing,		// Character has just landed on ground.
 			}
 			[NonSerialized] public State state;
 
 			[NonSerialized] public Vector3 inputVelocity;
 			[NonSerialized] public Vector3 walkingVelocity;
 
-			[Range(0, 2)] public float maxAcceleration;
-			[Range(0, 10)] public float maxWalkingSpeed;
+			[Range(0, 100)] public float maxAcceleration;
+			[Range(0, 100)] public float maxWalkingSpeed;
 			[Range(0, 90)] public float maxWalkingSlopeAngle;
 		}
 
@@ -30,11 +34,13 @@ namespace LanternTrip {
 			base.Start();
 
 			// Initialize
+			movement.state = Movement.State.Freefalling;
 			movement.inputVelocity = Vector3.zero;
 		}
 
-		new void FixedUpdate() {
-			base.FixedUpdate();
+		void FixedUpdate() {
+			if(movement.state == Movement.State.Passive)
+				return;
 
 			// Update movement state
 			if(!standingPoint.HasValue) {
@@ -65,7 +71,7 @@ namespace LanternTrip {
 						break;
 					movement.walkingVelocity = targetVelocity = targetVelocity - sine * normal;
 					Vector3 difference = targetVelocity - rigidbody.velocity;
-					rigidbody.velocity += movement.maxAcceleration * difference;
+					rigidbody.velocity += movement.maxAcceleration * difference * Time.fixedDeltaTime;
 					break;
 			}
 		}
