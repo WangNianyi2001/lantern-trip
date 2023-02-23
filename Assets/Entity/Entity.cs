@@ -55,10 +55,16 @@ namespace LanternTrip {
 
 		protected void OnDrawGizmos() {
 			if(Application.isPlaying) {
+				// Standing point
 				if(standingPoint.HasValue) {
 					Gizmos.color = Color.red;
 					Gizmos.DrawSphere(standingPoint.Value.point, .2f);
 				}
+
+				// Actual velocity
+				Vector3 position = rigidbody.position;
+				Gizmos.color = Color.red;
+				Gizmos.DrawLine(position, position + rigidbody.velocity);
 			}
 		}
 		#endregion

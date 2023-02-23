@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 using System;
 
 namespace LanternTrip {
@@ -16,6 +15,7 @@ namespace LanternTrip {
 
 			[Range(0, 2)] public float maxAcceleration;
 			[Range(0, 10)] public float maxWalkingSpeed;
+			[Range(0, 90)] public float maxWalkingSlopeAngle;
 		}
 
 		#region Inspector members
@@ -59,10 +59,27 @@ namespace LanternTrip {
 						targetVelocity = targetVelocity.normalized * movement.maxWalkingSpeed;
 					// Project onto the tangent plane of the current standing point
 					Vector3 normal = standingPoint.Value.normal;
-					targetVelocity = targetVelocity - Vector3.Dot(targetVelocity, normal) * normal;
-					Vector3 deltaVelocity = targetVelocity - rigidbody.velocity;
-					rigidbody.velocity += movement.maxAcceleration * deltaVelocity;
+					float sine = Vector3.Dot(targetVelocity, normal);
+					float slopeAngle = Mathf.Asin(sine) / Mathf.PI * 180;
+					if(slopeAngle > movement.maxWalkingSlopeAngle)
+						break;
+					movement.walkingVelocity = targetVelocity = targetVelocity - sine * normal;
+					Vector3 difference = targetVelocity - rigidbody.velocity;
+					rigidbody.velocity += movement.maxAcceleration * difference;
 					break;
+			}
+		}
+
+		new void OnDrawGizmos() {
+			base.OnDrawGizmos();
+
+			if(Application.isPlaying) {
+				// Input velocity
+				if(movement.state == Movement.State.Walking) {
+					Vector3 position = rigidbody.position;
+					Gizmos.color = Color.blue;
+					Gizmos.DrawLine(position, position + movement.walkingVelocity);
+				}
 			}
 		}
 		#endregion
