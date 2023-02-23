@@ -6,11 +6,11 @@ namespace LanternTrip {
 		[Serializable]
 		public struct Movement {
 			public enum State {
-				Passive,		// Character status is controlled externally.
-				Freefalling,	// Character is falling and doesn't receive player input.
-				Walking,		// Character is walking on ground.
-				Jumping,		// Character has just jumped.
-				Landing,		// Character has just landed on ground.
+				Passive,        // Character status is controlled externally.
+				Walking,        // Character is walking on ground.
+				Freefalling,    // Character is falling and doesn't receive player input.
+				Jumping,        // Character has just jumped.
+				Landing,        // Character has just landed on ground.
 			}
 			[NonSerialized] public State state;
 
@@ -26,6 +26,35 @@ namespace LanternTrip {
 		public Movement movement;
 		#endregion
 
+		#region Core methods
+		void UpdateMovementState() {
+			switch(movement.state) {
+				case Movement.State.Walking:
+					// If not standing on any point, freefall
+					if(!standingPoint.HasValue) {
+						// Reset necessary infomation
+						movement.walkingVelocity = Vector3.zero;
+						movement.state = Movement.State.Freefalling;
+					}
+					break;
+				case Movement.State.Freefalling:
+					// If landed, land
+					if(standingPoint.HasValue) {
+						movement.state = Movement.State.Landing;
+					}
+					break;
+				case Movement.State.Jumping:
+					// TODO: Animation etc.
+					movement.state = Movement.State.Freefalling;
+					break;
+				case Movement.State.Landing:
+					// TODO: Animation etc.
+					movement.state = Movement.State.Walking;
+					break;
+			}
+		}
+		#endregion
+
 		#region Public interfaces
 		#endregion
 
@@ -39,24 +68,7 @@ namespace LanternTrip {
 		}
 
 		void FixedUpdate() {
-			if(movement.state == Movement.State.Passive)
-				return;
-
-			// Update movement state
-			if(!standingPoint.HasValue) {
-				// Not standing on any point, neither walking or climbing
-				// Reset necessary infomation
-				switch(movement.state) {
-					case Movement.State.Walking:
-						movement.walkingVelocity = Vector3.zero;
-						break;
-				}
-				movement.state = Movement.State.Freefalling;
-			}
-			else {
-				movement.state = Movement.State.Walking;
-			}
-
+			UpdateMovementState();
 			switch(movement.state) {
 				case Movement.State.Walking:
 					Vector3 targetVelocity = movement.inputVelocity;

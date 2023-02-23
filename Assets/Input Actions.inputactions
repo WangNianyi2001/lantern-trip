@@ -13,6 +13,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "PlayerJump",
+                    "type": "Button",
+                    "id": "10857575-4f96-4050-abf0-779dc78a1c09",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -70,6 +79,17 @@
                     "action": "PlayerMove",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "f3592ef6-1081-490d-a075-41eca9b4dbbc",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "PlayerJump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

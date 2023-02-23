@@ -31,6 +31,9 @@ namespace LanternTrip {
 				raw.y
 			);
 		}
+		void OnPlayerJump(InputValue _) {
+			//
+		}
 		#endregion
 
 		#region Life cycle
