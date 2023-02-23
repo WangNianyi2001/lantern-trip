@@ -3,12 +3,12 @@ using System;
 
 namespace LanternTrip {
 	public class Player : Entity {
-		public enum MovementState {
-			Freefalling, Walking, Climbing
-		}
-
 		[Serializable]
-		public struct MovementSettings {
+		public struct Movement {
+			public enum State {
+				Freefalling, Walking, Climbing
+			}
+			[NonSerialized] public State state;
 			[Range(0, 2)]
 			public float maxAcceleration;
 			[Range(0, 10)]
@@ -16,7 +16,7 @@ namespace LanternTrip {
 		}
 
 		#region Inspector members
-		public MovementSettings movement;
+		public Movement movement;
 		#endregion
 
 		#region Core members
@@ -24,13 +24,6 @@ namespace LanternTrip {
 		#endregion
 
 		#region Public interfaces
-		public MovementState movementState {
-			get {
-				// TODO
-				return MovementState.Walking;
-			}
-		}
-
 		public Vector3 desiredVelocity {
 			set {
 				_desiredVelocity = value;
@@ -46,9 +39,18 @@ namespace LanternTrip {
 			desiredVelocity = Vector3.zero;
 		}
 
-		void FixedUpdate() {
-			switch(movementState) {
-				case MovementState.Walking:
+		new void FixedUpdate() {
+			base.FixedUpdate();
+
+			// Update movement state
+			if(standingPoint == null)
+				movement.state = Movement.State.Freefalling;
+			else {
+				movement.state = Movement.State.Walking;
+			}
+
+			switch(movement.state) {
+				case Movement.State.Walking:
 					Vector3 targetVelocity = _desiredVelocity;
 					if(targetVelocity.magnitude > movement.walkingSpeed)
 						targetVelocity = targetVelocity.normalized * movement.walkingSpeed;
