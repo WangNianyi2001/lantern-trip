@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using System;
 
 namespace LanternTrip {
@@ -9,51 +10,56 @@ namespace LanternTrip {
 				Freefalling, Walking, Climbing
 			}
 			[NonSerialized] public State state;
-			[Range(0, 2)]
-			public float maxAcceleration;
-			[Range(0, 10)]
-			public float walkingSpeed;
+
+			[NonSerialized] public Vector3 inputVelocity;
+			[NonSerialized] public Vector3 walkingVelocity;
+
+			[Range(0, 2)] public float maxAcceleration;
+			[Range(0, 10)] public float maxWalkingSpeed;
 		}
 
 		#region Inspector members
 		public Movement movement;
 		#endregion
 
-		#region Core members
-		Vector3 _desiredVelocity;
-		#endregion
-
 		#region Public interfaces
-		public Vector3 desiredVelocity {
-			set {
-				_desiredVelocity = value;
-			}
-		}
 		#endregion
 
 		#region Life cycle
 		new void Start() {
 			base.Start();
 
-			// Initialize player status
-			desiredVelocity = Vector3.zero;
+			// Initialize
+			movement.inputVelocity = Vector3.zero;
 		}
 
 		new void FixedUpdate() {
 			base.FixedUpdate();
 
 			// Update movement state
-			if(standingPoint == null)
+			if(!standingPoint.HasValue) {
+				// Not standing on any point, neither walking or climbing
+				// Reset necessary infomation
+				switch(movement.state) {
+					case Movement.State.Walking:
+						movement.walkingVelocity = Vector3.zero;
+						break;
+				}
 				movement.state = Movement.State.Freefalling;
+			}
 			else {
 				movement.state = Movement.State.Walking;
 			}
 
 			switch(movement.state) {
 				case Movement.State.Walking:
-					Vector3 targetVelocity = _desiredVelocity;
-					if(targetVelocity.magnitude > movement.walkingSpeed)
-						targetVelocity = targetVelocity.normalized * movement.walkingSpeed;
+					Vector3 targetVelocity = movement.inputVelocity;
+					// Trim target velocity if exceeds maximum speed
+					if(targetVelocity.magnitude > movement.maxWalkingSpeed)
+						targetVelocity = targetVelocity.normalized * movement.maxWalkingSpeed;
+					// Project onto the tangent plane of the current standing point
+					Vector3 normal = standingPoint.Value.normal;
+					targetVelocity = targetVelocity - Vector3.Dot(targetVelocity, normal) * normal;
 					Vector3 deltaVelocity = targetVelocity - rigidbody.velocity;
 					rigidbody.velocity += movement.maxAcceleration * deltaVelocity;
 					break;

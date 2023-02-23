@@ -55,9 +55,9 @@ namespace LanternTrip {
 
 		protected void OnDrawGizmos() {
 			if(Application.isPlaying) {
-				if(standingPoint != null) {
+				if(standingPoint.HasValue) {
 					Gizmos.color = Color.red;
-					Gizmos.DrawSphere(((ContactPoint)standingPoint).point, .2f);
+					Gizmos.DrawSphere(standingPoint.Value.point, .2f);
 				}
 			}
 		}

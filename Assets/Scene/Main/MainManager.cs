@@ -12,6 +12,7 @@ namespace LanternTrip {
 
 		#region Core members
 		PlayerInput playerInput;
+		Vector3 inputMovementVelocity;
 		#endregion
 
 		#region Public interfaces
@@ -23,13 +24,12 @@ namespace LanternTrip {
 
 		#region Input handlers
 		void OnPlayerMove(InputValue value) {
-			Vector2 rawVelocity = value.Get<Vector2>();
-			Vector3 convertedVelocity = new Vector3 {
-				x = rawVelocity.x,
-				y = 0,
-				z = rawVelocity.y
-			};
-			player.desiredVelocity = convertedVelocity;
+			Vector2 raw = value.Get<Vector2>();
+			player.movement.inputVelocity = new Vector3(
+				raw.x,
+				0,
+				raw.y
+			);
 		}
 		#endregion
 
