@@ -5,6 +5,7 @@ namespace LanternTrip {
 	public class LanternSlotUI : MonoBehaviour {
 		public Image icon;
 		public RectMask2D mask;
+		public Text timeLeftText;
 
 		Tinder _tinder;
 
@@ -12,16 +13,16 @@ namespace LanternTrip {
 			set {
 				value = Mathf.Clamp01(value);
 				RectTransform rt = mask.rectTransform;
-				float height = (rt.parent as RectTransform).sizeDelta.y;
 				Vector2 max = rt.anchorMax;
-				max.y = rt.anchorMin.y + height * value;
+				max.y = value;
+				rt.anchorMax = max;
 			}
 		}
 
 		public Tinder tinder {
 			set {
 				_tinder = value;
-				icon.color = _tinder?.mainColor ?? Color.gray;
+				icon.color = value?.mainColor ?? Color.gray;
 			}
 		}
 
@@ -29,9 +30,11 @@ namespace LanternTrip {
 			set {
 				if(_tinder == null) {
 					maskValue = 1;
+					timeLeftText.text = string.Empty;
 					return;
 				}
 				maskValue = value / _tinder.timeSpan;
+				timeLeftText.text = Mathf.Floor(value).ToString();
 			}
 		}
 

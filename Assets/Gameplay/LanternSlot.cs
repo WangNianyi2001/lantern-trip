@@ -1,20 +1,47 @@
-using UnityEngine;
-using System;
-
 namespace LanternTrip {
-	public class LanternSlot : ScriptableObject {
-		public Tinder tinder = null;
-		public float timeLast = 0;
-		[NonSerialized] public LanternSlotUI ui;
+	public class LanternSlot {
+		Tinder _tinder = null;
+		float _timeLeft = 0;
+
+		public readonly LanternSlotUI ui;
+		public LanternSlot(LanternSlotUI ui) {
+			this.ui = ui;
+		}
+
+		public Tinder tinder {
+			get => _tinder;
+			set {
+				_tinder = value;
+				ui.tinder = value;
+			}
+		}
+
+		public float timeLeft {
+			get => _timeLeft;
+			set {
+				_timeLeft = value;
+				ui.timeLeft = value;
+			}
+		}
+
+		public bool Load(Tinder tinder, bool force = false) {
+			if(!force) {
+				if(tinder != null)
+					return false;
+			}
+			this.tinder = tinder;
+			timeLeft = tinder.timeSpan;
+			return true;
+		}
 
 		/// <summary>Burn tinder in this slot by certain amount of time.</summary>
 		/// <returns>`true` if succeed, `false` if slot is empty or tinder exhausted.</returns>
 		public bool Burn(float time) {
 			if(tinder == null)
 				return false;
-			timeLast -= time;
-			if(timeLast < 0) {
-				timeLast = 0;
+			timeLeft -= time;
+			if(timeLeft <= 0) {
+				timeLeft = 0;
 				tinder = null;
 				return false;
 			}
