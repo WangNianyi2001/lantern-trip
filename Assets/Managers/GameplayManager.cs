@@ -20,6 +20,8 @@ namespace LanternTrip {
 		#endregion
 
 		#region Public interfaces
+		[Range(0, 10)] public float burningRate = 1;
+
 		public LanternSlot FirstEmptyLanternSlot {
 			get => lanternSlots.FirstOrDefault(slot => slot.tinder == null);
 		}
@@ -78,7 +80,7 @@ namespace LanternTrip {
 		}
 
 		void FixedUpdate() {
-			if(!Burn(Time.fixedDeltaTime)) {
+			if(!Burn(Time.fixedDeltaTime * burningRate)) {
 				//
 			}
 		}
