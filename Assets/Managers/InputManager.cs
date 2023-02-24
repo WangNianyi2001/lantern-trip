@@ -3,11 +3,11 @@ using UnityEngine.InputSystem;
 
 namespace LanternTrip {
 	[RequireComponent(typeof(PlayerInput))]
-	public class MainManager : MonoBehaviour {
-		public static MainManager instance;
+	public class InputManager : MonoBehaviour {
+		public static InputManager instance;
 
 		#region Inspector members
-		public Player player;
+		public Protagonist protagonist;
 		#endregion
 
 		#region Core members
@@ -23,15 +23,20 @@ namespace LanternTrip {
 
 		#region Input handlers
 		void OnPlayerMove(InputValue value) {
+			if(protagonist == null)
+				return;
 			Vector2 raw = value.Get<Vector2>();
-			player.movement.inputVelocity = new Vector3(
+			protagonist.movement.inputVelocity = new Vector3(
 				raw.x,
 				0,
 				raw.y
 			);
 		}
+
 		void OnPlayerJump(InputValue _) {
-			player.Jump();
+			if(protagonist == null)
+				return;
+			protagonist.Jump();
 		}
 		#endregion
 

@@ -1,26 +1,7 @@
 using UnityEngine;
-using System;
 
 namespace LanternTrip {
-	public class Player : Entity {
-		[Serializable]
-		public struct MovementSettings {
-			[Serializable]
-			public struct Walking {
-				[Range(0, 100)] public float accelerationGain;
-				[Range(0, 100)] public float maxAcceleration;
-				[Range(0, 100)] public float maxSpeed;
-				[Range(0, 90)] public float maxSlopeAngle;
-			}
-			public Walking walking;
-
-			[Serializable]
-			public struct Jumping {
-				[Range(0, 5)] public float speed;
-			}
-			public Jumping jumping;
-		}
-
+	public partial class Character : Entity {
 		public struct Movement {
 			public enum State {
 				Passive,        // Character status is controlled externally.
@@ -36,7 +17,7 @@ namespace LanternTrip {
 		}
 
 		#region Inspector members
-		public MovementSettings movementSettings;
+		public CharacterMovementSettings movementSettings;
 		#endregion
 
 		#region Core members
@@ -74,18 +55,22 @@ namespace LanternTrip {
 			}
 		}
 
+		float SlopeByNormal(Vector3 normal) {
+			float cos = Vector3.Dot(-Physics.gravity.normalized, normal.normalized);
+			return Mathf.Acos(cos);
+		}
+
 		Vector3 CalculateWalkingVelocity() {
 			Vector3 targetVelocity = movement.inputVelocity;
 			float speed = targetVelocity.magnitude;
-			speed = Mathf.Min(speed, movementSettings.walking.maxSpeed);
+			speed *= movementSettings.walking.speed;
 			targetVelocity = targetVelocity.normalized * speed;
 			// Project onto the tangent plane of the current standing point
 			Vector3 normal = standingPoint.Value.normal;
-			float sine = Vector3.Dot(targetVelocity.normalized, normal.normalized);
-			float slopeAngle = -Mathf.Asin(sine) / Mathf.PI * 180;
+			float slopeAngle = SlopeByNormal(normal) / Mathf.PI * 180;
 			if(slopeAngle > movementSettings.walking.maxSlopeAngle)
 				return Vector3.zero;
-			targetVelocity = targetVelocity - sine * speed * normal;
+			targetVelocity = targetVelocity - Vector3.Dot(targetVelocity, normal.normalized) * normal;
 			return targetVelocity;
 		}
 		Vector3 CalculateWalkingForce(Vector3 targetVelocity) {
@@ -98,6 +83,20 @@ namespace LanternTrip {
 		#endregion
 
 		#region Public interfaces
+		public ContactPoint? standingPoint {
+			get {
+				ContactPoint? result = null;
+				foreach(ContactPoint point in contactingPoints.Values) {
+					float slopeAngle = SlopeByNormal(point.normal) / Mathf.PI * 180;
+					if(slopeAngle > movementSettings.walking.maxSlopeAngle)
+						continue;
+					if(!result.HasValue || point.point.y < result.Value.point.y)
+						result = point;
+				}
+				return result;
+			}
+		}
+
 		public void Jump() {
 			Vector3 impulse = -Physics.gravity.normalized * movementSettings.jumping.speed / rigidbody.mass;
 			rigidbody.AddForce(impulse, ForceMode.Impulse);
@@ -106,7 +105,7 @@ namespace LanternTrip {
 		#endregion
 
 		#region Life cycle
-		new void Start() {
+		protected new void Start() {
 			base.Start();
 
 			// Initialize
@@ -114,7 +113,7 @@ namespace LanternTrip {
 			movement.inputVelocity = Vector3.zero;
 		}
 
-		void FixedUpdate() {
+		protected void FixedUpdate() {
 			UpdateMovementState();
 			switch(movement.state) {
 				case Movement.State.Walking:
@@ -122,18 +121,6 @@ namespace LanternTrip {
 					Vector3 force = CalculateWalkingForce(movement.walkingVelocity);
 					rigidbody.AddForce(force);
 					break;
-			}
-		}
-
-		new void OnDrawGizmos() {
-			base.OnDrawGizmos();
-
-			if(Application.isPlaying) {
-				// Input velocity
-				if(movement.state == Movement.State.Walking) {
-					Gizmos.color = Color.blue;
-					Gizmos.DrawRay(rigidbody.position, movement.walkingVelocity);
-				}
 			}
 		}
 		#endregion
