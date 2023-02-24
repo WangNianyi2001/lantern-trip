@@ -4,8 +4,6 @@ using UnityEngine.InputSystem;
 namespace LanternTrip {
 	[RequireComponent(typeof(PlayerInput))]
 	public class InputManager : MonoBehaviour {
-		public static InputManager instance;
-
 		#region Inspector members
 		public Protagonist protagonist;
 		#endregion
@@ -41,10 +39,6 @@ namespace LanternTrip {
 		#endregion
 
 		#region Life cycle
-		void Awake() {
-			instance = this;
-		}
-
 		void Start() {
 			// Get component references
 			playerInput = GetComponent<PlayerInput>();
