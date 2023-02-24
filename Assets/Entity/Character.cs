@@ -63,7 +63,7 @@ namespace LanternTrip {
 		Vector3 CalculateWalkingVelocity() {
 			Vector3 targetVelocity = movement.inputVelocity;
 			float speed = targetVelocity.magnitude;
-			speed = Mathf.Min(speed, movementSettings.walking.maxSpeed);
+			speed *= movementSettings.walking.speed;
 			targetVelocity = targetVelocity.normalized * speed;
 			// Project onto the tangent plane of the current standing point
 			Vector3 normal = standingPoint.Value.normal;
