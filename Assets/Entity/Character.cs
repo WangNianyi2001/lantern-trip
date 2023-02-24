@@ -1,26 +1,7 @@
 using UnityEngine;
-using System;
 
 namespace LanternTrip {
 	public class Character : Entity {
-		[Serializable]
-		public struct MovementSettings {
-			[Serializable]
-			public struct Walking {
-				[Range(0, 100)] public float accelerationGain;
-				[Range(0, 100)] public float maxAcceleration;
-				[Range(0, 100)] public float maxSpeed;
-				[Range(0, 90)] public float maxSlopeAngle;
-			}
-			public Walking walking;
-
-			[Serializable]
-			public struct Jumping {
-				[Range(0, 5)] public float speed;
-			}
-			public Jumping jumping;
-		}
-
 		public struct Movement {
 			public enum State {
 				Passive,        // Character status is controlled externally.
@@ -36,7 +17,7 @@ namespace LanternTrip {
 		}
 
 		#region Inspector members
-		public MovementSettings movementSettings;
+		public CharacterMovementSettings movementSettings;
 		#endregion
 
 		#region Core members

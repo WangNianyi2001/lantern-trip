@@ -7,7 +7,7 @@ namespace LanternTrip {
 		public static MainManager instance;
 
 		#region Inspector members
-		public Player player;
+		public Protagonist protagonist;
 		#endregion
 
 		#region Core members
@@ -24,14 +24,15 @@ namespace LanternTrip {
 		#region Input handlers
 		void OnPlayerMove(InputValue value) {
 			Vector2 raw = value.Get<Vector2>();
-			player.movement.inputVelocity = new Vector3(
+			protagonist.movement.inputVelocity = new Vector3(
 				raw.x,
 				0,
 				raw.y
 			);
 		}
+
 		void OnPlayerJump(InputValue _) {
-			player.Jump();
+			protagonist.Jump();
 		}
 		#endregion
 
