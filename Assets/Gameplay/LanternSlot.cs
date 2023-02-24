@@ -8,7 +8,7 @@ namespace LanternTrip {
 		[NonSerialized] public LanternSlotUI ui;
 
 		/// <summary>Burn tinder in this slot by certain amount of time.</summary>
-		/// <returns>`true` if succeed, `false` if slot is empty or tinder exausted.</returns>
+		/// <returns>`true` if succeed, `false` if slot is empty or tinder exhausted.</returns>
 		public bool Burn(float time) {
 			if(tinder == null)
 				return false;

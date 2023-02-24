@@ -19,24 +19,38 @@ namespace LanternTrip {
 		LanternSlot[] lanternSlots;
 		#endregion
 
-		#region Core methods
-		public LanternSlot FirstEmptyLanternSlot {
-			get => lanternSlots.First(slot => slot.tinder == null);
-		}
-		#endregion
-
 		#region Public interfaces
+		public LanternSlot FirstEmptyLanternSlot {
+			get => lanternSlots.FirstOrDefault(slot => slot.tinder == null);
+		}
+		public LanternSlot LastloadedLanternSlot {
+			get => lanternSlots.LastOrDefault(slot => slot.tinder != null);
+		}
+
 		[NonSerialized] public bool burning;
 
-		/// <summary>Try to put given type of tinder into first empty lantern and start burning.</summary>
+		/// <summary>Try to load given type of tinder into first empty lantern and start burning.</summary>
 		/// <returns>`true` if succeed, `false` otherwise.</returns>
-		public bool BurnTinder(Tinder tinder) {
+		public bool LoadTinder(Tinder tinder) {
 			LanternSlot targetSlot = FirstEmptyLanternSlot;
 			if(targetSlot == null)
 				return false;
 			targetSlot.tinder = tinder;
 			targetSlot.timeLast = tinder.timeSpan;
 			return true;
+		}
+
+		public bool Burn(float time) {
+			LanternSlot lastSlot = LastloadedLanternSlot;
+			if(lastSlot == null)
+				return false;
+			if(lastSlot.timeLast >= time) {
+				lastSlot.Burn(time);
+				return true;
+			}
+			time -= lastSlot.timeLast;
+			lastSlot.Burn(lastSlot.timeLast);
+			return Burn(time);
 		}
 		#endregion
 
@@ -63,8 +77,9 @@ namespace LanternTrip {
 		}
 
 		void FixedUpdate() {
-			// If burning, burns
-			// If fuel exausted, game end
+			if(!Burn(Time.fixedDeltaTime)) {
+				// All lanterns exhausted
+			}
 		}
 		#endregion
 	}
