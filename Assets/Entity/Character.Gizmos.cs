@@ -10,7 +10,10 @@ namespace LanternTrip {
 			if(Application.isPlaying) {
 				// Movement state
 				Handles.color = Color.white;
-				Handles.Label(rigidbody.position, typeof(Movement.State).GetEnumName(movement.state));
+				Collider collider = rigidbody.GetComponent<Collider>();
+				Vector3 position = (collider.bounds.max + collider.bounds.min) / 2;
+				position.y = collider.bounds.max.y;
+				Handles.Label(position, typeof(Movement.State).GetEnumName(movement.state));
 
 				// Input velocity
 				if(movement.state == Movement.State.Walking) {

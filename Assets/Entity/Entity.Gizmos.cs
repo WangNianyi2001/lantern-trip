@@ -5,17 +5,17 @@ namespace LanternTrip {
 	public partial class Entity : MonoBehaviour {
 		protected void OnDrawGizmos() {
 			if(Application.isPlaying) {
-				// Standing point
-				if(standingPoint.HasValue) {
+				// Contacting point
+				foreach(ContactPoint point in contactingPoints.Values) {
 					Gizmos.color = Color.red;
-					Gizmos.DrawSphere(standingPoint.Value.point, .1f);
+					Gizmos.DrawSphere(point.point, .05f);
 
 					// Normal
 					Gizmos.color = Color.green;
-					Gizmos.DrawRay(standingPoint.Value.point, standingPoint.Value.normal);
+					Gizmos.DrawRay(point.point, point.normal);
 				}
 
-				// Actual velocity
+				// Velocity
 				Gizmos.color = Color.red;
 				Gizmos.DrawRay(rigidbody.position, rigidbody.velocity);
 			}

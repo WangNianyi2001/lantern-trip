@@ -55,6 +55,11 @@ namespace LanternTrip {
 			}
 		}
 
+		float SlopeByNormal(Vector3 normal) {
+			float cos = Vector3.Dot(-Physics.gravity.normalized, normal.normalized);
+			return Mathf.Acos(cos);
+		}
+
 		Vector3 CalculateWalkingVelocity() {
 			Vector3 targetVelocity = movement.inputVelocity;
 			float speed = targetVelocity.magnitude;
@@ -62,11 +67,10 @@ namespace LanternTrip {
 			targetVelocity = targetVelocity.normalized * speed;
 			// Project onto the tangent plane of the current standing point
 			Vector3 normal = standingPoint.Value.normal;
-			float sine = Vector3.Dot(targetVelocity.normalized, normal.normalized);
-			float slopeAngle = -Mathf.Asin(sine) / Mathf.PI * 180;
+			float slopeAngle = SlopeByNormal(normal) / Mathf.PI * 180;
 			if(slopeAngle > movementSettings.walking.maxSlopeAngle)
 				return Vector3.zero;
-			targetVelocity = targetVelocity - sine * speed * normal;
+			targetVelocity = targetVelocity - Vector3.Dot(targetVelocity, normal.normalized) * normal;
 			return targetVelocity;
 		}
 		Vector3 CalculateWalkingForce(Vector3 targetVelocity) {
@@ -79,6 +83,20 @@ namespace LanternTrip {
 		#endregion
 
 		#region Public interfaces
+		public ContactPoint? standingPoint {
+			get {
+				ContactPoint? result = null;
+				foreach(ContactPoint point in contactingPoints.Values) {
+					float slopeAngle = SlopeByNormal(point.normal) / Mathf.PI * 180;
+					if(slopeAngle > movementSettings.walking.maxSlopeAngle)
+						continue;
+					if(!result.HasValue || point.point.y < result.Value.point.y)
+						result = point;
+				}
+				return result;
+			}
+		}
+
 		public void Jump() {
 			Vector3 impulse = -Physics.gravity.normalized * movementSettings.jumping.speed / rigidbody.mass;
 			rigidbody.AddForce(impulse, ForceMode.Impulse);
