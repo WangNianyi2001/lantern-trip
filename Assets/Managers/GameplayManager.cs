@@ -23,7 +23,7 @@ namespace LanternTrip {
 		public LanternSlot FirstEmptyLanternSlot {
 			get => lanternSlots.FirstOrDefault(slot => slot.tinder == null);
 		}
-		public LanternSlot LastloadedLanternSlot {
+		public LanternSlot LastLoadedLanternSlot {
 			get => lanternSlots.LastOrDefault(slot => slot.tinder != null);
 		}
 
@@ -35,22 +35,26 @@ namespace LanternTrip {
 			LanternSlot targetSlot = FirstEmptyLanternSlot;
 			if(targetSlot == null)
 				return false;
-			targetSlot.tinder = tinder;
-			targetSlot.timeLast = tinder.timeSpan;
+			targetSlot.Load(tinder, true);
 			return true;
 		}
+		public void TestLoadTinder(Tinder tinder) => LoadTinder(tinder);
 
 		public bool Burn(float time) {
-			LanternSlot lastSlot = LastloadedLanternSlot;
-			if(lastSlot == null)
-				return false;
-			if(lastSlot.timeLast >= time) {
-				lastSlot.Burn(time);
-				return true;
+			for(int i = 0; i < lanternSlotCount; ++i) {
+				if(time <= 0)
+					return true;
+				LanternSlot targetShot = LastLoadedLanternSlot;
+				if(targetShot == null)
+					return false;
+				if(targetShot.timeLeft >= time) {
+					targetShot.Burn(time);
+					return true;
+				}
+				time -= targetShot.timeLeft;
+				targetShot.Burn(targetShot.timeLeft);
 			}
-			time -= lastSlot.timeLast;
-			lastSlot.Burn(lastSlot.timeLast);
-			return Burn(time);
+			return false;
 		}
 		#endregion
 
@@ -70,15 +74,13 @@ namespace LanternTrip {
 			lanternSlots = new LanternSlot[lanternSlotCount];
 			for(int i = 0; i < lanternSlotCount; ++i) {
 				GameObject ui = Instantiate(lanternSlotUIPrefab, lanternSlotTrack);
-				LanternSlot lanternSlot = ScriptableObject.CreateInstance<LanternSlot>();
-				lanternSlot.ui = ui.GetComponent<LanternSlotUI>();
-				lanternSlots[i] = lanternSlot;
+				lanternSlots[i] = new LanternSlot(ui.GetComponent<LanternSlotUI>());
 			}
 		}
 
 		void FixedUpdate() {
 			if(!Burn(Time.fixedDeltaTime)) {
-				// All lanterns exhausted
+				//
 			}
 		}
 		#endregion
