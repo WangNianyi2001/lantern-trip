@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace LanternTrip {
-	public class Character : Entity {
+	public partial class Character : Entity {
 		public struct Movement {
 			public enum State {
 				Passive,        // Character status is controlled externally.
@@ -103,18 +103,6 @@ namespace LanternTrip {
 					Vector3 force = CalculateWalkingForce(movement.walkingVelocity);
 					rigidbody.AddForce(force);
 					break;
-			}
-		}
-
-		protected new void OnDrawGizmos() {
-			base.OnDrawGizmos();
-
-			if(Application.isPlaying) {
-				// Input velocity
-				if(movement.state == Movement.State.Walking) {
-					Gizmos.color = Color.blue;
-					Gizmos.DrawRay(rigidbody.position, movement.walkingVelocity);
-				}
 			}
 		}
 		#endregion
