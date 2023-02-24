@@ -54,6 +54,31 @@ namespace LanternTrip {
 					break;
 			}
 		}
+
+		Vector3 CalculateWalkingVelocity() {
+			Vector3 targetVelocity = movement.inputVelocity;
+			float speed = targetVelocity.magnitude;
+			if(speed > movement.maxWalkingSpeed)
+				speed = movement.maxWalkingSpeed;
+			targetVelocity = targetVelocity.normalized * speed;
+			// Project onto the tangent plane of the current standing point
+			Vector3 normal = standingPoint.Value.normal;
+			float sine = Vector3.Dot(targetVelocity, normal);
+			float slopeAngle = Mathf.Asin(sine) / Mathf.PI * 180;
+			if(slopeAngle > movement.maxWalkingSlopeAngle)
+				return Vector3.zero;
+			return targetVelocity = targetVelocity - sine * normal;
+		}
+		Vector3 CalculateWalkingForce(Vector3 targetVelocity) {
+			Vector3 force = targetVelocity - rigidbody.velocity;
+			// Ease out
+			if(targetVelocity.magnitude < 1)
+				force *= Mathf.Max(.2f, Mathf.Pow(targetVelocity.magnitude, .5f));
+			force *= movement.accelerationGain;
+			if(force.magnitude > movement.maxAcceleration)
+				force = force.normalized * movement.maxAcceleration;
+			return force;
+		}
 		#endregion
 
 		#region Public interfaces
@@ -72,25 +97,8 @@ namespace LanternTrip {
 			UpdateMovementState();
 			switch(movement.state) {
 				case Movement.State.Walking:
-					Vector3 targetVelocity = movement.inputVelocity;
-					float speed = targetVelocity.magnitude;
-					if(speed > movement.maxWalkingSpeed)
-						speed = movement.maxWalkingSpeed;
-					targetVelocity = targetVelocity.normalized * speed;
-					// Project onto the tangent plane of the current standing point
-					Vector3 normal = standingPoint.Value.normal;
-					float sine = Vector3.Dot(targetVelocity, normal);
-					float slopeAngle = Mathf.Asin(sine) / Mathf.PI * 180;
-					if(slopeAngle > movement.maxWalkingSlopeAngle)
-						break;
-					movement.walkingVelocity = targetVelocity = targetVelocity - sine * normal;
-					Vector3 force = targetVelocity - rigidbody.velocity;
-					// Ease out
-					if(speed < 1)
-						force *= Mathf.Max(.2f, Mathf.Pow(speed, .5f));
-					force *= movement.accelerationGain;
-					if(force.magnitude > movement.maxAcceleration)
-						force = force.normalized * movement.maxAcceleration;
+					movement.walkingVelocity = CalculateWalkingVelocity();
+					Vector3 force = CalculateWalkingForce(movement.walkingVelocity);
 					rigidbody.AddForce(force);
 					break;
 			}
@@ -102,9 +110,8 @@ namespace LanternTrip {
 			if(Application.isPlaying) {
 				// Input velocity
 				if(movement.state == Movement.State.Walking) {
-					Vector3 position = rigidbody.position;
 					Gizmos.color = Color.blue;
-					Gizmos.DrawLine(position, position + movement.walkingVelocity);
+					Gizmos.DrawRay(rigidbody.position, movement.walkingVelocity);
 				}
 			}
 		}
