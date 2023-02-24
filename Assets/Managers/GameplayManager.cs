@@ -38,7 +38,6 @@ namespace LanternTrip {
 			targetSlot.Load(tinder, true);
 			return true;
 		}
-		public void TestLoadTinder(Tinder tinder) => LoadTinder(tinder);
 
 		public bool Burn(float time) {
 			for(int i = 0; i < lanternSlotCount; ++i) {
