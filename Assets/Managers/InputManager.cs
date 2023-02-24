@@ -3,11 +3,7 @@ using UnityEngine.InputSystem;
 
 namespace LanternTrip {
 	[RequireComponent(typeof(PlayerInput))]
-	public class InputManager : MonoBehaviour {
-		#region Inspector members
-		public Protagonist protagonist;
-		#endregion
-
+	public class InputManager : ManagerBase {
 		#region Core members
 		PlayerInput playerInput;
 		#endregion
@@ -32,9 +28,7 @@ namespace LanternTrip {
 		}
 
 		void OnPlayerJump(InputValue _) {
-			if(protagonist == null)
-				return;
-			protagonist.Jump();
+			protagonist?.Jump();
 		}
 		#endregion
 
