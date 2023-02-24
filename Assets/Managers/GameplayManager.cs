@@ -25,9 +25,6 @@ namespace LanternTrip {
 		public LanternSlot FirstEmptyLanternSlot {
 			get => lanternSlots.FirstOrDefault(slot => slot.tinder == null);
 		}
-		public LanternSlot LastLoadedLanternSlot {
-			get => lanternSlots.LastOrDefault(slot => slot.tinder != null);
-		}
 
 		[NonSerialized] public bool burning;
 
@@ -42,20 +39,11 @@ namespace LanternTrip {
 		}
 
 		public bool Burn(float time) {
-			for(int i = 0; i < lanternSlotCount; ++i) {
-				if(time <= 0)
-					return true;
-				LanternSlot targetShot = LastLoadedLanternSlot;
-				if(targetShot == null)
-					return false;
-				if(targetShot.timeLeft >= time) {
-					targetShot.Burn(time);
-					return true;
-				}
-				time -= targetShot.timeLeft;
-				targetShot.Burn(targetShot.timeLeft);
-			}
-			return false;
+			if(lanternSlots.All(slot => slot.tinder == null))
+				return false;
+			foreach(var slot in lanternSlots)
+				slot.Burn(time);
+			return true;
 		}
 		#endregion
 

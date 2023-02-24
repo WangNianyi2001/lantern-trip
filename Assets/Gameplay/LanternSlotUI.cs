@@ -23,6 +23,8 @@ namespace LanternTrip {
 			set {
 				_tinder = value;
 				icon.color = value?.mainColor ?? Color.gray;
+				if(value == null)
+					timeLeft = 0;
 			}
 		}
 
@@ -40,7 +42,6 @@ namespace LanternTrip {
 
 		void Start() {
 			tinder = null;
-			timeLeft = 0;
 		}
 	}
 }
