@@ -30,7 +30,6 @@ namespace LanternTrip {
 				case Movement.State.Walking:
 					// If not standing on any point, freefall
 					if(!standingPoint.HasValue) {
-						// Reset necessary infomation
 						movement.walkingVelocity = Vector3.zero;
 						movement.state = Movement.State.Freefalling;
 					}
