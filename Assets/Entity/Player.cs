@@ -18,7 +18,7 @@ namespace LanternTrip {
 			[NonSerialized] public Vector3 walkingVelocity;
 
 			[Range(0, 100)] public float accelerationGain;
-			[Range(0, 500)] public float maxAcceleration;
+			[Range(0, 100)] public float maxAcceleration;
 			[Range(0, 100)] public float maxWalkingSpeed;
 			[Range(0, 90)] public float maxWalkingSlopeAngle;
 		}
@@ -58,26 +58,23 @@ namespace LanternTrip {
 		Vector3 CalculateWalkingVelocity() {
 			Vector3 targetVelocity = movement.inputVelocity;
 			float speed = targetVelocity.magnitude;
-			if(speed > movement.maxWalkingSpeed)
-				speed = movement.maxWalkingSpeed;
+			speed = Mathf.Min(speed, movement.maxWalkingSpeed);
 			targetVelocity = targetVelocity.normalized * speed;
 			// Project onto the tangent plane of the current standing point
 			Vector3 normal = standingPoint.Value.normal;
-			float sine = Vector3.Dot(targetVelocity, normal);
-			float slopeAngle = Mathf.Asin(sine) / Mathf.PI * 180;
+			float sine = Vector3.Dot(targetVelocity.normalized, normal.normalized);
+			float slopeAngle = -Mathf.Asin(sine) / Mathf.PI * 180;
 			if(slopeAngle > movement.maxWalkingSlopeAngle)
 				return Vector3.zero;
-			return targetVelocity = targetVelocity - sine * normal;
+			targetVelocity = targetVelocity - sine * speed * normal;
+			return targetVelocity;
 		}
 		Vector3 CalculateWalkingForce(Vector3 targetVelocity) {
-			Vector3 force = targetVelocity - rigidbody.velocity;
-			// Ease out
-			if(targetVelocity.magnitude < 1)
-				force *= Mathf.Max(.2f, Mathf.Pow(targetVelocity.magnitude, .5f));
-			force *= movement.accelerationGain;
-			if(force.magnitude > movement.maxAcceleration)
-				force = force.normalized * movement.maxAcceleration;
-			return force;
+			Vector3 deltaVelocity = targetVelocity - rigidbody.velocity;
+			float magnitude = deltaVelocity.magnitude;
+			magnitude *= movement.accelerationGain;
+			magnitude = Mathf.Min(magnitude, movement.maxAcceleration);
+			return deltaVelocity.normalized * magnitude;
 		}
 		#endregion
 
