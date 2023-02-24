@@ -6,6 +6,6 @@ namespace LanternTrip {
 		public string typeName;
 		public Color mainColor;
 		[Tooltip("How much time could it burn.")]
-		[Range(0, 120)]public float fuelEquivalant;
+		[Range(0, 120)] public float timeSpan;
 	}
 }
