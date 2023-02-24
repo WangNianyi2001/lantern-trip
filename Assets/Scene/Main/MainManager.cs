@@ -12,7 +12,6 @@ namespace LanternTrip {
 
 		#region Core members
 		PlayerInput playerInput;
-		Vector3 inputMovementVelocity;
 		#endregion
 
 		#region Public interfaces

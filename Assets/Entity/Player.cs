@@ -4,6 +4,17 @@ using System;
 namespace LanternTrip {
 	public class Player : Entity {
 		[Serializable]
+		public struct MovementSettings {
+			[Serializable]
+			public struct Walking {
+				[Range(0, 100)] public float accelerationGain;
+				[Range(0, 100)] public float maxAcceleration;
+				[Range(0, 100)] public float maxSpeed;
+				[Range(0, 90)] public float maxSlopeAngle;
+			}
+			public Walking walking;
+		}
+
 		public struct Movement {
 			public enum State {
 				Passive,        // Character status is controlled externally.
@@ -12,18 +23,17 @@ namespace LanternTrip {
 				Jumping,        // Character has just jumped.
 				Landing,        // Character has just landed on ground.
 			}
-			[NonSerialized] public State state;
+			public State state;
 
-			[NonSerialized] public Vector3 inputVelocity;
-			[NonSerialized] public Vector3 walkingVelocity;
-
-			[Range(0, 100)] public float accelerationGain;
-			[Range(0, 100)] public float maxAcceleration;
-			[Range(0, 100)] public float maxWalkingSpeed;
-			[Range(0, 90)] public float maxWalkingSlopeAngle;
+			public Vector3 inputVelocity;
+			public Vector3 walkingVelocity;
 		}
 
 		#region Inspector members
+		public MovementSettings movementSettings;
+		#endregion
+
+		#region Core members
 		public Movement movement;
 		#endregion
 
@@ -58,13 +68,13 @@ namespace LanternTrip {
 		Vector3 CalculateWalkingVelocity() {
 			Vector3 targetVelocity = movement.inputVelocity;
 			float speed = targetVelocity.magnitude;
-			speed = Mathf.Min(speed, movement.maxWalkingSpeed);
+			speed = Mathf.Min(speed, movementSettings.walking.maxSpeed);
 			targetVelocity = targetVelocity.normalized * speed;
 			// Project onto the tangent plane of the current standing point
 			Vector3 normal = standingPoint.Value.normal;
 			float sine = Vector3.Dot(targetVelocity.normalized, normal.normalized);
 			float slopeAngle = -Mathf.Asin(sine) / Mathf.PI * 180;
-			if(slopeAngle > movement.maxWalkingSlopeAngle)
+			if(slopeAngle > movementSettings.walking.maxSlopeAngle)
 				return Vector3.zero;
 			targetVelocity = targetVelocity - sine * speed * normal;
 			return targetVelocity;
@@ -72,8 +82,8 @@ namespace LanternTrip {
 		Vector3 CalculateWalkingForce(Vector3 targetVelocity) {
 			Vector3 deltaVelocity = targetVelocity - rigidbody.velocity;
 			float magnitude = deltaVelocity.magnitude;
-			magnitude *= movement.accelerationGain;
-			magnitude = Mathf.Min(magnitude, movement.maxAcceleration);
+			magnitude *= movementSettings.walking.accelerationGain;
+			magnitude = Mathf.Min(magnitude, movementSettings.walking.maxAcceleration);
 			return deltaVelocity.normalized * magnitude;
 		}
 		#endregion

@@ -77,11 +77,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1db06959deeca74499642f65b31cbaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movement:
-    accelerationGain: 20
-    maxAcceleration: 300
-    maxWalkingSpeed: 80
-    maxWalkingSlopeAngle: 30
+  movementSettings:
+    walking:
+      accelerationGain: 20
+      maxAcceleration: 100
+      maxSpeed: 80
+      maxSlopeAngle: 30
 --- !u!1 &9157032848939278228
 GameObject:
   m_ObjectHideFlags: 0
