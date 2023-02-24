@@ -31,7 +31,7 @@ namespace LanternTrip {
 			);
 		}
 		void OnPlayerJump(InputValue _) {
-			//
+			player.Jump();
 		}
 		#endregion
 

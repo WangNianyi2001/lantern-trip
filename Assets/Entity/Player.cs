@@ -13,6 +13,12 @@ namespace LanternTrip {
 				[Range(0, 90)] public float maxSlopeAngle;
 			}
 			public Walking walking;
+
+			[Serializable]
+			public struct Jumping {
+				[Range(0, 5)] public float speed;
+			}
+			public Jumping jumping;
 		}
 
 		public struct Movement {
@@ -51,6 +57,9 @@ namespace LanternTrip {
 				case Movement.State.Freefalling:
 					// If landed, land
 					if(standingPoint.HasValue) {
+						float fallingSpeed = Vector3.Dot(rigidbody.velocity, Physics.gravity);
+						if(fallingSpeed < 0)
+							break;
 						movement.state = Movement.State.Landing;
 					}
 					break;
@@ -89,6 +98,11 @@ namespace LanternTrip {
 		#endregion
 
 		#region Public interfaces
+		public void Jump() {
+			Vector3 impulse = -Physics.gravity.normalized * movementSettings.jumping.speed / rigidbody.mass;
+			rigidbody.AddForce(impulse, ForceMode.Impulse);
+			movement.state = Movement.State.Jumping;
+		}
 		#endregion
 
 		#region Life cycle
