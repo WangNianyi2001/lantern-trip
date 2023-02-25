@@ -22,6 +22,16 @@ namespace LanternTrip {
 
 		#region Core members
 		public Movement movement;
+		float scanOffset = .5f;
+		float scanHeight = .3f;
+		float radius = .6f;
+		PhysicsUtility.CircularSector staircaseSector => new PhysicsUtility.CircularSector {
+			center = rigidbody.position + rigidbody.transform.up * scanOffset,
+			normal = -rigidbody.transform.up,
+			radius = radius,
+			startingDirection = rigidbody.transform.right,
+			spanAngle = Mathf.PI
+		};
 		#endregion
 
 		#region Core methods
@@ -79,6 +89,21 @@ namespace LanternTrip {
 			magnitude = Mathf.Min(magnitude, movementSettings.walking.maxAcceleration);
 			return deltaVelocity.normalized * magnitude;
 		}
+		Vector3 CalculateStaircaseImpulse() {
+			RaycastHit? hit = PhysicsUtility.CircularSectorSweepCast(staircaseSector, scanHeight);
+			if(!hit.HasValue)
+				return Vector3.zero;
+			Debug.Log($"Staircase: {hit.Value.collider}");
+			return transform.up * 2;
+		}
+		Quaternion CalculateRotation() {
+			Vector3 forward = rigidbody.velocity;
+			Vector3 upward = -Physics.gravity.normalized;
+			forward -= Vector3.Dot(forward, upward) * upward;
+			if(forward.magnitude < .5f)
+				return rigidbody.rotation;
+			return Quaternion.LookRotation(forward, upward);
+		}
 		#endregion
 
 		#region Public interfaces
@@ -119,6 +144,8 @@ namespace LanternTrip {
 					movement.walkingVelocity = CalculateWalkingVelocity();
 					Vector3 force = CalculateWalkingForce(movement.walkingVelocity);
 					rigidbody.AddForce(force);
+					rigidbody.AddForce(CalculateStaircaseImpulse(), ForceMode.Impulse);
+					rigidbody.rotation = CalculateRotation();
 					break;
 			}
 		}
