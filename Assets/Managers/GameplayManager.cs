@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using NaughtyAttributes;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -11,23 +12,15 @@ namespace LanternTrip {
 
 		#region Inspector members
 		new public Protagonist protagonist;
+		public InputManager input;
 		public UiManager ui;
-		public uint lanternSlotCount = 3u;
-
-		[Header("Bonus")]
-		public UnityEvent allDifferentBonus;
-		[Serializable]
-		public struct AllSameBonus {
-			public string typeName;
-			public UnityEvent bonus;
-		}
-		public List<AllSameBonus> allSameBonus;
+		[Expandable] public GameSettings settings;
 		#endregion
 
 		#region Core members
-		[NonSerialized] public InputManager input;
 		[NonSerialized] public LanternSlot[] lanternSlots;
 		float bonusTime;
+		List<Bonus> activeBonuses = new List<Bonus>();
 		#endregion
 
 		#region Core methods
@@ -68,26 +61,32 @@ namespace LanternTrip {
 			}
 		}
 
-		/// <summary>Check if certain bonus condition is satisfied.</summary>
-		/// <returns>Bonus action that should be granted.</returns>
-		List<UnityEvent> CheckForBonus() {
-			var bonuses = new List<UnityEvent>();
-			if(lanternSlots.Any(slot => slot.tinder == null))
-				return bonuses;
-			bool allSame = true, allDifferent = true;
-			string firstType = lanternSlots[0].tinder.typeName;
-			for(int i = 1; i < lanternSlots.Count(); ++i) {
-				LanternSlot slot = lanternSlots[i];
-				if(slot.tinder.typeName != firstType)
-					allSame &= false;
-				if(lanternSlots.Take(i - 1).Any(other => slot.tinder.typeName == other.tinder.typeName))
-					allDifferent &= false;
+		void ActivateSatisfiedBonus() {
+			foreach(var bonus in settings.bonuses) {
+				var types = lanternSlots.Select(slot => slot.tinder?.type ?? Tinder.Type.Invalid);
+				if(!bonus.Check(types))
+					continue;
+				if(bonus.immediate)
+					bonus.onGrant.Invoke();
+				else {
+					activeBonuses.Add(bonus);
+					bonus.onActivate.Invoke();
+				}
 			}
-			if(allSame)
-				bonuses.Add(allSameBonus.Find(bonus => bonus.typeName == firstType).bonus);
-			if(allDifferent)
-				bonuses.Add(allDifferentBonus);
-			return bonuses;
+		}
+
+		void DeactivateUnsatisfiedBonus() {
+			var survivedList = new List<Bonus>();
+			foreach(var bonus in activeBonuses) {
+				var types = lanternSlots.Select(slot => slot.tinder?.type ?? Tinder.Type.Invalid);
+				if(bonus.Check(types)) {
+					survivedList.Add(bonus);
+					continue;
+				}
+				bonus.onDeactivate.Invoke();
+			}
+			activeBonuses.Clear();
+			activeBonuses.AddRange(survivedList);
 		}
 		#endregion
 
@@ -98,7 +97,7 @@ namespace LanternTrip {
 			get => lanternSlots.FirstOrDefault(slot => slot.tinder == null);
 		}
 
-		public bool burning = true;
+		bool burning = true;
 
 		/// <summary>Try to load given type of tinder into first empty lantern and start burning.</summary>
 		/// <returns>`true` if succeed, `false` otherwise.</returns>
@@ -106,7 +105,7 @@ namespace LanternTrip {
 			if(SelectedLanternSlot == null)
 				return false;
 			SelectedLanternSlot.Load(tinder, true);
-			CheckForBonus().ForEach(action => action.Invoke());
+			ActivateSatisfiedBonus();
 			return true;
 		}
 
@@ -129,18 +128,17 @@ namespace LanternTrip {
 		}
 
 		void Start() {
-			// Get component reference
-			input = GetComponent<InputManager>();
-
 			// Initialize lantern slots
-			lanternSlots = new LanternSlot[lanternSlotCount];
-			for(int i = 0; i < lanternSlotCount; ++i)
+			lanternSlots = new LanternSlot[settings.lanternSlotCount];
+			for(int i = 0; i < settings.lanternSlotCount; ++i)
 				lanternSlots[i] = new LanternSlot(ui.CreateLanternSlot());
 		}
 
 		void FixedUpdate() {
 			if(burning) {
 				bool burntOut = !Burn(Time.fixedDeltaTime * burningRate);
+				if(activeBonuses.Count > 0)
+					DeactivateUnsatisfiedBonus();
 				if(burntOut) {
 					//
 				}

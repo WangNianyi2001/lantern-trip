@@ -184,7 +184,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2810346448126698523, guid: 9827efcfa323cbd4ba28e25477dd7cd7, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 120
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2810346448126698523, guid: 9827efcfa323cbd4ba28e25477dd7cd7, type: 3}
       propertyPath: m_SizeDelta.y
@@ -1729,42 +1729,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   protagonist: {fileID: 66699399}
+  input: {fileID: 626574643}
   ui: {fileID: 1066295816}
-  lanternSlotCount: 3
-  allDifferentBonus:
-    m_PersistentCalls:
-      m_Calls: []
-  allSameBonus:
-  - typeName: Green
-    bonus:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 11400000, guid: 2e5037efd0717804cbfaf5bfbddcf40c, type: 2}
-          m_TargetAssemblyTypeName: LanternTrip.GameplayAgent, Assembly-CSharp
-          m_MethodName: AddBonusTime
-          m_Mode: 4
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 60
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 11400000, guid: 2e5037efd0717804cbfaf5bfbddcf40c, type: 2}
-          m_TargetAssemblyTypeName: LanternTrip.GameplayAgent, Assembly-CSharp
-          m_MethodName: Log
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Green bonus! +60s
-            m_BoolArgument: 0
-          m_CallState: 2
+  settings: {fileID: 11400000, guid: 62b0c7de78fc02b459e30c3d05659f0a, type: 2}
   burningRate: 1
-  burning: 1
 --- !u!1001 &1453689368791351296
 PrefabInstance:
   m_ObjectHideFlags: 0
