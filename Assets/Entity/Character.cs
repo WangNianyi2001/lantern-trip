@@ -2,6 +2,17 @@ using UnityEngine;
 
 namespace LanternTrip {
 	public partial class Character : Entity {
+		#region Properties
+
+		public uint ID = 0;
+		private static uint id = 0;
+
+		public int HP = 100;
+
+		public Tinder.Type element = Tinder.Type.Red;
+
+		#endregion
+
 		public struct Movement {
 			public enum State {
 				Passive,        // Character status is controlled externally.
@@ -15,6 +26,11 @@ namespace LanternTrip {
 			public Vector3 inputVelocity;
 			public Vector3 walkingVelocity;
 		}
+
+        public Character()
+        {
+			ID = id++;
+        }
 
 		#region Inspector members
 		public CharacterMovementSettings movementSettings;
@@ -97,6 +113,8 @@ namespace LanternTrip {
 		}
 
 		public void Jump() {
+			if(movement.state != Movement.State.Walking)
+				return;
 			Vector3 impulse = -Physics.gravity.normalized * movementSettings.jumping.speed / rigidbody.mass;
 			rigidbody.AddForce(impulse, ForceMode.Impulse);
 			movement.state = Movement.State.Jumping;

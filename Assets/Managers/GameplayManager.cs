@@ -1,6 +1,9 @@
 using UnityEngine;
+using UnityEngine.Events;
+using NaughtyAttributes;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace LanternTrip {
 	[RequireComponent(typeof(InputManager))]
@@ -9,54 +12,114 @@ namespace LanternTrip {
 
 		#region Inspector members
 		new public Protagonist protagonist;
-		public RectTransform lanternSlotTrack;
-		public GameObject lanternSlotUIPrefab;
+		public InputManager input;
+		public UiManager ui;
+		[Expandable] public GameSettings settings;
 		#endregion
 
 		#region Core members
-		InputManager input;
-		const uint lanternSlotCount = 3u;
-		LanternSlot[] lanternSlots;
+		[NonSerialized] public LanternSlot[] lanternSlots;
+		float bonusTime;
+		List<Bonus> activeBonuses = new List<Bonus>();
+		#endregion
+
+		#region Core methods
+		public float BonusTime {
+			get => bonusTime;
+			set {
+				bonusTime = value;
+				ui.bonusSlot.SetValue(value);
+			}
+		}
+
+		float BurnBonus(float time) {
+			if(BonusTime >= time) {
+				BonusTime -= time;
+				time = 0;
+			}
+			else {
+				time -= bonusTime;
+				BonusTime = 0;
+			}
+			return time;
+		}
+
+		/// <summary>Returns 0 if it's possible to burn any lantern by given time.</summary>
+		float BurnLanterns(float time) {
+			if(lanternSlots.All(slot => slot.tinder == null))
+				return time;
+			float maxTimeLeft = lanternSlots.Select(slot => slot.timeLeft).Max();
+			if(maxTimeLeft < time) {
+				foreach(var slot in lanternSlots)
+					slot.Burn(maxTimeLeft);
+				return time - maxTimeLeft;
+			}
+			else {
+				foreach(var slot in lanternSlots)
+					slot.Burn(time);
+				return 0;
+			}
+		}
+
+		void ActivateSatisfiedBonus() {
+			foreach(var bonus in settings.bonuses) {
+				var types = lanternSlots.Select(slot => slot.tinder?.type ?? Tinder.Type.Invalid);
+				if(!bonus.Check(types))
+					continue;
+				if(bonus.immediate)
+					bonus.onGrant.Invoke();
+				else {
+					activeBonuses.Add(bonus);
+					bonus.onActivate.Invoke();
+				}
+			}
+		}
+
+		void DeactivateUnsatisfiedBonus() {
+			var survivedList = new List<Bonus>();
+			foreach(var bonus in activeBonuses) {
+				var types = lanternSlots.Select(slot => slot.tinder?.type ?? Tinder.Type.Invalid);
+				if(bonus.Check(types)) {
+					survivedList.Add(bonus);
+					continue;
+				}
+				bonus.onDeactivate.Invoke();
+			}
+			activeBonuses.Clear();
+			activeBonuses.AddRange(survivedList);
+		}
 		#endregion
 
 		#region Public interfaces
 		[Range(0, 10)] public float burningRate = 1;
 
-		public LanternSlot FirstEmptyLanternSlot {
+		public LanternSlot SelectedLanternSlot {
 			get => lanternSlots.FirstOrDefault(slot => slot.tinder == null);
 		}
-		public LanternSlot LastLoadedLanternSlot {
-			get => lanternSlots.LastOrDefault(slot => slot.tinder != null);
-		}
 
-		[NonSerialized] public bool burning;
+		bool burning = true;
 
 		/// <summary>Try to load given type of tinder into first empty lantern and start burning.</summary>
 		/// <returns>`true` if succeed, `false` otherwise.</returns>
 		public bool LoadTinder(Tinder tinder) {
-			LanternSlot targetSlot = FirstEmptyLanternSlot;
-			if(targetSlot == null)
+			if(SelectedLanternSlot == null)
 				return false;
-			targetSlot.Load(tinder, true);
+			SelectedLanternSlot.Load(tinder, true);
+			ActivateSatisfiedBonus();
 			return true;
 		}
 
 		public bool Burn(float time) {
-			for(int i = 0; i < lanternSlotCount; ++i) {
-				if(time <= 0)
-					return true;
-				LanternSlot targetShot = LastLoadedLanternSlot;
-				if(targetShot == null)
-					return false;
-				if(targetShot.timeLeft >= time) {
-					targetShot.Burn(time);
-					return true;
-				}
-				time -= targetShot.timeLeft;
-				targetShot.Burn(targetShot.timeLeft);
-			}
-			return false;
+			if(time == 0)
+				return true;
+			time = BurnBonus(time);
+			if(time == 0)
+				return true;
+			time = BurnLanterns(time);
+			return time == 0;
 		}
+
+		public void AddBonusTime(float time) => BonusTime += time;
 		#endregion
 
 		#region Life cycle
@@ -65,25 +128,22 @@ namespace LanternTrip {
 		}
 
 		void Start() {
-			// Get component reference
-			input = GetComponent<InputManager>();
-
-			// Initialize lantern slots & track UI
-			// First clean all editor-preview slots in the track
-			foreach(Transform child in lanternSlotTrack.transform)
-				Destroy(child.gameObject);
-			lanternSlots = new LanternSlot[lanternSlotCount];
-			for(int i = 0; i < lanternSlotCount; ++i) {
-				GameObject ui = Instantiate(lanternSlotUIPrefab, lanternSlotTrack);
-				lanternSlots[i] = new LanternSlot(ui.GetComponent<LanternSlotUI>());
-			}
+			// Initialize lantern slots
+			lanternSlots = new LanternSlot[settings.lanternSlotCount];
+			for(int i = 0; i < settings.lanternSlotCount; ++i)
+				lanternSlots[i] = new LanternSlot(ui.CreateLanternSlot());
 		}
 
 		void FixedUpdate() {
-			if(!Burn(Time.fixedDeltaTime * burningRate)) {
-				//
+			if(burning) {
+				bool burntOut = !Burn(Time.fixedDeltaTime * burningRate);
+				if(activeBonuses.Count > 0)
+					DeactivateUnsatisfiedBonus();
+				if(burntOut) {
+					//
+				}
 			}
 		}
-		#endregion
-	}
+			#endregion
+		}
 }
