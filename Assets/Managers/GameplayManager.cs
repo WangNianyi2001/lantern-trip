@@ -9,13 +9,12 @@ namespace LanternTrip {
 
 		#region Inspector members
 		new public Protagonist protagonist;
-		public RectTransform lanternSlotTrack;
-		public GameObject lanternSlotUIPrefab;
+		public UiManager ui;
+		public uint lanternSlotCount = 3u;
 		#endregion
 
 		#region Core members
-		InputManager input;
-		const uint lanternSlotCount = 3u;
+		[NonSerialized] public InputManager input;
 		LanternSlot[] lanternSlots;
 		#endregion
 
@@ -26,7 +25,7 @@ namespace LanternTrip {
 			get => lanternSlots.FirstOrDefault(slot => slot.tinder == null);
 		}
 
-		[NonSerialized] public bool burning;
+		public bool burning = true;
 
 		/// <summary>Try to load given type of tinder into first empty lantern and start burning.</summary>
 		/// <returns>`true` if succeed, `false` otherwise.</returns>
@@ -56,22 +55,20 @@ namespace LanternTrip {
 			// Get component reference
 			input = GetComponent<InputManager>();
 
-			// Initialize lantern slots & track UI
-			// First clean all editor-preview slots in the track
-			foreach(Transform child in lanternSlotTrack.transform)
-				Destroy(child.gameObject);
+			// Initialize lantern slots
 			lanternSlots = new LanternSlot[lanternSlotCount];
-			for(int i = 0; i < lanternSlotCount; ++i) {
-				GameObject ui = Instantiate(lanternSlotUIPrefab, lanternSlotTrack);
-				lanternSlots[i] = new LanternSlot(ui.GetComponent<LanternSlotUI>());
-			}
+			for(int i = 0; i < lanternSlotCount; ++i)
+				lanternSlots[i] = new LanternSlot(ui.CreateLanternSlot());
 		}
 
 		void FixedUpdate() {
-			if(!Burn(Time.fixedDeltaTime * burningRate)) {
-				//
+			if(burning) {
+				bool burntOut = !Burn(Time.fixedDeltaTime * burningRate);
+				if(burntOut) {
+					//
+				}
 			}
 		}
-		#endregion
-	}
+			#endregion
+		}
 }

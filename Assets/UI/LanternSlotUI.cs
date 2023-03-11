@@ -8,7 +8,6 @@ namespace LanternTrip {
 		public Text timeLeftText;
 
 		Tinder tinder;
-		float value;
 
 		float maskProgress {
 			set {
@@ -26,24 +25,20 @@ namespace LanternTrip {
 				tinder = value;
 				icon.color = value?.mainColor ?? Color.gray;
 				if(value == null)
-					Value = 0;
+					SetValue(0);
 			}
 		}
 
-		public override float Value {
-			get => value;
-			set {
-				if(tinder == null) {
-					this.value = 0;
-					maskProgress = 1;
-					timeLeftText.text = string.Empty;
-				}
-				else {
-					this.value = value;
-					maskProgress = value / tinder.timeSpan;
-					timeLeftText.text = Mathf.Floor(value).ToString();
-				}
+		public override void SetValue(float value) {
+			if(tinder == null) {
+				maskProgress = 1;
+				timeLeftText.text = string.Empty;
 			}
+			else {
+				maskProgress = value / tinder.timeSpan;
+				timeLeftText.text = Mathf.Floor(value).ToString();
+			}
+			base.SetValue(value);
 		}
 
 		void Start() {

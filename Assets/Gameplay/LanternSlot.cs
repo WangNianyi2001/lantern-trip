@@ -20,7 +20,7 @@ namespace LanternTrip {
 			get => _timeLeft;
 			set {
 				_timeLeft = value;
-				ui.Value = value;
+				ui.SetValue(value);
 			}
 		}
 
