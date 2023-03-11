@@ -20,12 +20,15 @@ namespace LanternTrip {
 				return false;
 			if(types.Any(type => type == Tinder.Type.Invalid))
 				return false;
-			int andMask = types.Select(type => (int)type).Aggregate((a, b) => a & b);
 			switch(type) {
-				case Type.AllDifferent:
-					return andMask == 0;
-				case Type.AllSame:
-					return andMask != 0 && types.First() == tinderType;
+				case Type.AllDifferent: {
+						int mask = types.Select(type => ~(int)type).Aggregate((a, b) => a & b);
+						return (mask & 0x7) == 0;
+					}
+				case Type.AllSame: {
+						int mask = types.Select(type => (int)type).Aggregate((a, b) => a & b);
+						return mask != 0 && types.First() == tinderType;
+					}
 			}
 			return false;
 		}

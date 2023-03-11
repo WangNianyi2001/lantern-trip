@@ -7,7 +7,7 @@ namespace LanternTrip {
 	public partial class Entity : MonoBehaviour {
 		#region Core members
 		protected new Rigidbody rigidbody;
-		protected Dictionary<Collider, ContactPoint> contactingPoints;
+		protected Dictionary<Collider, ContactPoint> contactingPoints = new Dictionary<Collider, ContactPoint>();
 		#endregion
 
 		#region Private method
