@@ -23,8 +23,22 @@ namespace LanternTrip {
 			get => tinder;
 			set {
 				tinder = value;
-				icon.color = value?.mainColor ?? Color.gray;
-				if(value == null)
+                //icon.color = value?.mainColor ?? Color.gray;
+                switch (value?.mainColor)
+                {
+                    case TinderType.Red:
+						icon.color = Color.red;
+						break;
+                    case TinderType.Green:
+						icon.color = Color.green;
+						break;
+                    case TinderType.Blue:
+						icon.color = Color.blue;
+                        break;
+                    default:
+                        break;
+                }
+                if(value == null)
 					SetValue(0);
 			}
 		}
