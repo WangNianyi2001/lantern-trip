@@ -2,14 +2,15 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace LanternTrip {
-	public class LanternSlotUI : MonoBehaviour {
+	public class LanternSlotUI : SlotUI {
 		public Image icon;
 		public RectMask2D mask;
 		public Text timeLeftText;
 
-		Tinder _tinder;
+		Tinder tinder;
+		float value;
 
-		float maskValue {
+		float maskProgress {
 			set {
 				value = Mathf.Clamp01(value);
 				RectTransform rt = mask.rectTransform;
@@ -19,29 +20,34 @@ namespace LanternTrip {
 			}
 		}
 
-		public Tinder tinder {
+		public Tinder Tinder {
+			get => tinder;
 			set {
-				_tinder = value;
+				tinder = value;
 				icon.color = value?.mainColor ?? Color.gray;
 				if(value == null)
-					timeLeft = 0;
+					Value = 0;
 			}
 		}
 
-		public float timeLeft {
+		public override float Value {
+			get => value;
 			set {
-				if(_tinder == null) {
-					maskValue = 1;
+				if(tinder == null) {
+					this.value = 0;
+					maskProgress = 1;
 					timeLeftText.text = string.Empty;
-					return;
 				}
-				maskValue = value / _tinder.timeSpan;
-				timeLeftText.text = Mathf.Floor(value).ToString();
+				else {
+					this.value = value;
+					maskProgress = value / tinder.timeSpan;
+					timeLeftText.text = Mathf.Floor(value).ToString();
+				}
 			}
 		}
 
 		void Start() {
-			tinder = null;
+			Tinder = null;
 		}
 	}
 }
