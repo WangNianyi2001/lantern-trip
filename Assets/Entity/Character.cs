@@ -97,6 +97,8 @@ namespace LanternTrip {
 		}
 
 		public void Jump() {
+			if(movement.state != Movement.State.Walking)
+				return;
 			Vector3 impulse = -Physics.gravity.normalized * movementSettings.jumping.speed / rigidbody.mass;
 			rigidbody.AddForce(impulse, ForceMode.Impulse);
 			movement.state = Movement.State.Jumping;
