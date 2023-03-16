@@ -1,5 +1,6 @@
-using System;
 using UnityEngine;
+using System;
+using System.Collections;
 
 namespace LanternTrip {
 	public partial class Character : Entity {
@@ -58,7 +59,6 @@ namespace LanternTrip {
 				case Movement.State.Jumping:
 					animationController.Jumping = true;
 					// TODO: Animation etc.
-					movement.state = Movement.State.Freefalling;
 					break;
 				case Movement.State.Landing:
 					// TODO: Animation etc.
@@ -113,6 +113,14 @@ namespace LanternTrip {
 			Vector3 expectedAngularVelocity = up * deltaZenith * direction;
 			return expectedAngularVelocity - actualAngularVelocity;
 		}
+
+		IEnumerator JumpCoroutine() {
+			yield return new WaitForSeconds(movementSettings.jumping.preWaitingTime);
+			Vector3 impulse = -Physics.gravity.normalized * movementSettings.jumping.speed / rigidbody.mass;
+			rigidbody.AddForce(impulse, ForceMode.Impulse);
+			movement.state = Movement.State.Freefalling;
+
+		}
 		#endregion
 
 		#region Public interfaces
@@ -133,9 +141,8 @@ namespace LanternTrip {
 		public void Jump() {
 			if(movement.state != Movement.State.Walking)
 				return;
-			Vector3 impulse = -Physics.gravity.normalized * movementSettings.jumping.speed / rigidbody.mass;
-			rigidbody.AddForce(impulse, ForceMode.Impulse);
-			movement.state = Movement.State.Freefalling;
+			movement.state = Movement.State.Jumping;
+			StartCoroutine(JumpCoroutine());
 		}
 		#endregion
 
@@ -147,7 +154,7 @@ namespace LanternTrip {
 			animationController = new CharacterAnimationController(this);
 
 			// Initialize
-			movement.state = Movement.State.Freefalling;
+			movement.state = Movement.State.Walking;
 			movement.inputVelocity = Vector3.zero;
 		}
 
