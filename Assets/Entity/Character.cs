@@ -4,14 +4,10 @@ using UnityEngine;
 namespace LanternTrip {
 	public partial class Character : Entity {
 		#region Properties
-
 		[NonSerialized] public uint ID = 0;
 		private static uint id = 0;
-
 		public int HP = 100;
-
 		public Tinder.Type element = Tinder.Type.Red;
-
 		#endregion
 
 		public struct Movement {
@@ -35,6 +31,7 @@ namespace LanternTrip {
 
 		#region Core members
 		public Movement movement;
+		public CharacterAnimationController animationController;
 		#endregion
 
 		#region Core methods
@@ -48,6 +45,8 @@ namespace LanternTrip {
 					}
 					break;
 				case Movement.State.Freefalling:
+					animationController.Freefalling = true;
+					animationController.Jumping = false;
 					// If landed, land
 					if(standingPoint.HasValue) {
 						float fallingSpeed = Vector3.Dot(rigidbody.velocity, Physics.gravity);
@@ -57,6 +56,7 @@ namespace LanternTrip {
 					}
 					break;
 				case Movement.State.Jumping:
+					animationController.Jumping = true;
 					// TODO: Animation etc.
 					movement.state = Movement.State.Freefalling;
 					break;
@@ -65,6 +65,11 @@ namespace LanternTrip {
 					movement.state = Movement.State.Walking;
 					break;
 			}
+			animationController.Moving =
+				(movement.state == Movement.State.Walking)
+				&& (movement.walkingVelocity.magnitude > .1f);
+			animationController.Freefalling =
+				movement.state == Movement.State.Freefalling;
 		}
 
 		float SlopeByNormal(Vector3 normal) {
@@ -130,7 +135,7 @@ namespace LanternTrip {
 				return;
 			Vector3 impulse = -Physics.gravity.normalized * movementSettings.jumping.speed / rigidbody.mass;
 			rigidbody.AddForce(impulse, ForceMode.Impulse);
-			movement.state = Movement.State.Jumping;
+			movement.state = Movement.State.Freefalling;
 		}
 		#endregion
 
@@ -139,6 +144,7 @@ namespace LanternTrip {
 			base.Start();
 
 			ID = id++;
+			animationController = new CharacterAnimationController(this);
 
 			// Initialize
 			movement.state = Movement.State.Freefalling;
@@ -157,10 +163,7 @@ namespace LanternTrip {
 			Vector3 zenithTorque = CalculateZenithTorque();
 			rigidbody.AddTorque(zenithTorque);
 
-			// Animator
-			animator.transform.localPosition = Vector3.zero;
-			animator.transform.localRotation = Quaternion.identity;
-			animator?.SetBool("Walking", movement.walkingVelocity.magnitude > .1f);
+			animationController.Update();
 		}
 		#endregion
 	}
