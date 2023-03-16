@@ -1,7 +1,16 @@
 using UnityEngine;
+using System;
+using System.Collections;
 
 namespace LanternTrip {
 	public partial class Character : Entity {
+		#region Properties
+		[NonSerialized] public uint ID = 0;
+		private static uint id = 0;
+		public int HP = 100;
+		public Tinder.Type element = Tinder.Type.Red;
+		#endregion
+
 		public struct Movement {
 			public enum State {
 				Passive,        // Character status is controlled externally.
@@ -18,10 +27,12 @@ namespace LanternTrip {
 
 		#region Inspector members
 		public CharacterMovementSettings movementSettings;
+		public Animator animator;
 		#endregion
 
 		#region Core members
 		public Movement movement;
+		public CharacterAnimationController animationController;
 		#endregion
 
 		#region Core methods
@@ -35,6 +46,8 @@ namespace LanternTrip {
 					}
 					break;
 				case Movement.State.Freefalling:
+					animationController.Freefalling = true;
+					animationController.Jumping = false;
 					// If landed, land
 					if(standingPoint.HasValue) {
 						float fallingSpeed = Vector3.Dot(rigidbody.velocity, Physics.gravity);
@@ -44,14 +57,19 @@ namespace LanternTrip {
 					}
 					break;
 				case Movement.State.Jumping:
+					animationController.Jumping = true;
 					// TODO: Animation etc.
-					movement.state = Movement.State.Freefalling;
 					break;
 				case Movement.State.Landing:
 					// TODO: Animation etc.
 					movement.state = Movement.State.Walking;
 					break;
 			}
+			animationController.Moving =
+				(movement.state == Movement.State.Walking)
+				&& (movement.walkingVelocity.magnitude > .1f);
+			animationController.Freefalling =
+				movement.state == Movement.State.Freefalling;
 		}
 
 		float SlopeByNormal(Vector3 normal) {
@@ -65,7 +83,7 @@ namespace LanternTrip {
 			speed *= movementSettings.walking.speed;
 			targetVelocity = targetVelocity.normalized * speed;
 			// Project onto the tangent plane of the current standing point
-			Vector3 normal = standingPoint.Value.normal;
+			Vector3 normal = standingPoint.HasValue ? standingPoint.Value.normal : -Physics.gravity;
 			float slopeAngle = SlopeByNormal(normal) / Mathf.PI * 180;
 			if(slopeAngle > movementSettings.walking.maxSlopeAngle)
 				return Vector3.zero;
@@ -78,6 +96,30 @@ namespace LanternTrip {
 			magnitude *= movementSettings.walking.accelerationGain;
 			magnitude = Mathf.Min(magnitude, movementSettings.walking.maxAcceleration);
 			return deltaVelocity.normalized * magnitude;
+		}
+		Vector3 CalculateZenithTorque() {
+			Vector3 up = Physics.gravity;
+			Vector3 actualAngularVelocity = rigidbody.angularVelocity;
+			Vector3 expected = rigidbody.velocity.ProjectOnto(up);
+			if(expected.magnitude < .1f)
+				return -actualAngularVelocity;
+
+			Vector3 expectedDirection = expected.normalized;
+			Vector3 actualDirection = transform.forward.ProjectOnto(up).normalized;
+			float deltaZenith = Mathf.Acos(Vector3.Dot(expectedDirection, actualDirection));
+			// Left or right
+			float direction = Mathf.Sign(Vector3.Dot(Vector3.Cross(actualDirection, expectedDirection), up));
+
+			Vector3 expectedAngularVelocity = up * deltaZenith * direction;
+			return expectedAngularVelocity - actualAngularVelocity;
+		}
+
+		IEnumerator JumpCoroutine() {
+			yield return new WaitForSeconds(movementSettings.jumping.preWaitingTime);
+			Vector3 impulse = -Physics.gravity.normalized * movementSettings.jumping.speed / rigidbody.mass;
+			rigidbody.AddForce(impulse, ForceMode.Impulse);
+			movement.state = Movement.State.Freefalling;
+
 		}
 		#endregion
 
@@ -97,9 +139,10 @@ namespace LanternTrip {
 		}
 
 		public void Jump() {
-			Vector3 impulse = -Physics.gravity.normalized * movementSettings.jumping.speed / rigidbody.mass;
-			rigidbody.AddForce(impulse, ForceMode.Impulse);
+			if(movement.state != Movement.State.Walking)
+				return;
 			movement.state = Movement.State.Jumping;
+			StartCoroutine(JumpCoroutine());
 		}
 		#endregion
 
@@ -107,8 +150,11 @@ namespace LanternTrip {
 		protected new void Start() {
 			base.Start();
 
+			ID = id++;
+			animationController = new CharacterAnimationController(this);
+
 			// Initialize
-			movement.state = Movement.State.Freefalling;
+			movement.state = Movement.State.Walking;
 			movement.inputVelocity = Vector3.zero;
 		}
 
@@ -121,6 +167,10 @@ namespace LanternTrip {
 					rigidbody.AddForce(force);
 					break;
 			}
+			Vector3 zenithTorque = CalculateZenithTorque();
+			rigidbody.AddTorque(zenithTorque);
+
+			animationController.Update();
 		}
 		#endregion
 	}

@@ -20,6 +20,18 @@ namespace LanternTrip {
 					Gizmos.color = Color.blue;
 					Gizmos.DrawRay(rigidbody.position, movement.walkingVelocity);
 				}
+
+				// Actual velocity
+				Gizmos.color = Color.red;
+				Gizmos.DrawRay(rigidbody.position, rigidbody.velocity);
+
+				// Forward
+				Gizmos.color = Color.magenta;
+				Gizmos.DrawRay(rigidbody.position, transform.forward);
+
+				// Zenith torque
+				Gizmos.color = Color.green;
+				Gizmos.DrawRay(rigidbody.position, -CalculateZenithTorque());
 			}
 		}
 	}

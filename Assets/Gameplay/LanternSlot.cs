@@ -12,7 +12,7 @@ namespace LanternTrip {
 			get => _tinder;
 			set {
 				_tinder = value;
-				ui.tinder = value;
+				ui.Tinder = value;
 			}
 		}
 
@@ -20,7 +20,7 @@ namespace LanternTrip {
 			get => _timeLeft;
 			set {
 				_timeLeft = value;
-				ui.timeLeft = value;
+				ui.SetValue(value);
 			}
 		}
 
