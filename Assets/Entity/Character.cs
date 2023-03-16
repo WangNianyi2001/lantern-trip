@@ -1,10 +1,11 @@
+using System;
 using UnityEngine;
 
 namespace LanternTrip {
 	public partial class Character : Entity {
 		#region Properties
 
-		public uint ID = 0;
+		[NonSerialized] public uint ID = 0;
 		private static uint id = 0;
 
 		public int HP = 100;
@@ -27,13 +28,9 @@ namespace LanternTrip {
 			public Vector3 walkingVelocity;
 		}
 
-        public Character()
-        {
-			ID = id++;
-        }
-
 		#region Inspector members
 		public CharacterMovementSettings movementSettings;
+		public Animator animator;
 		#endregion
 
 		#region Core members
@@ -81,7 +78,7 @@ namespace LanternTrip {
 			speed *= movementSettings.walking.speed;
 			targetVelocity = targetVelocity.normalized * speed;
 			// Project onto the tangent plane of the current standing point
-			Vector3 normal = standingPoint.Value.normal;
+			Vector3 normal = standingPoint.HasValue ? standingPoint.Value.normal : -Physics.gravity;
 			float slopeAngle = SlopeByNormal(normal) / Mathf.PI * 180;
 			if(slopeAngle > movementSettings.walking.maxSlopeAngle)
 				return Vector3.zero;
@@ -94,6 +91,22 @@ namespace LanternTrip {
 			magnitude *= movementSettings.walking.accelerationGain;
 			magnitude = Mathf.Min(magnitude, movementSettings.walking.maxAcceleration);
 			return deltaVelocity.normalized * magnitude;
+		}
+		Vector3 CalculateZenithTorque() {
+			Vector3 up = Physics.gravity;
+			Vector3 actualAngularVelocity = rigidbody.angularVelocity;
+			Vector3 expected = rigidbody.velocity.ProjectOnto(up);
+			if(expected.magnitude < .1f)
+				return -actualAngularVelocity;
+
+			Vector3 expectedDirection = expected.normalized;
+			Vector3 actualDirection = transform.forward.ProjectOnto(up).normalized;
+			float deltaZenith = Mathf.Acos(Vector3.Dot(expectedDirection, actualDirection));
+			// Left or right
+			float direction = Mathf.Sign(Vector3.Dot(Vector3.Cross(actualDirection, expectedDirection), up));
+
+			Vector3 expectedAngularVelocity = up * deltaZenith * direction;
+			return expectedAngularVelocity - actualAngularVelocity;
 		}
 		#endregion
 
@@ -125,6 +138,8 @@ namespace LanternTrip {
 		protected new void Start() {
 			base.Start();
 
+			ID = id++;
+
 			// Initialize
 			movement.state = Movement.State.Freefalling;
 			movement.inputVelocity = Vector3.zero;
@@ -139,6 +154,13 @@ namespace LanternTrip {
 					rigidbody.AddForce(force);
 					break;
 			}
+			Vector3 zenithTorque = CalculateZenithTorque();
+			rigidbody.AddTorque(zenithTorque);
+
+			// Animator
+			animator.transform.localPosition = Vector3.zero;
+			animator.transform.localRotation = Quaternion.identity;
+			animator?.SetBool("Walking", movement.walkingVelocity.magnitude > .1f);
 		}
 		#endregion
 	}
