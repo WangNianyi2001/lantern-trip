@@ -1,8 +1,8 @@
 using UnityEngine;
-using UnityEngine.Events;
 using NaughtyAttributes;
 using System;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace LanternTrip {
@@ -88,14 +88,17 @@ namespace LanternTrip {
 			activeBonuses.Clear();
 			activeBonuses.AddRange(survivedList);
 		}
+
+		IEnumerator StartingCoroutine() {
+			yield return new WaitForEndOfFrame();
+			ui.slotTrack.Current = lanternSlots[0];
+		}
 		#endregion
 
 		#region Public interfaces
 		[Range(0, 10)] public float burningRate = 1;
 
-		public LanternSlot SelectedLanternSlot {
-			get => lanternSlots.FirstOrDefault(slot => slot.tinder == null);
-		}
+		public LanternSlot currentLanterSlot => ui.slotTrack.Current;
 
 		public bool burning = true;
 
@@ -106,9 +109,9 @@ namespace LanternTrip {
 				Debug.LogWarning("Tinder to load is null");
 				return false;
 			}
-			if(SelectedLanternSlot == null)
+			if(currentLanterSlot == null)
 				return false;
-			SelectedLanternSlot.Load(tinder, true);
+			currentLanterSlot.Load(tinder, true);
 			ActivateSatisfiedBonus();
 			return true;
 		}
@@ -129,6 +132,15 @@ namespace LanternTrip {
 		}
 
 		public void AddBonusTime(float time) => BonusTime += time;
+
+		public void ScrollSlot(int delta) {
+			if(currentLanterSlot == null) {
+				ui.slotTrack.Current = lanternSlots[0];
+				return;
+			}
+			int index = (currentLanterSlot.Index + lanternSlots.Length + delta) % lanternSlots.Length;
+			ui.slotTrack.Current = lanternSlots[index];
+		}
 		#endregion
 
 		#region Life cycle
@@ -141,6 +153,8 @@ namespace LanternTrip {
 			lanternSlots = new LanternSlot[settings.lanternSlotCount];
 			for(int i = 0; i < settings.lanternSlotCount; ++i)
 				lanternSlots[i] = new LanternSlot(ui.CreateLanternSlot());
+			
+			StartCoroutine(StartingCoroutine());
 		}
 
 		void FixedUpdate() {
@@ -149,7 +163,7 @@ namespace LanternTrip {
 				if(activeBonuses.Count > 0)
 					DeactivateUnsatisfiedBonus();
 				if(burntOut) {
-					//
+					Debug.Log("Tinders exhausted, thou shall die now");
 				}
 			}
 		}

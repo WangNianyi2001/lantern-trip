@@ -1,16 +1,8 @@
 using UnityEngine;
-using System;
 using System.Collections;
 
 namespace LanternTrip {
 	public partial class Character : Entity {
-		#region Properties
-		[NonSerialized] public uint ID = 0;
-		private static uint id = 0;
-		public int HP = 100;
-		public Tinder.Type element = Tinder.Type.Red;
-		#endregion
-
 		public struct Movement {
 			public enum State {
 				Passive,        // Character status is controlled externally.
@@ -36,6 +28,8 @@ namespace LanternTrip {
 		#endregion
 
 		#region Core methods
+		protected virtual Vector3 InputVelocity => movement.inputVelocity;
+
 		protected virtual void UpdateMovementState() {
 			switch(movement.state) {
 				case Movement.State.Walking:
@@ -58,10 +52,8 @@ namespace LanternTrip {
 					break;
 				case Movement.State.Jumping:
 					animationController.Jumping = true;
-					// TODO: Animation etc.
 					break;
 				case Movement.State.Landing:
-					// TODO: Animation etc.
 					movement.state = Movement.State.Walking;
 					break;
 			}
@@ -78,7 +70,8 @@ namespace LanternTrip {
 		}
 
 		protected virtual Vector3 CalculateWalkingVelocity() {
-			Vector3 targetVelocity = movement.inputVelocity;
+			Vector3 targetVelocity = InputVelocity;
+			Debug.Log(movement.inputVelocity);
 			float speed = targetVelocity.magnitude;
 			speed *= movementSettings.walking.speed;
 			targetVelocity = targetVelocity.normalized * speed;
@@ -158,7 +151,6 @@ namespace LanternTrip {
 		protected new void Start() {
 			base.Start();
 
-			ID = id++;
 			animationController = new CharacterAnimationController(this);
 
 			// Initialize

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using DSUsable = PixelCrushers.DialogueSystem.Wrappers.Usable;
 
 namespace LanternTrip {
 	[RequireComponent(typeof(Entity))]
@@ -14,7 +15,7 @@ namespace LanternTrip {
 		public UnityEvent onLeave;
 		public UnityEvent onDeliver;
 
-		private PixelCrushers.DialogueSystem.Usable usable;
+		private DSUsable usable;
 
 		public void OnApproach() {
 			if(!isActiveAndEnabled)
@@ -56,8 +57,9 @@ namespace LanternTrip {
 			trigger.onEnter.AddListener(_ => OnApproach());
 			trigger.onExit.AddListener(_ => OnLeave());
 
-			usable = trigger.gameObject.AddComponent<PixelCrushers.DialogueSystem.Usable>();
+			usable = trigger.gameObject.AddComponent<DSUsable>();
 			usable.overrideName = "Tinder Source";
+			usable.overrideUseMessage = "Load";
 		}
 	}
 }

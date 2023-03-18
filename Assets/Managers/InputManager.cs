@@ -34,6 +34,14 @@ namespace LanternTrip {
 		public void OnPlayerLoadTinder(InputValue _) {
 			gameplay.LoadTinderFromCurrentSource();
 		}
+
+		public void OnPlayerScrollSlot(InputValue value) {
+			float raw = value.Get<float>();
+			if(raw == 0)
+				return;
+			int delta = (int)Mathf.Sign(raw);
+			gameplay.ScrollSlot(delta);
+		}
 		#endregion
 
 		#region Life cycle

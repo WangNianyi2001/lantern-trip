@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 1453689368839176326}
   - component: {fileID: 850664010360470792}
   - component: {fileID: 2603426331845639940}
-  - component: {fileID: 939303130339776345}
   - component: {fileID: 4247896699230650457}
   m_Layer: 0
   m_Name: Protagonist
@@ -33,6 +32,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 866654468189255784}
+  - {fileID: 9108749173661373959}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -66,7 +66,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &939303130339776345
+--- !u!114 &4247896699230650457
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -75,10 +75,59 @@ MonoBehaviour:
   m_GameObject: {fileID: 1453689368839176325}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1db06959deeca74499642f65b31cbaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HP: 100
+  element: 1
+  movementSettings: {fileID: 11400000, guid: 080db88ecc3bc9c459f6c14ee65f94dc, type: 2}
+  animator: {fileID: 6550157389936534034}
+--- !u!1 &8982595078269450231
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9108749173661373959}
+  - component: {fileID: 5946209558946407320}
+  - component: {fileID: 3444528849180837676}
+  m_Layer: 0
+  m_Name: Dialogue System
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9108749173661373959
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8982595078269450231}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1453689368839176326}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5946209558946407320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8982595078269450231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 963d6358c55a0f44d8de57bee560f184, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useDefaultGUI: 1
+  useDefaultGUI: 0
   guiSkin: {fileID: 0}
   guiStyleName: label
   alignment: 1
@@ -86,9 +135,9 @@ MonoBehaviour:
   textStyle: 1
   textStyleColor: {r: 0, g: 0, b: 0, a: 1}
   defaultUseMessage: 
-  useKey: 101
+  useKey: 0
   useButton: 
-  enableTouch: 0
+  enableTouch: 1
   touchArea:
     origin: 0
     alignment: 0
@@ -107,29 +156,39 @@ MonoBehaviour:
     minPixelWidth: 0
     minPixelHeight: 0
   broadcastToChildren: 1
-  actorTransform: {fileID: 0}
+  actorTransform: {fileID: 1453689368839176326}
   onSelectedUsable:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 2e5037efd0717804cbfaf5bfbddcf40c, type: 2}
+        m_TargetAssemblyTypeName: LanternTrip.GameplayAgent, Assembly-CSharp
+        m_MethodName: Log
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Selecting, bitch
+          m_BoolArgument: 0
+        m_CallState: 2
   onDeselectedUsable:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &4247896699230650457
+--- !u!114 &3444528849180837676
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1453689368839176325}
+  m_GameObject: {fileID: 8982595078269450231}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1db06959deeca74499642f65b31cbaf, type: 3}
+  m_Script: {fileID: 11500000, guid: bf9481d631e872c45a9f702509a148ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 100
-  element: 1
-  movementSettings: {fileID: 11400000, guid: 080db88ecc3bc9c459f6c14ee65f94dc, type: 2}
-  animator: {fileID: 6550157389936534034}
+  tagSpecificElements: []
+  layerSpecificElements: []
 --- !u!1001 &832111331268206467
 PrefabInstance:
   m_ObjectHideFlags: 0

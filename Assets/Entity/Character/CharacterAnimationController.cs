@@ -14,6 +14,9 @@ namespace LanternTrip {
 		}
 
 		public void Update() {
+			if(!animator)
+				return;
+
 			animator.transform.localPosition = Vector3.zero;
 			animator.transform.localRotation = Quaternion.identity;
 
