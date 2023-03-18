@@ -10,6 +10,10 @@ namespace LanternTrip {
 		protected Dictionary<Collider, ContactPoint> contactingPoints = new Dictionary<Collider, ContactPoint>();
 		#endregion
 
+		#region Public interfaces
+		public IEnumerable<ContactPoint> ContactingPoints => contactingPoints.Values;
+		#endregion
+
 		#region Private method
 		void UpdateCollision(Collision collision) {
 			ContactPoint lowest = collision.contacts.Aggregate((a, b) => a.point.y < b.point.y ? a : b);

@@ -36,7 +36,7 @@ namespace LanternTrip {
 		#endregion
 
 		#region Core methods
-		void UpdateMovementState() {
+		protected virtual void UpdateMovementState() {
 			switch(movement.state) {
 				case Movement.State.Walking:
 					// If not standing on any point, freefall
@@ -72,12 +72,12 @@ namespace LanternTrip {
 				movement.state == Movement.State.Freefalling;
 		}
 
-		float SlopeByNormal(Vector3 normal) {
+		protected virtual float SlopeByNormal(Vector3 normal) {
 			float cos = Vector3.Dot(-Physics.gravity.normalized, normal.normalized);
 			return Mathf.Acos(cos);
 		}
 
-		Vector3 CalculateWalkingVelocity() {
+		protected virtual Vector3 CalculateWalkingVelocity() {
 			Vector3 targetVelocity = movement.inputVelocity;
 			float speed = targetVelocity.magnitude;
 			speed *= movementSettings.walking.speed;
@@ -90,17 +90,23 @@ namespace LanternTrip {
 			targetVelocity = targetVelocity - Vector3.Dot(targetVelocity, normal.normalized) * normal;
 			return targetVelocity;
 		}
-		Vector3 CalculateWalkingForce(Vector3 targetVelocity) {
+		protected virtual Vector3 CalculateWalkingForce(Vector3 targetVelocity) {
 			Vector3 deltaVelocity = targetVelocity - rigidbody.velocity;
 			float magnitude = deltaVelocity.magnitude;
 			magnitude *= movementSettings.walking.accelerationGain;
 			magnitude = Mathf.Min(magnitude, movementSettings.walking.maxAcceleration);
 			return deltaVelocity.normalized * magnitude;
 		}
-		Vector3 CalculateZenithTorque() {
-			Vector3 up = Physics.gravity;
+		protected virtual Vector3 CalculateExpectedDirection() {
+			if(movement.inputVelocity.magnitude > .01f)
+				return movement.inputVelocity;
+			return rigidbody.velocity.ProjectOnto(Physics.gravity);
+		}
+		protected virtual Vector3 CalculateZenithTorque() {
+			Vector3 up = Physics.gravity.normalized;
 			Vector3 actualAngularVelocity = rigidbody.angularVelocity;
-			Vector3 expected = rigidbody.velocity.ProjectOnto(up);
+
+			Vector3 expected = CalculateExpectedDirection();
 			if(expected.magnitude < .1f)
 				return -actualAngularVelocity;
 
@@ -111,7 +117,9 @@ namespace LanternTrip {
 			float direction = Mathf.Sign(Vector3.Dot(Vector3.Cross(actualDirection, expectedDirection), up));
 
 			Vector3 expectedAngularVelocity = up * deltaZenith * direction;
-			return expectedAngularVelocity - actualAngularVelocity;
+			float attenuation = (expectedAngularVelocity - actualAngularVelocity).magnitude;
+			attenuation = Mathf.Pow(attenuation, .5f);
+			return attenuation * movementSettings.walking.torqueGain * expectedAngularVelocity;
 		}
 
 		IEnumerator JumpCoroutine() {

@@ -16,7 +16,7 @@ namespace LanternTrip {
 		#endregion
 
 		#region Input handlers
-		void OnPlayerMove(InputValue value) {
+		public void OnPlayerMove(InputValue value) {
 			if(protagonist == null)
 				return;
 			Vector2 raw = value.Get<Vector2>();
@@ -27,8 +27,12 @@ namespace LanternTrip {
 			);
 		}
 
-		void OnPlayerJump(InputValue _) {
+		public void OnPlayerJump(InputValue _) {
 			protagonist?.Jump();
+		}
+
+		public void OnPlayerLoadTinder(InputValue _) {
+			gameplay.LoadTinderFromCurrentSource();
 		}
 		#endregion
 
