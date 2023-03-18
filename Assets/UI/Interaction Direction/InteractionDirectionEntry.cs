@@ -1,11 +1,11 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using TMPro;
 
 namespace LanternTrip {
 	public class InteractionDirectionEntry : MonoBehaviour {
-		[SerializeField] Text key;
-		[SerializeField] Text content;
+		[SerializeField] TextMeshProUGUI key;
+		[SerializeField] TextMeshProUGUI content;
 
 		public Key Key {
 			set => key.text = typeof(Key).GetEnumName(value).Substring(0, 1);
