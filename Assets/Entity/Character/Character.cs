@@ -114,10 +114,25 @@ namespace LanternTrip {
 			return attenuation * movementSettings.walking.torqueGain * expectedAngularVelocity;
 		}
 
+		public PhysicsUtility.CircularSector autoJumpSector => new PhysicsUtility.CircularSector {
+			center = transform.position + transform.up * movementSettings.jumping.autoJumpHeight,
+			normal = Physics.gravity.normalized,
+			radius = movementSettings.jumping.autoJumpRadius,
+			spanAngle = Mathf.PI,
+			startingDirection = transform.right,
+		};
+		protected virtual Vector3 jumpingImpulse => -Physics.gravity.normalized * movementSettings.jumping.speed / rigidbody.mass;
+		protected virtual Vector3 CalculateAutoJumpingImpulse() {
+			float castDistance = movementSettings.jumping.autoJumpHeight - movementSettings.jumping.autoJumpBottomSlitHeight;
+			RaycastHit? hit = PhysicsUtility.CircularSectorSweepCast(autoJumpSector, castDistance);
+			if(!hit.HasValue)
+				return Vector3.zero;
+			return jumpingImpulse;
+		}
+
 		IEnumerator JumpCoroutine() {
 			yield return new WaitForSeconds(movementSettings.jumping.preWaitingTime);
-			Vector3 impulse = -Physics.gravity.normalized * movementSettings.jumping.speed / rigidbody.mass;
-			rigidbody.AddForce(impulse, ForceMode.Impulse);
+			rigidbody.AddForce(jumpingImpulse, ForceMode.Impulse);
 			movement.state = Movement.State.Freefalling;
 
 		}
@@ -162,8 +177,12 @@ namespace LanternTrip {
 			switch(movement.state) {
 				case Movement.State.Walking:
 					movement.walkingVelocity = CalculateWalkingVelocity();
-					Vector3 force = CalculateWalkingForce(movement.walkingVelocity);
-					rigidbody.AddForce(force);
+					Vector3 walkingForce = CalculateWalkingForce(movement.walkingVelocity);
+					rigidbody.AddForce(walkingForce);
+					if(movementSettings.jumping.autoJump) {
+						Vector3 autoJumpingImpulse = CalculateAutoJumpingImpulse();
+						rigidbody.AddForce(autoJumpingImpulse, ForceMode.Impulse);
+					}
 					break;
 			}
 			Vector3 zenithTorque = CalculateZenithTorque();

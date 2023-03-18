@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using NaughtyAttributes;
 
 namespace LanternTrip {
 	[CreateAssetMenu(menuName = "LanternTrip/CharacterMovementSettings")]
@@ -18,6 +19,10 @@ namespace LanternTrip {
 		public struct Jumping {
 			[Range(0, 20)] public float speed;
 			[Range(0, 1)] public float preWaitingTime;
+			public bool autoJump;
+			[ShowIf("autoJump")] public float autoJumpRadius;
+			[ShowIf("autoJump")] public float autoJumpHeight;
+			[ShowIf("autoJump")] public float autoJumpBottomSlitHeight;
 		}
 		public Jumping jumping;
 	}
