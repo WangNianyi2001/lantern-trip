@@ -17,9 +17,6 @@ namespace LanternTrip {
 			if(!animator)
 				return;
 
-			animator.transform.localPosition = Vector3.zero;
-			animator.transform.localRotation = Quaternion.identity;
-
 			animator.SetBool("Moving", Moving);
 			animator.SetBool("Jumping", Jumping);
 			animator.SetBool("Freefalling", Freefalling);
