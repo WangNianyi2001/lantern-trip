@@ -71,7 +71,6 @@ namespace LanternTrip {
 
 		protected virtual Vector3 CalculateWalkingVelocity() {
 			Vector3 targetVelocity = InputVelocity;
-			Debug.Log(movement.inputVelocity);
 			float speed = targetVelocity.magnitude;
 			speed *= movementSettings.walking.speed;
 			targetVelocity = targetVelocity.normalized * speed;
