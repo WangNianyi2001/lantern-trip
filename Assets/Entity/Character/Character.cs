@@ -28,6 +28,8 @@ namespace LanternTrip {
 		#endregion
 
 		#region Core methods
+		protected virtual Vector3 InputVelocity => movement.inputVelocity;
+
 		protected virtual void UpdateMovementState() {
 			switch(movement.state) {
 				case Movement.State.Walking:
@@ -50,10 +52,8 @@ namespace LanternTrip {
 					break;
 				case Movement.State.Jumping:
 					animationController.Jumping = true;
-					// TODO: Animation etc.
 					break;
 				case Movement.State.Landing:
-					// TODO: Animation etc.
 					movement.state = Movement.State.Walking;
 					break;
 			}
@@ -70,7 +70,8 @@ namespace LanternTrip {
 		}
 
 		protected virtual Vector3 CalculateWalkingVelocity() {
-			Vector3 targetVelocity = movement.inputVelocity;
+			Vector3 targetVelocity = InputVelocity;
+			Debug.Log(movement.inputVelocity);
 			float speed = targetVelocity.magnitude;
 			speed *= movementSettings.walking.speed;
 			targetVelocity = targetVelocity.normalized * speed;
