@@ -17,7 +17,7 @@ namespace LanternTrip {
 
 		[Serializable]
 		public struct Jumping {
-			[Range(0, 20)] public float speed;
+			[Range(0, 4)] public float height;
 			[Range(0, 1)] public float preWaitingTime;
 			public bool autoJump;
 			[ShowIf("autoJump")] public float autoJumpRadius;

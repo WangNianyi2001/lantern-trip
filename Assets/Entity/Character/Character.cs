@@ -121,17 +121,19 @@ namespace LanternTrip {
 			spanAngle = Mathf.PI,
 			startingDirection = transform.right,
 		};
-		protected virtual Vector3 jumpingImpulse => -Physics.gravity.normalized * movementSettings.jumping.speed / rigidbody.mass;
-		protected virtual Vector3 CalculateAutoJumpingImpulse() {
+		protected virtual bool CalculateShouldAutoJump() {
 			float castDistance = movementSettings.jumping.autoJumpHeight - movementSettings.jumping.autoJumpBottomSlitHeight;
 			RaycastHit? hit = PhysicsUtility.CircularSectorSweepCast(autoJumpSector, castDistance);
-			if(!hit.HasValue)
-				return Vector3.zero;
-			return jumpingImpulse;
+			return hit.HasValue;
 		}
 
 		IEnumerator JumpCoroutine() {
 			yield return new WaitForSeconds(movementSettings.jumping.preWaitingTime);
+			float gravity = Physics.gravity.magnitude;
+			float targetHeight = movementSettings.jumping.height;
+			// v^2 = 2gh
+			float speed = Mathf.Sqrt(2 * gravity * targetHeight);
+			Vector3 jumpingImpulse = transform.up * speed / rigidbody.mass;
 			rigidbody.AddForce(jumpingImpulse, ForceMode.Impulse);
 			movement.state = Movement.State.Freefalling;
 
@@ -180,8 +182,8 @@ namespace LanternTrip {
 					Vector3 walkingForce = CalculateWalkingForce(movement.walkingVelocity);
 					rigidbody.AddForce(walkingForce);
 					if(movementSettings.jumping.autoJump) {
-						Vector3 autoJumpingImpulse = CalculateAutoJumpingImpulse();
-						rigidbody.AddForce(autoJumpingImpulse, ForceMode.Impulse);
+						if(CalculateShouldAutoJump())
+							Jump();
 					}
 					break;
 			}
