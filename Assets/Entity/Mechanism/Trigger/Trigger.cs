@@ -5,13 +5,11 @@ using NaughtyAttributes;
 namespace LanternTrip {
 	public class Trigger : MonoBehaviour {
 		public Entity entity;
-		public Collider volume;
+		public PixelCrushers.TriggerEvent agent;
 		public bool oneTime = false;
 		[SerializeField][Tag] string tagMask;
 		public UnityEvent<Collider> onEnter;
 		public UnityEvent<Collider> onExit;
-
-		private PixelCrushers.TriggerEvent agent;
 
 		public new bool enabled {
 			get => base.enabled;
@@ -37,12 +35,6 @@ namespace LanternTrip {
 		}
 
 		protected void Start() {
-			if(volume == null)
-				volume = GetComponent<Collider>();
-			if(volume == null)
-				Debug.LogWarning("Volume for trigger is null");
-
-			agent = volume.gameObject.AddComponent<PixelCrushers.TriggerEvent>();
 			TagMask = tagMask;
 
 			agent.onTriggerEnter.AddListener(obj => onEnter.Invoke(obj.GetComponent<Collider>()));
