@@ -6,7 +6,7 @@ namespace LanternTrip {
 
 		private void OnCollisionEnter(Collision collision) {
 			Enemy enemy = collision.gameObject.GetComponent<Enemy>();
-			enemy?.GainDamage(type);
+			enemy?.TakeArrowDamage(this);
 		}
 	}
 }
