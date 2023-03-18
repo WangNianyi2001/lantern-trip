@@ -1,14 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+namespace LanternTrip {
+	public class Npc : Character {
+		public int HP = 100;
+		public Tinder.Type type = Tinder.Type.Red;
 
-namespace LanternTrip
-{
-    public class NPC : Character
-    {
-        public void FollowTarget()
-        {
+		public void GainDamage(Tinder.Type type) {
+			if(this.type == type)
+				HP -= 100;
+			else
+				HP -= 50;
 
-        }
-    }
+			if(HP <= 0)
+				Die();
+		}
+
+		public void Die() {
+			//
+		}
+	}
 }

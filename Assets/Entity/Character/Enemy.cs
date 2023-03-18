@@ -1,4 +1,4 @@
 namespace LanternTrip {
-	public class Enemy : Character {
+	public class Enemy : Npc {
 	}
 }

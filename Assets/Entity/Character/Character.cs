@@ -1,16 +1,8 @@
 using UnityEngine;
-using System;
 using System.Collections;
 
 namespace LanternTrip {
 	public partial class Character : Entity {
-		#region Properties
-		[NonSerialized] public uint ID = 0;
-		private static uint id = 0;
-		public int HP = 100;
-		public Tinder.Type element = Tinder.Type.Red;
-		#endregion
-
 		public struct Movement {
 			public enum State {
 				Passive,        // Character status is controlled externally.
@@ -158,7 +150,6 @@ namespace LanternTrip {
 		protected new void Start() {
 			base.Start();
 
-			ID = id++;
 			animationController = new CharacterAnimationController(this);
 
 			// Initialize
