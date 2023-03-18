@@ -149,7 +149,7 @@ namespace LanternTrip {
 				if(activeBonuses.Count > 0)
 					DeactivateUnsatisfiedBonus();
 				if(burntOut) {
-					//
+					Debug.Log("Tinders exhausted, thou shall die now");
 				}
 			}
 		}
