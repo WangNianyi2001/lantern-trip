@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace LanternTrip {
 	public class LanternSlot {
 		Tinder _tinder = null;
@@ -23,6 +25,8 @@ namespace LanternTrip {
 				ui.SetValue(value);
 			}
 		}
+
+		public int Index => GameplayManager.instance.lanternSlots.ToList().IndexOf(this);
 
 		public bool Load(Tinder tinder, bool force = false) {
 			if(!force) {
