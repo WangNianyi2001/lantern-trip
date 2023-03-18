@@ -28,6 +28,9 @@ namespace LanternTrip {
 		public string TagMask {
 			get => tagMask;
 			set {
+				if(string.IsNullOrEmpty(value)) {
+					value = "Player";
+				}
 				tagMask = value;
 				agent.tagMask.m_tags = new string[] { tagMask };
 			}

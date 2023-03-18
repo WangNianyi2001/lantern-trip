@@ -97,7 +97,7 @@ namespace LanternTrip {
 			get => lanternSlots.FirstOrDefault(slot => slot.tinder == null);
 		}
 
-		bool burning = true;
+		public bool burning = true;
 
 		/// <summary>Try to load given type of tinder into first empty lantern and start burning.</summary>
 		/// <returns>`true` if succeed, `false` otherwise.</returns>
