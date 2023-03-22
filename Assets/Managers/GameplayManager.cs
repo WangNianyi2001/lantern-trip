@@ -24,6 +24,7 @@ namespace LanternTrip {
 		List<Bonus> activeBonuses = new List<Bonus>();
 		float chargeUpSpeed = 0;
 		float chargeUpValue = 0;
+		int safezoneCounter = 0;
 		#endregion
 
 		#region Core methods
@@ -143,6 +144,17 @@ namespace LanternTrip {
 			}
 			int index = (currentLanterSlot.Index + lanternSlots.Length + delta) % lanternSlots.Length;
 			ui.slotTrack.Current = lanternSlots[index];
+		}
+
+		public void EnterSafezone() {
+			++safezoneCounter;
+			burning = false;
+		}
+		public void ExitSafezone() {
+			--safezoneCounter;
+			if(safezoneCounter < 0)
+				safezoneCounter = 0;
+			burning = safezoneCounter == 0;
 		}
 
 		public bool HoldingBow {

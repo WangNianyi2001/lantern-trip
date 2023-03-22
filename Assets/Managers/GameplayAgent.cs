@@ -16,5 +16,8 @@ namespace LanternTrip {
 			get => gameplay.burning;
 			set => gameplay.burning = value;
 		}
+
+		public void EnterSafezone() => gameplay.EnterSafezone();
+		public void ExitSafezone() => gameplay.ExitSafezone();
 	}
 }
