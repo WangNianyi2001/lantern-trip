@@ -79,6 +79,8 @@ namespace LanternTrip {
 		}
 
 		protected virtual Vector3 CalculateWalkingVelocity() {
+			if(movement.state == Movement.State.Shooting)
+				return Vector3.zero;
 			Vector3 targetVelocity = InputVelocity;
 			float speed = targetVelocity.magnitude;
 			speed *= movementSettings.walking.speed;
@@ -93,6 +95,7 @@ namespace LanternTrip {
 		}
 		protected virtual Vector3 CalculateWalkingForce(Vector3 targetVelocity) {
 			Vector3 deltaVelocity = targetVelocity - rigidbody.velocity;
+			deltaVelocity = deltaVelocity.ProjectOnto(Physics.gravity);
 			float magnitude = deltaVelocity.magnitude;
 			magnitude *= movementSettings.walking.accelerationGain;
 			magnitude = Mathf.Min(magnitude, movementSettings.walking.maxAcceleration);
@@ -140,7 +143,7 @@ namespace LanternTrip {
 			float targetHeight = movementSettings.jumping.height;
 			// v^2 = 2gh
 			float speed = Mathf.Sqrt(2 * gravity * targetHeight);
-			Vector3 jumpingImpulse = transform.up * speed / rigidbody.mass;
+			Vector3 jumpingImpulse = transform.up * speed * rigidbody.mass;
 			rigidbody.AddForce(jumpingImpulse, ForceMode.Impulse);
 			movement.state = Movement.State.Freefalling;
 
@@ -168,7 +171,6 @@ namespace LanternTrip {
 					default: return true;
 					case Movement.State.Passive:
 					case Movement.State.Dead:
-					case Movement.State.Shooting:
 						return false;
 				}
 			}
