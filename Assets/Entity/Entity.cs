@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace LanternTrip {
 	[RequireComponent(typeof(Rigidbody))]
@@ -8,6 +9,10 @@ namespace LanternTrip {
 		#region Core members
 		protected new Rigidbody rigidbody;
 		protected Dictionary<Collider, ContactPoint> contactingPoints = new Dictionary<Collider, ContactPoint>();
+		#endregion
+
+		#region Public interfaces
+		public IEnumerable<ContactPoint> ContactingPoints => contactingPoints.Values;
 		#endregion
 
 		#region Private method

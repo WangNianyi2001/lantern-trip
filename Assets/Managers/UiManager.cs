@@ -6,6 +6,7 @@ namespace LanternTrip {
 		public SlotTrack slotTrack;
 		public GameObject lanternSlotUIPrefab;
 		public BonusSlotUI bonusSlot;
+		public GameObject interactionDirectionEntryPrefab;
 		#endregion
 
 		#region Public interfaces

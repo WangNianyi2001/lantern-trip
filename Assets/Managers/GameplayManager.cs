@@ -1,8 +1,8 @@
 using UnityEngine;
-using UnityEngine.Events;
 using NaughtyAttributes;
 using System;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace LanternTrip {
@@ -14,6 +14,7 @@ namespace LanternTrip {
 		new public Protagonist protagonist;
 		public InputManager input;
 		public UiManager ui;
+		public ShootManager shoot;
 		[Expandable] public GameSettings settings;
 		#endregion
 
@@ -21,6 +22,9 @@ namespace LanternTrip {
 		[NonSerialized] public LanternSlot[] lanternSlots;
 		float bonusTime;
 		List<Bonus> activeBonuses = new List<Bonus>();
+		float chargeUpSpeed = 0;
+		float chargeUpValue = 0;
+		int safezoneCounter = 0;
 		#endregion
 
 		#region Core methods
@@ -88,25 +92,37 @@ namespace LanternTrip {
 			activeBonuses.Clear();
 			activeBonuses.AddRange(survivedList);
 		}
+
+		IEnumerator StartingCoroutine() {
+			yield return new WaitForEndOfFrame();
+			ui.slotTrack.Current = lanternSlots[0];
+		}
 		#endregion
 
 		#region Public interfaces
 		[Range(0, 10)] public float burningRate = 1;
 
-		public LanternSlot SelectedLanternSlot {
-			get => lanternSlots.FirstOrDefault(slot => slot.tinder == null);
-		}
+		public LanternSlot currentLanterSlot => ui.slotTrack.Current;
 
-		bool burning = true;
+		[NonSerialized] public bool burning = false;
 
 		/// <summary>Try to load given type of tinder into first empty lantern and start burning.</summary>
 		/// <returns>`true` if succeed, `false` otherwise.</returns>
 		public bool LoadTinder(Tinder tinder) {
-			if(SelectedLanternSlot == null)
+			if(tinder == null) {
+				Debug.LogWarning("Tinder to load is null");
 				return false;
-			SelectedLanternSlot.Load(tinder, true);
+			}
+			if(currentLanterSlot == null)
+				return false;
+			currentLanterSlot.Load(tinder, true);
 			ActivateSatisfiedBonus();
 			return true;
+		}
+
+		public void LoadTinderFromCurrentSource() {
+			Debug.Log($"Load tinder from {TinderSource.current?.name ?? "((null))"}");
+			TinderSource.current?.Deliver();
 		}
 
 		public bool Burn(float time) {
@@ -120,6 +136,61 @@ namespace LanternTrip {
 		}
 
 		public void AddBonusTime(float time) => BonusTime += time;
+
+		public void ScrollSlot(int delta) {
+			if(currentLanterSlot == null) {
+				ui.slotTrack.Current = lanternSlots[0];
+				return;
+			}
+			int index = (currentLanterSlot.Index + lanternSlots.Length + delta) % lanternSlots.Length;
+			ui.slotTrack.Current = lanternSlots[index];
+		}
+
+		public void EnterSafezone() {
+			++safezoneCounter;
+			burning = false;
+		}
+		public void ExitSafezone() {
+			--safezoneCounter;
+			if(safezoneCounter < 0)
+				safezoneCounter = 0;
+			burning = safezoneCounter == 0;
+		}
+
+		public bool HoldingBow {
+			get => protagonist.animationController.HoldingBow;
+			set {
+				if(value == HoldingBow)
+					return;
+
+				protagonist.animationController.HoldingBow = value;
+				shoot.enabled = value;
+			}
+		}
+
+		[NonSerialized] public float previousChargeUpValue = 0;
+		public float ChargeUpSpeed {
+			get => chargeUpSpeed;
+			set {
+				value = Mathf.Clamp01(value);
+				chargeUpSpeed = value;
+				if(chargeUpSpeed == 0)
+					chargeUpValue = 0;
+			}
+		}
+		public float ChargeUpValue {
+			get => chargeUpValue;
+			set {
+				value = Mathf.Clamp01(value);
+				if(value != 0)
+					previousChargeUpValue = value;
+				if(HoldingBow && protagonist.CanShoot)
+					chargeUpValue = value;
+				else
+					chargeUpValue = 0;
+				protagonist.animationController.ChargingUpValue = chargeUpValue;
+			}
+		}
 		#endregion
 
 		#region Life cycle
@@ -132,6 +203,8 @@ namespace LanternTrip {
 			lanternSlots = new LanternSlot[settings.lanternSlotCount];
 			for(int i = 0; i < settings.lanternSlotCount; ++i)
 				lanternSlots[i] = new LanternSlot(ui.CreateLanternSlot());
+
+			StartCoroutine(StartingCoroutine());
 		}
 
 		void FixedUpdate() {
@@ -139,11 +212,11 @@ namespace LanternTrip {
 				bool burntOut = !Burn(Time.fixedDeltaTime * burningRate);
 				if(activeBonuses.Count > 0)
 					DeactivateUnsatisfiedBonus();
-				if(burntOut) {
-					//
-				}
+				if(burntOut)
+					protagonist.Die();
 			}
+			ChargeUpValue += ChargeUpSpeed * Time.fixedDeltaTime;
 		}
-			#endregion
-		}
+		#endregion
+	}
 }
