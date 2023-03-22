@@ -172,7 +172,7 @@ namespace LanternTrip {
 				value = Mathf.Clamp01(value);
 				if(value != 0)
 					previousChargeUpValue = value;
-				if(HoldingBow && protagonist.Idle)
+				if(HoldingBow && protagonist.CanShoot)
 					chargeUpValue = value;
 				else
 					chargeUpValue = 0;

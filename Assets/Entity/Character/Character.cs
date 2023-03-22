@@ -161,7 +161,13 @@ namespace LanternTrip {
 			}
 		}
 
-		public bool Idle => movement.state == Movement.State.Walking && InputVelocity.magnitude < .1f;
+		public bool CanShoot {
+			get {
+				bool idle = movement.state == Movement.State.Walking && InputVelocity.magnitude < .1f;
+				bool charging = movement.state == Movement.State.Shooting;
+				return idle || charging;
+			}
+		}
 
 		public void Jump() {
 			if(movement.state != Movement.State.Walking)
