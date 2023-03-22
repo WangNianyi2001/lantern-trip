@@ -100,7 +100,7 @@ namespace LanternTrip {
 
 		public LanternSlot currentLanterSlot => ui.slotTrack.Current;
 
-		public bool burning = true;
+		[NonSerialized] public bool burning = false;
 
 		/// <summary>Try to load given type of tinder into first empty lantern and start burning.</summary>
 		/// <returns>`true` if succeed, `false` otherwise.</returns>
@@ -153,7 +153,7 @@ namespace LanternTrip {
 			lanternSlots = new LanternSlot[settings.lanternSlotCount];
 			for(int i = 0; i < settings.lanternSlotCount; ++i)
 				lanternSlots[i] = new LanternSlot(ui.CreateLanternSlot());
-			
+
 			StartCoroutine(StartingCoroutine());
 		}
 
@@ -163,10 +163,10 @@ namespace LanternTrip {
 				if(activeBonuses.Count > 0)
 					DeactivateUnsatisfiedBonus();
 				if(burntOut) {
-					Debug.Log("Tinders exhausted, thou shall die now");
+					protagonist.Die();
 				}
 			}
 		}
-			#endregion
-		}
+		#endregion
+	}
 }
