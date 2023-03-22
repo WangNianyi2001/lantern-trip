@@ -40,6 +40,15 @@
                     "processors": "Normalize(min=-1,max=1),Invert",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "PlayerLook",
+                    "type": "Value",
+                    "id": "9efcee24-f369-4307-9da9-331e0c89e01f",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -128,6 +137,28 @@
                     "processors": "",
                     "groups": "PC",
                     "action": "PlayerScrollSlot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "299f8b89-3adb-4089-916b-7f7ee3d36dfb",
+                    "path": "<Pointer>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PlayerLook",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e5601e48-bbed-40ec-a7b2-da0fa70d5fbf",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PlayerLook",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
