@@ -1,15 +1,22 @@
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LanternTrip {
-	[RequireComponent(typeof(Camera))]
 	public class ShootManager : ManagerBase {
-		new Camera camera;
 		Transform targetAnchor;
+		Vector3 outVelocity;
+		Vector3 outPosition;
 
+		public new Camera camera;
 		public GameObject arrowPrefab;
 		public GameObject targetPrefab;
+		public LineRenderer lr;
 
-		public Vector3? Position {
+		Vector3 forward => protagonist.transform.forward;
+		Vector3 upward => protagonist.transform.up;
+
+		public Vector3? TargetPosition {
 			get => targetAnchor.gameObject.activeSelf ? targetAnchor.position : null;
 			set {
 				if(!value.HasValue) {
@@ -22,22 +29,27 @@ namespace LanternTrip {
 		}
 
 		public void MakeShoot() {
-			float speedMin = protagonist.speedRange.x, speedMax = protagonist.speedRange.y;
-			float speed = Mathf.Lerp(speedMin, speedMax, gameplay.previousChargeUpValue);
-			Vector3 forward = protagonist.transform.forward;
-			Vector3 upward = protagonist.transform.up;
-			Vector3 velocity = forward * speed + upward * protagonist.verticalSpeed;
-
-			Vector3 outPosition = protagonist.transform.position + forward + upward;
-
-			GameObject arrowObj = Instantiate(arrowPrefab, outPosition, Quaternion.LookRotation(forward, upward));
+			GameObject arrowObj = Instantiate(arrowPrefab, outPosition, Quaternion.LookRotation(forward, protagonist.transform.up));
 			Arrow arrow = arrowObj.GetComponent<Arrow>();
 			arrow.Tinder = gameplay.currentLanterSlot.tinder;
-			arrow.GetComponent<Rigidbody>().velocity = velocity;
+			arrow.GetComponent<Rigidbody>().velocity = outVelocity;
+		}
+
+		public IEnumerable<Vector3> CalculateProjectilePositions() {
+			float dt = .1f;
+			Vector3 pos = outPosition;
+			Vector3 vel = outVelocity;
+			Vector3 dv = Physics.gravity * dt;
+			for(float t = 0; t < 10; t += dt) {
+				vel += dv;
+				pos += vel * dt;
+				if(pos.y < 0)
+					break;
+				yield return pos;
+			}
 		}
 
 		void Start() {
-			camera = GetComponent<Camera>();
 			targetAnchor = Instantiate(targetPrefab, transform).transform;
 		}
 
@@ -45,16 +57,24 @@ namespace LanternTrip {
 			Ray ray = camera.ScreenPointToRay(gameplay.input.MousePosition);
 			RaycastHit hit;
 			Physics.Raycast(ray, out hit, Mathf.Infinity, ~0, QueryTriggerInteraction.Ignore);
-			Position = hit.collider ? hit.point : null;
+			TargetPosition = hit.collider ? hit.point : null;
 			targetAnchor.rotation = Quaternion.identity;
-		}
 
-		void OnEnable() {
-			//
+			// Update velocity
+			lr.enabled = protagonist.movement.state == Character.Movement.State.Shooting;
+			if(lr.enabled) {
+				float speedMin = protagonist.speedRange.x, speedMax = protagonist.speedRange.y;
+				float speed = Mathf.Lerp(speedMin, speedMax, gameplay.previousChargeUpValue);
+				outVelocity = forward * speed + upward * protagonist.verticalSpeed;
+				outPosition = protagonist.transform.position + forward + upward;
+				Vector3[] positions = CalculateProjectilePositions().ToArray();
+				lr.positionCount = positions.Length;
+				lr.SetPositions(positions);
+			}
 		}
 
 		void OnDisable() {
-			Position = null;
+			TargetPosition = null;
 		}
 	}
 }

@@ -24,7 +24,7 @@ namespace LanternTrip {
 
 		protected override Vector3 CalculateExpectedDirection() {
 			if(movement.state == Movement.State.Shooting) {
-				Vector3? target = GameplayManager.instance.shoot.Position;
+				Vector3? target = GameplayManager.instance.shoot.TargetPosition;
 				if(!target.HasValue)
 					return transform.forward;
 				Vector3 offset = target.Value - transform.position;
