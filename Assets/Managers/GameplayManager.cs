@@ -156,23 +156,24 @@ namespace LanternTrip {
 			}
 		}
 
+		[NonSerialized] public float previousChargeUpValue = 0;
 		public float ChargeUpSpeed {
 			get => chargeUpSpeed;
 			set {
 				value = Mathf.Clamp01(value);
 				chargeUpSpeed = value;
-				if(chargeUpSpeed == 0) {
-					if(chargeUpValue > 0)
-						protagonist.Shoot();
+				if(chargeUpSpeed == 0)
 					chargeUpValue = 0;
-				}
 			}
 		}
 		public float ChargeUpValue {
 			get => chargeUpValue;
 			set {
+				value = Mathf.Clamp01(value);
+				if(value != 0)
+					previousChargeUpValue = value;
 				if(HoldingBow && protagonist.Idle)
-					chargeUpValue = Mathf.Clamp01(value);
+					chargeUpValue = value;
 				else
 					chargeUpValue = 0;
 				protagonist.animationController.ChargingUpValue = chargeUpValue;

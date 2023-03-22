@@ -10,7 +10,7 @@ namespace LanternTrip {
 		public GameObject targetPrefab;
 
 		public Vector3? Position {
-			get => targetAnchor.gameObject.active ? targetAnchor.position : null;
+			get => targetAnchor.gameObject.activeSelf ? targetAnchor.position : null;
 			set {
 				if(!value.HasValue) {
 					targetAnchor.gameObject.SetActive(false);
@@ -19,6 +19,19 @@ namespace LanternTrip {
 				targetAnchor.gameObject.SetActive(true);
 				targetAnchor.position = value.Value;
 			}
+		}
+
+		public void MakeShoot() {
+			float strength = gameplay.previousChargeUpValue * 10;
+			Vector3 forward = protagonist.transform.forward;
+			Vector3 upward = protagonist.transform.up;
+			Vector3 velocity = forward * strength + upward;
+
+			Vector3 outPosition = protagonist.transform.position + forward + upward;
+
+			GameObject arrowObj = Instantiate(arrowPrefab, outPosition, Quaternion.LookRotation(forward, upward));
+			Arrow arrow = arrowObj.GetComponent<Arrow>();
+			arrow.GetComponent<Rigidbody>().velocity = velocity;
 		}
 
 		void Start() {
