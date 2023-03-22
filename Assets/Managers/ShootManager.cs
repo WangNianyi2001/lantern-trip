@@ -32,6 +32,7 @@ namespace LanternTrip {
 
 			GameObject arrowObj = Instantiate(arrowPrefab, outPosition, Quaternion.LookRotation(forward, upward));
 			Arrow arrow = arrowObj.GetComponent<Arrow>();
+			arrow.Tinder = gameplay.currentLanterSlot.tinder;
 			arrow.GetComponent<Rigidbody>().velocity = velocity;
 		}
 

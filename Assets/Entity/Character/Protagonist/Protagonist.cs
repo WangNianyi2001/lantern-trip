@@ -39,5 +39,12 @@ namespace LanternTrip {
 
 			Debug.Log("Died");
 		}
+
+		public void Shoot() {
+			GameplayManager gameplay = GameplayManager.instance;
+			if(gameplay.Burn(1)) {
+				gameplay.shoot.MakeShoot();
+			}
+		}
 	}
 }

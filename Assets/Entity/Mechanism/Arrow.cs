@@ -5,7 +5,8 @@ namespace LanternTrip {
 	[RequireComponent(typeof(Entity))]
 	public class Arrow : MonoBehaviour {
 		public Entity entity;
-		public Tinder.Type type;
+		public ParticleSystem particle;
+		Tinder tinder;
 
 		bool firstCollision = false;
 
@@ -14,10 +15,20 @@ namespace LanternTrip {
 			Destroy(gameObject);
 		}
 
+		public Tinder Tinder {
+			get => tinder;
+			set {
+				tinder = value;
+				particle.startColor = tinder?.mainColor ?? Color.white;
+			}
+		}
+
 		private void OnCollisionEnter(Collision collision) {
 			if(firstCollision)
 				return;
 			firstCollision = true;
+
+			particle.Stop();
 
 			Enemy enemy = collision.gameObject.GetComponent<Enemy>();
 			enemy?.TakeArrowDamage(this);
