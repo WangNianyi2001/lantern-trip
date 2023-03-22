@@ -43,6 +43,7 @@ namespace LanternTrip {
 				case Movement.State.Freefalling:
 					animationController.Freefalling = true;
 					animationController.Jumping = false;
+
 					// If landed, land
 					if(standingPoint.HasValue) {
 						float fallingSpeed = Vector3.Dot(rigidbody.velocity, Physics.gravity);
@@ -191,8 +192,15 @@ namespace LanternTrip {
 					}
 					break;
 			}
-			Vector3 zenithTorque = CalculateZenithTorque();
-			rigidbody.AddTorque(zenithTorque);
+			switch(movement.state) {
+				case Movement.State.Passive:
+				case Movement.State.Dead:
+					break;
+				default:
+					Vector3 zenithTorque = CalculateZenithTorque();
+					rigidbody.AddTorque(zenithTorque);
+					break;
+			}
 
 			animationController.Update();
 		}

@@ -49,6 +49,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "PlayerBow",
+                    "type": "Button",
+                    "id": "9880a837-7159-4af4-88ce-46788f0962da",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -146,19 +155,19 @@
                     "path": "<Pointer>/delta",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "PC",
                     "action": "PlayerLook",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "e5601e48-bbed-40ec-a7b2-da0fa70d5fbf",
-                    "path": "<Gamepad>/rightStick",
+                    "id": "0c7baef7-253c-434d-bf86-e5e5569e94b8",
+                    "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "PlayerLook",
+                    "groups": "PC",
+                    "action": "PlayerBow",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

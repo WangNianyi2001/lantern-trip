@@ -42,6 +42,10 @@ namespace LanternTrip {
 			int delta = (int)Mathf.Sign(raw);
 			gameplay.ScrollSlot(delta);
 		}
+
+		public void OnPlayerBow(InputValue _) {
+			protagonist.HoldingBow ^= true;
+		}
 		#endregion
 
 		#region Life cycle
