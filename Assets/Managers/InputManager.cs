@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cinemachine;
+using NaughtyAttributes;
 
 namespace LanternTrip {
 	[RequireComponent(typeof(PlayerInput))]
@@ -12,11 +14,19 @@ namespace LanternTrip {
 		PlayerInput playerInput;
 		Vector2 mousePosition = new Vector2();
 		Vector3 rawInputMovement;
+		bool isOrientingCamera = false;
+		float orbitDistance = 1;
+		CinemachineOrbitalTransposer orbit;
+		Vector2 targetOrbitOrientation, actualOrbitOrientation;
 		#endregion
 
 		#region Inspector members
 		public InputCoordinate coordinate;
 		new public Camera camera;
+		public CinemachineVirtualCamera orbitalCamera;
+		[MinMaxSlider(0, 90)] public Vector2 orbitAzimuthRange;
+		[Range(0, 2)] public float orbitGain;
+		[Range(0, 5)] public float orbitDamp;
 		#endregion
 
 		#region Public interfaces
@@ -65,6 +75,18 @@ namespace LanternTrip {
 			float raw = value.Get<float>();
 			gameplay.ChargeUpSpeed = raw;
 		}
+
+		public void OnPlayerToggleOrientCamera(InputValue value) {
+			isOrientingCamera = value.Get<float>() > .5f;
+		}
+		public void OnPlayerOrientCamera(InputValue value) {
+			if(!isOrientingCamera || !orbit)
+				return;
+
+			Vector2 raw = value.Get<Vector2>() * orbitGain;
+			targetOrbitOrientation.y += raw.x;
+			targetOrbitOrientation.x += raw.y;
+		}
 		#endregion
 
 		#region Life cycle
@@ -74,21 +96,42 @@ namespace LanternTrip {
 
 			// Initialize main game
 			GainPlayerControl();
+
+			if(orbitalCamera) {
+				var transposer = orbitalCamera.GetCinemachineComponent(CinemachineCore.Stage.Body);
+				if(transposer is CinemachineOrbitalTransposer) {
+					orbit = transposer as CinemachineOrbitalTransposer;
+					orbitDistance = orbit.m_FollowOffset.magnitude;
+				}
+			}
 		}
 
 		void FixedUpdate() {
+			// Movement
 			Vector3 v = rawInputMovement;
+			Quaternion q = Quaternion.identity;
 			switch(coordinate) {
 				case InputCoordinate.World:
 					break;
 				case InputCoordinate.Protagonist:
-					v = protagonist.transform.localToWorldMatrix.MultiplyVector(v);
+					q = protagonist.transform.rotation;
 					break;
 				case InputCoordinate.Camera:
-					v = camera.transform.localToWorldMatrix.MultiplyVector(v);
+					q = camera.transform.rotation;
 					break;
 			}
+			Vector3 euler = q.eulerAngles;
+			euler.x = 0;
+			q = Quaternion.Euler(euler);
+			v = q * v;
 			protagonist.movement.inputVelocity = v;
+
+			// Orbital camera orientation
+			if(orbit) {
+				targetOrbitOrientation.x = Mathf.Clamp(targetOrbitOrientation.x, orbitAzimuthRange.x, orbitAzimuthRange.y);
+				actualOrbitOrientation = Vector2.Lerp(actualOrbitOrientation, targetOrbitOrientation, Mathf.Exp(-orbitDamp));
+				orbit.m_FollowOffset = Quaternion.Euler(actualOrbitOrientation) * Vector3.forward * -orbitDistance;
+			}
 		}
 		#endregion
 	}
