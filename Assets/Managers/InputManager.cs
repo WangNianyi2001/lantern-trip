@@ -6,6 +6,7 @@ namespace LanternTrip {
 	public class InputManager : ManagerBase {
 		#region Core members
 		PlayerInput playerInput;
+		Vector2 mousePosition = new Vector2();
 		#endregion
 
 		#region Public interfaces
@@ -13,6 +14,8 @@ namespace LanternTrip {
 			playerInput.SwitchCurrentActionMap("Player");
 			playerInput.ActivateInput();
 		}
+
+		public Vector2 MousePosition => mousePosition;
 		#endregion
 
 		#region Input handlers
@@ -45,6 +48,15 @@ namespace LanternTrip {
 
 		public void OnPlayerBow(InputValue _) {
 			gameplay.HoldingBow ^= true;
+		}
+
+		public void OnPlayerAim(InputValue value) {
+			mousePosition = value.Get<Vector2>();
+		}
+
+		public void OnPlayerChargeUp(InputValue value) {
+			float raw = value.Get<float>();
+			gameplay.ChargeUpSpeed = raw;
 		}
 		#endregion
 

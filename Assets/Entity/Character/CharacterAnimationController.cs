@@ -10,6 +10,7 @@ namespace LanternTrip {
 		public bool Freefalling = false;
 		public bool Dead = false;
 		public bool HoldingBow = false;
+		public float ChargingUpValue = 0;
 
 		public CharacterAnimationController(Character character) {
 			this.character = character;
@@ -24,6 +25,7 @@ namespace LanternTrip {
 			animator.SetBool("Freefalling", Freefalling);
 			animator.SetBool("Dead", Dead);
 			animator.SetBool("Holding Bow", HoldingBow);
+			animator.SetFloat("Charging Up", ChargingUpValue);
 		}
 	}
 }

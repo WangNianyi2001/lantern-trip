@@ -11,6 +11,7 @@ namespace LanternTrip {
 				Jumping,        // Character has just jumped.
 				Landing,        // Character has just landed on ground.
 				Dead,
+				Shooting,
 			}
 			public State state;
 
@@ -159,6 +160,8 @@ namespace LanternTrip {
 				return result;
 			}
 		}
+
+		public bool Idle => movement.state == Movement.State.Walking && InputVelocity.magnitude < .1f;
 
 		public void Jump() {
 			if(movement.state != Movement.State.Walking)
