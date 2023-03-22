@@ -34,7 +34,8 @@ namespace LanternTrip {
 
 		public void TakeDamage(int amount) => hp -= amount;
 
-		public virtual void Die() {
+		public override void Die() {
+			base.Die();
 			Debug.Log($"NPC {profile.name} died");
 		}
 
