@@ -71,7 +71,6 @@ namespace LanternTrip {
 
 		protected virtual Vector3 CalculateWalkingVelocity() {
 			Vector3 targetVelocity = InputVelocity;
-			Debug.Log(movement.inputVelocity);
 			float speed = targetVelocity.magnitude;
 			speed *= movementSettings.walking.speed;
 			targetVelocity = targetVelocity.normalized * speed;
@@ -115,10 +114,27 @@ namespace LanternTrip {
 			return attenuation * movementSettings.walking.torqueGain * expectedAngularVelocity;
 		}
 
+		public PhysicsUtility.CircularSector autoJumpSector => new PhysicsUtility.CircularSector {
+			center = transform.position + transform.up * movementSettings.jumping.autoJumpHeight,
+			normal = Physics.gravity.normalized,
+			radius = movementSettings.jumping.autoJumpRadius,
+			spanAngle = Mathf.PI,
+			startingDirection = transform.right,
+		};
+		protected virtual bool CalculateShouldAutoJump() {
+			float castDistance = movementSettings.jumping.autoJumpHeight - movementSettings.jumping.autoJumpBottomSlitHeight;
+			RaycastHit? hit = PhysicsUtility.CircularSectorSweepCast(autoJumpSector, castDistance);
+			return hit.HasValue;
+		}
+
 		IEnumerator JumpCoroutine() {
 			yield return new WaitForSeconds(movementSettings.jumping.preWaitingTime);
-			Vector3 impulse = -Physics.gravity.normalized * movementSettings.jumping.speed / rigidbody.mass;
-			rigidbody.AddForce(impulse, ForceMode.Impulse);
+			float gravity = Physics.gravity.magnitude;
+			float targetHeight = movementSettings.jumping.height;
+			// v^2 = 2gh
+			float speed = Mathf.Sqrt(2 * gravity * targetHeight);
+			Vector3 jumpingImpulse = transform.up * speed / rigidbody.mass;
+			rigidbody.AddForce(jumpingImpulse, ForceMode.Impulse);
 			movement.state = Movement.State.Freefalling;
 
 		}
@@ -163,8 +179,12 @@ namespace LanternTrip {
 			switch(movement.state) {
 				case Movement.State.Walking:
 					movement.walkingVelocity = CalculateWalkingVelocity();
-					Vector3 force = CalculateWalkingForce(movement.walkingVelocity);
-					rigidbody.AddForce(force);
+					Vector3 walkingForce = CalculateWalkingForce(movement.walkingVelocity);
+					rigidbody.AddForce(walkingForce);
+					if(movementSettings.jumping.autoJump) {
+						if(CalculateShouldAutoJump())
+							Jump();
+					}
 					break;
 			}
 			Vector3 zenithTorque = CalculateZenithTorque();

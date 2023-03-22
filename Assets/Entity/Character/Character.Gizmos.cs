@@ -32,6 +32,13 @@ namespace LanternTrip {
 				// Zenith torque
 				Gizmos.color = Color.green;
 				Gizmos.DrawRay(rigidbody.position, -CalculateZenithTorque());
+
+				// Auto jumping sector
+				if(movementSettings.jumping.autoJump) {
+					Gizmos.color = Color.white;
+					float distance = movementSettings.jumping.autoJumpHeight - movementSettings.jumping.autoJumpBottomSlitHeight;
+					PhysicsUtility.DrawCircularSectorSweepGizmos(autoJumpSector, distance);
+				}
 			}
 		}
 	}
