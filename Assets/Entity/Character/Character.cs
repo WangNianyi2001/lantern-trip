@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace LanternTrip {
 	public partial class Character : Entity {
@@ -161,6 +162,18 @@ namespace LanternTrip {
 			}
 		}
 
+		public bool CanMove {
+			get {
+				switch(movement.state) {
+					default: return true;
+					case Movement.State.Passive:
+					case Movement.State.Dead:
+					case Movement.State.Shooting:
+						return false;
+				}
+			}
+		}
+
 		public bool CanShoot {
 			get {
 				bool idle = movement.state == Movement.State.Walking && InputVelocity.magnitude < .1f;
@@ -194,16 +207,16 @@ namespace LanternTrip {
 
 		protected void FixedUpdate() {
 			UpdateMovementState();
-			switch(movement.state) {
-				case Movement.State.Walking:
-					movement.walkingVelocity = CalculateWalkingVelocity();
-					Vector3 walkingForce = CalculateWalkingForce(movement.walkingVelocity);
-					rigidbody.AddForce(walkingForce);
-					if(movementSettings.jumping.autoJump) {
-						if(CalculateShouldAutoJump())
-							Jump();
-					}
-					break;
+			if(CanMove) {
+				movement.walkingVelocity = CalculateWalkingVelocity();
+				Vector3 walkingForce = CalculateWalkingForce(movement.walkingVelocity);
+				rigidbody.AddForce(walkingForce);
+			}
+			if(movement.state == Movement.State.Walking) {
+				if(movementSettings.jumping.autoJump) {
+					if(CalculateShouldAutoJump())
+						Jump();
+				}
 			}
 			switch(movement.state) {
 				case Movement.State.Passive:
