@@ -173,7 +173,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2810346448126698523, guid: 9827efcfa323cbd4ba28e25477dd7cd7, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 2810346448126698523, guid: 9827efcfa323cbd4ba28e25477dd7cd7, type: 3}
       propertyPath: m_SizeDelta.y
@@ -656,7 +656,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 6b7213a932c8fa647a51fdfed616ed1e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -688,13 +688,22 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.23952103
-        inSlope: 0
-        outSlope: 0
+        value: 0.12574768
+        inSlope: 0.8323946
+        outSlope: 0.8323946
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.33333334
+        outWeight: 0.12085561
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0.9270151
+        outSlope: 0.9270151
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.13048124
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -728,7 +737,7 @@ LineRenderer:
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
-    numCapVertices: 0
+    numCapVertices: 3
     alignment: 0
     textureMode: 0
     shadowBias: 0.5
