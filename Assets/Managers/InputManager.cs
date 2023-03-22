@@ -44,7 +44,7 @@ namespace LanternTrip {
 		}
 
 		public void OnPlayerBow(InputValue _) {
-			protagonist.HoldingBow ^= true;
+			gameplay.HoldingBow ^= true;
 		}
 		#endregion
 

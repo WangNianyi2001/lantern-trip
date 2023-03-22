@@ -12,6 +12,7 @@ namespace LanternTrip {
 
 		#region Inspector members
 		new public Protagonist protagonist;
+		new public Camera camera;
 		public InputManager input;
 		public UiManager ui;
 		[Expandable] public GameSettings settings;
@@ -140,6 +141,16 @@ namespace LanternTrip {
 			}
 			int index = (currentLanterSlot.Index + lanternSlots.Length + delta) % lanternSlots.Length;
 			ui.slotTrack.Current = lanternSlots[index];
+		}
+
+		public bool HoldingBow {
+			get => protagonist.animationController.HoldingBow;
+			set {
+				if(value == HoldingBow)
+					return;
+
+				protagonist.animationController.HoldingBow = value;
+			}
 		}
 		#endregion
 
