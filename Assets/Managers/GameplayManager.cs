@@ -24,6 +24,7 @@ namespace LanternTrip {
 		List<Bonus> activeBonuses = new List<Bonus>();
 		float chargeUpSpeed = 0;
 		float chargeUpValue = 0;
+		int safezoneCounter = 0;
 		#endregion
 
 		#region Core methods
@@ -145,6 +146,17 @@ namespace LanternTrip {
 			ui.slotTrack.Current = lanternSlots[index];
 		}
 
+		public void EnterSafezone() {
+			++safezoneCounter;
+			burning = false;
+		}
+		public void ExitSafezone() {
+			--safezoneCounter;
+			if(safezoneCounter < 0)
+				safezoneCounter = 0;
+			burning = safezoneCounter == 0;
+		}
+
 		public bool HoldingBow {
 			get => protagonist.animationController.HoldingBow;
 			set {
@@ -172,7 +184,7 @@ namespace LanternTrip {
 				value = Mathf.Clamp01(value);
 				if(value != 0)
 					previousChargeUpValue = value;
-				if(HoldingBow && protagonist.Idle)
+				if(HoldingBow && protagonist.CanShoot)
 					chargeUpValue = value;
 				else
 					chargeUpValue = 0;
@@ -201,7 +213,7 @@ namespace LanternTrip {
 				if(activeBonuses.Count > 0)
 					DeactivateUnsatisfiedBonus();
 				if(burntOut)
-					protagonist.movement.state = Character.Movement.State.Dead;
+					protagonist.Die();
 			}
 			ChargeUpValue += ChargeUpSpeed * Time.fixedDeltaTime;
 		}

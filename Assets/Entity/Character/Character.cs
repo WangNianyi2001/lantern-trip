@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace LanternTrip {
 	public partial class Character : Entity {
@@ -78,6 +79,8 @@ namespace LanternTrip {
 		}
 
 		protected virtual Vector3 CalculateWalkingVelocity() {
+			if(movement.state == Movement.State.Shooting)
+				return Vector3.zero;
 			Vector3 targetVelocity = InputVelocity;
 			float speed = targetVelocity.magnitude;
 			speed *= movementSettings.walking.speed;
@@ -92,6 +95,7 @@ namespace LanternTrip {
 		}
 		protected virtual Vector3 CalculateWalkingForce(Vector3 targetVelocity) {
 			Vector3 deltaVelocity = targetVelocity - rigidbody.velocity;
+			deltaVelocity = deltaVelocity.ProjectOnto(Physics.gravity);
 			float magnitude = deltaVelocity.magnitude;
 			magnitude *= movementSettings.walking.accelerationGain;
 			magnitude = Mathf.Min(magnitude, movementSettings.walking.maxAcceleration);
@@ -139,7 +143,7 @@ namespace LanternTrip {
 			float targetHeight = movementSettings.jumping.height;
 			// v^2 = 2gh
 			float speed = Mathf.Sqrt(2 * gravity * targetHeight);
-			Vector3 jumpingImpulse = transform.up * speed / rigidbody.mass;
+			Vector3 jumpingImpulse = transform.up * speed * rigidbody.mass;
 			rigidbody.AddForce(jumpingImpulse, ForceMode.Impulse);
 			movement.state = Movement.State.Freefalling;
 
@@ -161,13 +165,34 @@ namespace LanternTrip {
 			}
 		}
 
-		public bool Idle => movement.state == Movement.State.Walking && InputVelocity.magnitude < .1f;
+		public bool CanMove {
+			get {
+				switch(movement.state) {
+					default: return true;
+					case Movement.State.Passive:
+					case Movement.State.Dead:
+						return false;
+				}
+			}
+		}
+
+		public bool CanShoot {
+			get {
+				bool idle = movement.state == Movement.State.Walking && InputVelocity.magnitude < .1f;
+				bool charging = movement.state == Movement.State.Shooting;
+				return idle || charging;
+			}
+		}
 
 		public void Jump() {
 			if(movement.state != Movement.State.Walking)
 				return;
 			movement.state = Movement.State.Jumping;
 			StartCoroutine(JumpCoroutine());
+		}
+
+		public virtual void Die() {
+			movement.state = Movement.State.Dead;
 		}
 		#endregion
 
@@ -184,16 +209,16 @@ namespace LanternTrip {
 
 		protected void FixedUpdate() {
 			UpdateMovementState();
-			switch(movement.state) {
-				case Movement.State.Walking:
-					movement.walkingVelocity = CalculateWalkingVelocity();
-					Vector3 walkingForce = CalculateWalkingForce(movement.walkingVelocity);
-					rigidbody.AddForce(walkingForce);
-					if(movementSettings.jumping.autoJump) {
-						if(CalculateShouldAutoJump())
-							Jump();
-					}
-					break;
+			if(CanMove) {
+				movement.walkingVelocity = CalculateWalkingVelocity();
+				Vector3 walkingForce = CalculateWalkingForce(movement.walkingVelocity);
+				rigidbody.AddForce(walkingForce);
+			}
+			if(movement.state == Movement.State.Walking) {
+				if(movementSettings.jumping.autoJump) {
+					if(CalculateShouldAutoJump())
+						Jump();
+				}
 			}
 			switch(movement.state) {
 				case Movement.State.Passive:
