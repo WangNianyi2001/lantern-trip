@@ -67,7 +67,7 @@ namespace LanternTrip {
 			while(t < distance) {
 				local.z = t;
 				Vector3 world = g.LocalToWorld(local);
-				Physics.SphereCast(world, g.radius, g.normal, out hit, distance - t);
+				Physics.SphereCast(world, g.radius, g.normal, out hit, distance - t, ~0, QueryTriggerInteraction.Ignore);
 				if(!hit.collider)
 					// No more candidate hits
 					break;
