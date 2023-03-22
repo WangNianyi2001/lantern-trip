@@ -201,7 +201,7 @@ namespace LanternTrip {
 				if(activeBonuses.Count > 0)
 					DeactivateUnsatisfiedBonus();
 				if(burntOut)
-					protagonist.movement.state = Character.Movement.State.Dead;
+					protagonist.Die();
 			}
 			ChargeUpValue += ChargeUpSpeed * Time.fixedDeltaTime;
 		}

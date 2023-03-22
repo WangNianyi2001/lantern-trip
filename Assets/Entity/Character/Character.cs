@@ -175,6 +175,10 @@ namespace LanternTrip {
 			movement.state = Movement.State.Jumping;
 			StartCoroutine(JumpCoroutine());
 		}
+
+		public virtual void Die() {
+			movement.state = Movement.State.Dead;
+		}
 		#endregion
 
 		#region Life cycle

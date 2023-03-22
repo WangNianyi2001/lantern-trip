@@ -1,7 +1,12 @@
 using UnityEngine;
+using NaughtyAttributes;
 
 namespace LanternTrip {
 	public class Protagonist : Character {
+		[Header("Shooting")]
+		[Range(0, 4)] public float verticalSpeed;
+		[MinMaxSlider(1, 20)] public Vector2 speedRange;
+
 		protected override void UpdateMovementState() {
 			base.UpdateMovementState();
 			switch(movement.state) {
@@ -27,6 +32,12 @@ namespace LanternTrip {
 			}
 			else
 				return base.CalculateExpectedDirection();
+		}
+
+		public override void Die() {
+			base.Die();
+
+			Debug.Log("Died");
 		}
 	}
 }
