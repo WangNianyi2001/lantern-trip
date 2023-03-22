@@ -4,9 +4,19 @@ using UnityEngine.InputSystem;
 namespace LanternTrip {
 	[RequireComponent(typeof(PlayerInput))]
 	public class InputManager : ManagerBase {
+		public enum InputCoordinate {
+			World, Camera, Protagonist,
+		};
+
 		#region Core members
 		PlayerInput playerInput;
 		Vector2 mousePosition = new Vector2();
+		Vector3 rawInputMovement;
+		#endregion
+
+		#region Inspector members
+		public InputCoordinate coordinate;
+		new public Camera camera;
 		#endregion
 
 		#region Public interfaces
@@ -23,11 +33,8 @@ namespace LanternTrip {
 			if(protagonist == null)
 				return;
 			Vector2 raw = value.Get<Vector2>();
-			protagonist.movement.inputVelocity = new Vector3(
-				raw.x,
-				0,
-				raw.y
-			);
+			Vector3 raw3 = new Vector3(raw.x, 0, raw.y);
+			rawInputMovement = raw3;
 		}
 
 		public void OnPlayerJump(InputValue _) {
@@ -67,6 +74,21 @@ namespace LanternTrip {
 
 			// Initialize main game
 			GainPlayerControl();
+		}
+
+		void FixedUpdate() {
+			Vector3 v = rawInputMovement;
+			switch(coordinate) {
+				case InputCoordinate.World:
+					break;
+				case InputCoordinate.Protagonist:
+					v = protagonist.transform.localToWorldMatrix.MultiplyVector(v);
+					break;
+				case InputCoordinate.Camera:
+					v = camera.transform.localToWorldMatrix.MultiplyVector(v);
+					break;
+			}
+			protagonist.movement.inputVelocity = v;
 		}
 		#endregion
 	}
