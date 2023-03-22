@@ -12,9 +12,9 @@ namespace LanternTrip {
 
 		#region Inspector members
 		new public Protagonist protagonist;
-		new public Camera camera;
 		public InputManager input;
 		public UiManager ui;
+		public ShootManager shoot;
 		[Expandable] public GameSettings settings;
 		#endregion
 
@@ -150,6 +150,7 @@ namespace LanternTrip {
 					return;
 
 				protagonist.animationController.HoldingBow = value;
+				shoot.enabled = value;
 			}
 		}
 		#endregion
