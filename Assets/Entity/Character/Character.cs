@@ -67,6 +67,7 @@ namespace LanternTrip {
 				&& (movement.walkingVelocity.magnitude > .1f);
 			animationController.Freefalling =
 				movement.state == Movement.State.Freefalling;
+			rigidbody.isKinematic = movement.state == Movement.State.Passive;
 		}
 
 		protected virtual float SlopeByNormal(Vector3 normal) {
