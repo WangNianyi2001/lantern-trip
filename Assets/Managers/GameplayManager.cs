@@ -163,7 +163,7 @@ namespace LanternTrip {
 				if(activeBonuses.Count > 0)
 					DeactivateUnsatisfiedBonus();
 				if(burntOut) {
-					protagonist.Die();
+					protagonist.movement.state = Character.Movement.State.Dead;
 				}
 			}
 		}

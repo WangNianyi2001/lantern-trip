@@ -10,6 +10,7 @@ namespace LanternTrip {
 				Freefalling,    // Character is falling and doesn't receive player input.
 				Jumping,        // Character has just jumped.
 				Landing,        // Character has just landed on ground.
+				Dead,
 			}
 			public State state;
 
@@ -54,7 +55,11 @@ namespace LanternTrip {
 					animationController.Jumping = true;
 					break;
 				case Movement.State.Landing:
+					animationController.Freefalling = false;
 					movement.state = Movement.State.Walking;
+					break;
+				case Movement.State.Dead:
+					animationController.Dead = true;
 					break;
 			}
 			animationController.Moving =
@@ -90,26 +95,24 @@ namespace LanternTrip {
 			return deltaVelocity.normalized * magnitude;
 		}
 		protected virtual Vector3 CalculateExpectedDirection() {
-			if(movement.inputVelocity.magnitude > .01f)
-				return movement.inputVelocity;
-			return rigidbody.velocity.ProjectOnto(Physics.gravity);
+			Vector3 velocity = rigidbody.velocity.ProjectOnto(Physics.gravity);
+			if(velocity.magnitude < .1f)
+				return transform.forward;
+			return velocity.normalized;
 		}
 		protected virtual Vector3 CalculateZenithTorque() {
 			Vector3 up = Physics.gravity.normalized;
-			Vector3 actualAngularVelocity = rigidbody.angularVelocity;
 
-			Vector3 expected = CalculateExpectedDirection();
-			if(expected.magnitude < .1f)
-				return -actualAngularVelocity;
-
-			Vector3 expectedDirection = expected.normalized;
+			Vector3 expectedDirection = CalculateExpectedDirection();
 			Vector3 actualDirection = transform.forward.ProjectOnto(up).normalized;
-			float deltaZenith = Mathf.Acos(Vector3.Dot(expectedDirection, actualDirection));
+			float cosine = Vector3.Dot(expectedDirection, actualDirection);
+			cosine = Mathf.Clamp(cosine, -1f, 1f);	// Prevent overflow
+			float deltaZenith = Mathf.Acos(cosine);
 			// Left or right
 			float direction = Mathf.Sign(Vector3.Dot(Vector3.Cross(actualDirection, expectedDirection), up));
 
 			Vector3 expectedAngularVelocity = up * deltaZenith * direction;
-			float attenuation = (expectedAngularVelocity - actualAngularVelocity).magnitude;
+			float attenuation = (expectedAngularVelocity - rigidbody.angularVelocity).magnitude;
 			attenuation = Mathf.Pow(attenuation, .5f);
 			return attenuation * movementSettings.walking.torqueGain * expectedAngularVelocity;
 		}
