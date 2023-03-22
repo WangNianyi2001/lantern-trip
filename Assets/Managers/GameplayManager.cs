@@ -22,6 +22,8 @@ namespace LanternTrip {
 		[NonSerialized] public LanternSlot[] lanternSlots;
 		float bonusTime;
 		List<Bonus> activeBonuses = new List<Bonus>();
+		float chargeUpSpeed = 0;
+		float chargeUpValue = 0;
 		#endregion
 
 		#region Core methods
@@ -153,6 +155,29 @@ namespace LanternTrip {
 				shoot.enabled = value;
 			}
 		}
+
+		public float ChargeUpSpeed {
+			get => chargeUpSpeed;
+			set {
+				value = Mathf.Clamp01(value);
+				chargeUpSpeed = value;
+				if(chargeUpSpeed == 0) {
+					if(chargeUpValue > 0)
+						protagonist.Shoot();
+					chargeUpValue = 0;
+				}
+			}
+		}
+		public float ChargeUpValue {
+			get => chargeUpValue;
+			set {
+				if(HoldingBow && protagonist.Idle)
+					chargeUpValue = Mathf.Clamp01(value);
+				else
+					chargeUpValue = 0;
+				protagonist.animationController.ChargingUpValue = chargeUpValue;
+			}
+		}
 		#endregion
 
 		#region Life cycle
@@ -174,10 +199,10 @@ namespace LanternTrip {
 				bool burntOut = !Burn(Time.fixedDeltaTime * burningRate);
 				if(activeBonuses.Count > 0)
 					DeactivateUnsatisfiedBonus();
-				if(burntOut) {
+				if(burntOut)
 					protagonist.movement.state = Character.Movement.State.Dead;
-				}
 			}
+			ChargeUpValue += ChargeUpSpeed * Time.fixedDeltaTime;
 		}
 		#endregion
 	}

@@ -67,6 +67,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "PlayerChargeUp",
+                    "type": "Value",
+                    "id": "d4c45492-194b-4b83-be85-dd52f0113096",
+                    "expectedControlType": "Analog",
+                    "processors": "Normalize(max=1)",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -188,6 +197,17 @@
                     "processors": "",
                     "groups": "PC",
                     "action": "PlayerAim",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "70909b7c-5bca-4824-a6fe-f11d57d89987",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "PlayerChargeUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

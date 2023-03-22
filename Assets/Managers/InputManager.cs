@@ -53,6 +53,11 @@ namespace LanternTrip {
 		public void OnPlayerAim(InputValue value) {
 			mousePosition = value.Get<Vector2>();
 		}
+
+		public void OnPlayerChargeUp(InputValue value) {
+			float raw = value.Get<float>();
+			gameplay.ChargeUpSpeed = raw;
+		}
 		#endregion
 
 		#region Life cycle
