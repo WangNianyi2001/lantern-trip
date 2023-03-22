@@ -22,10 +22,11 @@ namespace LanternTrip {
 		}
 
 		public void MakeShoot() {
-			float strength = gameplay.previousChargeUpValue * 10;
+			float speedMin = protagonist.speedRange.x, speedMax = protagonist.speedRange.y;
+			float speed = Mathf.Lerp(speedMin, speedMax, gameplay.previousChargeUpValue);
 			Vector3 forward = protagonist.transform.forward;
 			Vector3 upward = protagonist.transform.up;
-			Vector3 velocity = forward * strength + upward;
+			Vector3 velocity = forward * speed + upward * protagonist.verticalSpeed;
 
 			Vector3 outPosition = protagonist.transform.position + forward + upward;
 
