@@ -25,14 +25,14 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 11400000, guid: 2e5037efd0717804cbfaf5bfbddcf40c, type: 2}
           m_TargetAssemblyTypeName: LanternTrip.GameplayAgent, Assembly-CSharp
-          m_MethodName: Log
-          m_Mode: 5
+          m_MethodName: set_ColdDebuffEnabled
+          m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: Activating red bonus
+            m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
     onDeactivate:
@@ -40,15 +40,15 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 11400000, guid: 2e5037efd0717804cbfaf5bfbddcf40c, type: 2}
           m_TargetAssemblyTypeName: LanternTrip.GameplayAgent, Assembly-CSharp
-          m_MethodName: Log
-          m_Mode: 5
+          m_MethodName: set_ColdDebuffEnabled
+          m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: Deactivating red bonus
-            m_BoolArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
           m_CallState: 2
   - type: 1
     tinderType: 2
@@ -58,14 +58,14 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 11400000, guid: 2e5037efd0717804cbfaf5bfbddcf40c, type: 2}
           m_TargetAssemblyTypeName: LanternTrip.GameplayAgent, Assembly-CSharp
-          m_MethodName: Log
-          m_Mode: 5
+          m_MethodName: GrantBonusTime
+          m_Mode: 4
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Granting green bonus
+            m_FloatArgument: 60
+            m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
     onActivate:
@@ -85,14 +85,14 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 11400000, guid: 2e5037efd0717804cbfaf5bfbddcf40c, type: 2}
           m_TargetAssemblyTypeName: LanternTrip.GameplayAgent, Assembly-CSharp
-          m_MethodName: Log
-          m_Mode: 5
+          m_MethodName: set_SpeedBonusRate
+          m_Mode: 4
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Activating blue bonus
+            m_FloatArgument: 1.4
+            m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
     onDeactivate:
@@ -100,14 +100,14 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 11400000, guid: 2e5037efd0717804cbfaf5bfbddcf40c, type: 2}
           m_TargetAssemblyTypeName: LanternTrip.GameplayAgent, Assembly-CSharp
-          m_MethodName: Log
-          m_Mode: 5
+          m_MethodName: set_SpeedBonusRate
+          m_Mode: 4
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Deactivating blue bonus
+            m_FloatArgument: 0.71428573
+            m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
   - type: 0
@@ -121,8 +121,8 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 11400000, guid: 2e5037efd0717804cbfaf5bfbddcf40c, type: 2}
           m_TargetAssemblyTypeName: LanternTrip.GameplayAgent, Assembly-CSharp
-          m_MethodName: Log
-          m_Mode: 5
+          m_MethodName: set_ColdDebuffEnabled
+          m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -131,20 +131,44 @@ MonoBehaviour:
             m_StringArgument: Activating trio bonus
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 11400000, guid: 2e5037efd0717804cbfaf5bfbddcf40c, type: 2}
+          m_TargetAssemblyTypeName: LanternTrip.GameplayAgent, Assembly-CSharp
+          m_MethodName: set_SpeedBonusRate
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 1.4
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     onDeactivate:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 11400000, guid: 2e5037efd0717804cbfaf5bfbddcf40c, type: 2}
           m_TargetAssemblyTypeName: LanternTrip.GameplayAgent, Assembly-CSharp
-          m_MethodName: Log
-          m_Mode: 5
+          m_MethodName: set_ColdDebuffEnabled
+          m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: Deactivating trio bonus
-            m_BoolArgument: 0
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 11400000, guid: 2e5037efd0717804cbfaf5bfbddcf40c, type: 2}
+          m_TargetAssemblyTypeName: LanternTrip.GameplayAgent, Assembly-CSharp
+          m_MethodName: set_SpeedBonusRate
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0.71428573
+            m_StringArgument: 
+            m_BoolArgument: 1
           m_CallState: 2
   - type: 0
     tinderType: 0
@@ -154,13 +178,13 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 11400000, guid: 2e5037efd0717804cbfaf5bfbddcf40c, type: 2}
           m_TargetAssemblyTypeName: LanternTrip.GameplayAgent, Assembly-CSharp
-          m_MethodName: Log
-          m_Mode: 5
+          m_MethodName: GrantExtraGreenTime
+          m_Mode: 4
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
-            m_FloatArgument: 0
+            m_FloatArgument: 30
             m_StringArgument: Granting trio bonus
             m_BoolArgument: 0
           m_CallState: 2
