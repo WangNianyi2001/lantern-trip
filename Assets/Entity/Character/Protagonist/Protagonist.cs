@@ -9,21 +9,21 @@ namespace LanternTrip {
 
 		protected override void UpdateMovementState() {
 			base.UpdateMovementState();
-			switch(movement.state) {
-				case Movement.State.Walking:
+			switch(state) {
+				case State.Walking:
 					if(CanShoot && GameplayManager.instance.ChargeUpValue > 0) {
-						movement.state = Movement.State.Shooting;
+						state = State.Shooting;
 					}
 					break;
-				case Movement.State.Shooting:
+				case State.Shooting:
 					if(GameplayManager.instance.ChargeUpValue == 0)
-						movement.state = Movement.State.Walking;
+						state = State.Walking;
 					break;
 			}
 		}
 
 		protected override Vector3 CalculateExpectedDirection() {
-			if(movement.state == Movement.State.Shooting) {
+			if(state == State.Shooting) {
 				Vector3? target = GameplayManager.instance.shoot.TargetPosition;
 				if(!target.HasValue)
 					return transform.forward;

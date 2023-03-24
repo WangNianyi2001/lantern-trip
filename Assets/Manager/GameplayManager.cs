@@ -212,7 +212,7 @@ namespace LanternTrip {
 				bool burntOut = !Burn(Time.fixedDeltaTime * burningRate);
 				if(activeBonuses.Count > 0)
 					DeactivateUnsatisfiedBonus();
-				if(burntOut)
+				if(burntOut && protagonist.state == Character.State.Dead)
 					protagonist.Die();
 			}
 			ChargeUpValue += ChargeUpSpeed * Time.fixedDeltaTime;
