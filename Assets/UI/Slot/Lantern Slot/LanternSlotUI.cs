@@ -3,7 +3,6 @@ using UnityEngine.UI;
 
 namespace LanternTrip {
 	public class LanternSlotUI : SlotUI {
-		public Image icon;
 		public RectMask2D mask;
 		public Text timeLeftText;
 
@@ -23,7 +22,6 @@ namespace LanternTrip {
 			get => tinder;
 			set {
 				tinder = value;
-				icon.color = value?.mainColor ?? Color.gray;
 				if(value == null)
 					SetValue(0);
 			}
@@ -41,8 +39,15 @@ namespace LanternTrip {
 			base.SetValue(value);
 		}
 
-		void Start() {
+		protected new void Start() {
+			base.Start();
+
 			Tinder = null;
+		}
+
+		protected new void FixedUpdate() {
+			base.FixedUpdate();
+			graphic.material?.SetColor("mainColor", tinder?.mainColor ?? Color.gray);
 		}
 	}
 }

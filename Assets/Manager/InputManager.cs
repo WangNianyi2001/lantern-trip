@@ -124,7 +124,7 @@ namespace LanternTrip {
 			euler.x = 0;
 			q = Quaternion.Euler(euler);
 			v = q * v;
-			protagonist.movement.inputVelocity = v;
+			protagonist.inputVelocity = v;
 
 			// Orbital camera orientation
 			if(orbit) {

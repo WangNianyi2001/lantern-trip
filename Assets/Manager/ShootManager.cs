@@ -61,7 +61,7 @@ namespace LanternTrip {
 			targetAnchor.rotation = Quaternion.identity;
 
 			// Update velocity
-			lr.enabled = protagonist.movement.state == Character.Movement.State.Shooting;
+			lr.enabled = protagonist.state == Character.State.Shooting;
 			if(lr.enabled) {
 				float speedMin = protagonist.speedRange.x, speedMax = protagonist.speedRange.y;
 				float speed = Mathf.Lerp(speedMin, speedMax, gameplay.previousChargeUpValue);
