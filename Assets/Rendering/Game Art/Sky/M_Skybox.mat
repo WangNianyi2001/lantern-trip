@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: M_Skybox
+  m_Shader: {fileID: 4800000, guid: a55b2ee9eb2489245987093b4db9f5e2, type: 3}
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _NoiseTexture:
+        m_Texture: {fileID: 2800000, guid: a8f81ee774ef24f4ea4db73a4eb32916, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Brightness: 0.6
+    - _EnableSolidGroundLineColor: 1
+    - _GroundLineScatter: 0.912
+    - _HorizonColorBoundary1: -1
+    - _HorizonColorBoundary2: -1
+    - _HorizonColorBoundary3: -1
+    - _HorizonColorBoundary4: -1
+    - _HorizonColorRamp1: 1
+    - _HorizonColorRamp2: 1
+    - _HorizonColorRamp3: 0.285
+    - _HorizonColorRamp4: 0.4
+    - _MoonRadius1: 0.314
+    - _MoonRadius2: 0.15
+    - _MoonRadius3: 0.15
+    - _MoonRadius4: 0.15
+    - _MoonScatter1: 1
+    - _MoonScatter2: 0.569
+    - _MoonScatter3: 0
+    - _MoonScatter4: 0
+    - _ReduceMoonIntensity: 0
+    - _ReduceSunIntensity: 0
+    - _SkyColorBoundary1: 0.25
+    - _SkyColorBoundary2: 0.25
+    - _SkyColorBoundary3: 0.25
+    - _SkyColorBoundary4: 0.25
+    - _SkyColorRamp1: 1
+    - _SkyColorRamp2: 1
+    - _SkyColorRamp3: 1
+    - _SkyColorRamp4: 1
+    - _SkyColorSaturate: 1
+    - _SkyHorizonColorBoundary1: -0.5
+    - _SkyHorizonColorBoundary2: -0.9
+    - _SkyHorizonColorBoundary3: -1
+    - _SkyHorizonColorBoundary4: -1
+    - _SkyHorizonColorRamp1: 0.5
+    - _SkyHorizonColorRamp2: 0.5
+    - _SkyHorizonColorRamp3: 0.5
+    - _SkyHorizonColorRamp4: 0.75
+    - _SkyboxBias: -0.15
+    - _StarsBrightness: 1
+    - _StarsHeight: 0
+    - _StarsScale: 0.5
+    - _SunAndMoonColorSaturate: 0.229
+    - _SunRadius1: 0.2
+    - _SunRadius2: 0.2
+    - _SunRadius3: 0.2
+    - _SunRadius4: 0.2
+    - _SunScatter1: 0
+    - _SunScatter2: 0.5
+    - _SunScatter3: 0.632
+    - _SunScatter4: 0.5
+    - _SunSetDuration: 0.376
+    m_Colors:
+    - _GroundColor: {r: 0, g: 0.509434, b: 0.38220775, a: 1}
+    - _HigherHorizonColor1: {r: 0, g: 0.053125, b: 0.2, a: 1}
+    - _HigherHorizonColor2: {r: 0.2, g: 0.059, b: 0.077, a: 1}
+    - _HigherHorizonColor3: {r: 1, g: 0.556, b: 0.052, a: 1}
+    - _HigherHorizonColor4: {r: 0.392, g: 0.957, b: 1, a: 1}
+    - _HigherSkyColor1: {r: 0, g: 0.055555534, b: 0.1, a: 1}
+    - _HigherSkyColor2: {r: 0.008, g: 0.02, b: 0.031, a: 1}
+    - _HigherSkyColor3: {r: 0.08627452, g: 0.17765796, b: 0.45490196, a: 1}
+    - _HigherSkyColor4: {r: 0.098, g: 0.361, b: 1, a: 1}
+    - _LowerHorizonColor1: {r: 0, g: 0.024265354, b: 0.09803922, a: 1}
+    - _LowerHorizonColor2: {r: 0.236, g: 0.108, b: 0.046, a: 1}
+    - _LowerHorizonColor3: {r: 1, g: 0.249, b: 0.051, a: 1}
+    - _LowerHorizonColor4: {r: 0.816, g: 0.961, b: 1, a: 1}
+    - _LowerSkyColor1: {r: 0, g: 0.0666667, b: 0.2, a: 1}
+    - _LowerSkyColor2: {r: 0.016, g: 0.024, b: 0.071, a: 1}
+    - _LowerSkyColor3: {r: 0, g: 0.406, b: 0.249, a: 1}
+    - _LowerSkyColor4: {r: 0, g: 0.537, b: 1, a: 1}
+    - _MoonColor1: {r: 0, g: 7.744728, b: 7.744728, a: 1}
+    - _MoonColor2: {r: 4, g: 4, b: 4, a: 1}
+    - _MoonColor3: {r: 1, g: 1, b: 1, a: 1}
+    - _MoonColor4: {r: 0, g: 0, b: 0, a: 1}
+    - _SunColor1: {r: 0, g: 0, b: 0, a: 1}
+    - _SunColor2: {r: 8, g: 1.851, b: 0, a: 1}
+    - _SunColor3: {r: 181.019, g: 61.76, b: 0, a: 1}
+    - _SunColor4: {r: 85.445, g: 75.156, b: 0, a: 1}
+  m_BuildTextureStacks: []
