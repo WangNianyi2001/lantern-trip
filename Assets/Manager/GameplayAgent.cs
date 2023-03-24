@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 namespace LanternTrip {
@@ -10,7 +11,20 @@ namespace LanternTrip {
 
 		public void LoadTinder(Tinder tinder) => gameplay.LoadTinder(tinder);
 
-		public void AddBonusTime(float time) => gameplay.AddBonusTime(time);
+		public void GrantBonusTime(float time) => gameplay.GrantBonusTime(time);
+		public void GrantExtraGreenTime(float time) {
+			foreach(var slot in gameplay.lanternSlots.Where(slot => slot.tinder.type == Tinder.Type.Green))
+				slot.timeLeft += time;
+		}
+
+		public float SpeedBonusRate {
+			get => gameplay.speedBonusRate;
+			set => gameplay.speedBonusRate *= value;
+		}
+		public bool ColdDebuffEnabled {
+			get => gameplay.coldDebuffEnabled;
+			set => gameplay.coldDebuffEnabled = value;
+		}
 
 		public bool Burning {
 			get => gameplay.burning;
@@ -19,5 +33,7 @@ namespace LanternTrip {
 
 		public void EnterSafezone() => gameplay.EnterSafezone();
 		public void ExitSafezone() => gameplay.ExitSafezone();
+		public void EnterColdzone() => gameplay.EnterColdzone();
+		public void ExitColdzone() => gameplay.ExitColdzone();
 	}
 }
