@@ -174,7 +174,7 @@ namespace LanternTrip {
 
 		public bool CanShoot {
 			get {
-				bool idle = state == State.Walking && InputVelocity.magnitude < .1f;
+				bool idle = state == State.Walking;
 				bool charging = state == State.Shooting;
 				return idle || charging;
 			}
