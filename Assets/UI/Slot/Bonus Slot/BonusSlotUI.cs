@@ -11,7 +11,9 @@ namespace LanternTrip {
 			base.SetValue(value);
 		}
 
-		void Start() {
+		protected new void Start() {
+			base.Start();
+
 			SetValue(0);
 		}
 	}
