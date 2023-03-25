@@ -6,7 +6,6 @@ namespace LanternTrip {
 		[Expandable] public NpcProfile profile;
 		public float followDistance = 2;
 
-		private int hp;
 		protected Transform followTarget = null;
 
 		protected override Vector3 InputVelocity {
@@ -21,24 +20,6 @@ namespace LanternTrip {
 		}
 
 		#region Public interfaces
-		public int Hp {
-			get => hp;
-			set {
-				hp = value;
-				if(hp <= 0) {
-					hp = 0;
-					Die();
-				}
-			}
-		}
-
-		public void TakeDamage(int amount) => hp -= amount;
-
-		public override void Die() {
-			base.Die();
-			Debug.Log($"NPC {profile.name} died");
-		}
-
 		public void SetFollowTarget(Transform target) {
 			followTarget = target;
 		}
@@ -47,7 +28,8 @@ namespace LanternTrip {
 		protected new void Start() {
 			base.Start();
 
-			hp = profile.hp;
+			Hp = profile.hp;
+			Undead = profile.undead;
 		}
 	}
 }

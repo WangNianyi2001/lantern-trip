@@ -186,10 +186,6 @@ namespace LanternTrip {
 			state = State.Jumping;
 			StartCoroutine(JumpCoroutine());
 		}
-
-		public virtual void Die() {
-			state = State.Dead;
-		}
 		#endregion
 
 		#region Life cycle
@@ -201,6 +197,8 @@ namespace LanternTrip {
 			// Initialize
 			state = State.Walking;
 			inputVelocity = Vector3.zero;
+
+			onDie.AddListener(() => state = State.Dead);
 		}
 
 		protected void FixedUpdate() {
