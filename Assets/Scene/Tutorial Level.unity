@@ -925,13 +925,15 @@ GameObject:
   m_Component:
   - component: {fileID: 228453534}
   - component: {fileID: 228453535}
+  - component: {fileID: 228453537}
+  - component: {fileID: 228453536}
   m_Layer: 0
   m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &228453534
 Transform:
   m_ObjectHideFlags: 0
@@ -955,21 +957,21 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 228453533}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 466ad2bdbd6f7f64ea1ef43fb6591bfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entity: {fileID: 0}
+  entity: {fileID: 1102729672}
   agent: {fileID: 1762363498}
   oneTime: 0
   tagMask: Arrow
   onEnter:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1102729671}
-        m_TargetAssemblyTypeName: LanternTrip.ElevatorMove, Assembly-CSharp
-        m_MethodName: DeleteElevatorSwitch
+      - m_Target: {fileID: 382984351}
+        m_TargetAssemblyTypeName: LanternTrip.ElevatorSystem, Assembly-CSharp
+        m_MethodName: StartElevatorMove
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -982,6 +984,45 @@ MonoBehaviour:
   onExit:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &228453536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 228453533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5961af2285b9c6e45b0a3d1570c83eb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageMultiplier: 1
+  shotType: 0
+  onDie:
+    m_PersistentCalls:
+      m_Calls: []
+  onShot:
+    m_PersistentCalls:
+      m_Calls: []
+  onMatchedShot:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!54 &228453537
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 228453533}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &284003023
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1070,8 +1111,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 382984350}
+  - component: {fileID: 382984353}
+  - component: {fileID: 382984352}
+  - component: {fileID: 382984351}
   m_Layer: 0
-  m_Name: Elevator Pair
+  m_Name: ElevatorSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1092,9 +1136,72 @@ Transform:
   - {fileID: 1102729670}
   - {fileID: 495104102}
   - {fileID: 1148594966}
+  - {fileID: 1841582365}
   m_Father: {fileID: 492718035}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &382984351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382984349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 079d7522c7c025d4ea33de91ff862f50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startPosition: {fileID: 1841582365}
+  endPosition: {fileID: 1148594966}
+  moveSpeed: 2
+  elevatorSwitch: {fileID: 1102729670}
+  elevatorPosition: {fileID: 495104102}
+  onDeleteElevatorSwitch:
+    m_PersistentCalls:
+      m_Calls: []
+  onStartElevatorMove:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &382984352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382984349}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5961af2285b9c6e45b0a3d1570c83eb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageMultiplier: 1
+  shotType: 0
+  onDie:
+    m_PersistentCalls:
+      m_Calls: []
+  onShot:
+    m_PersistentCalls:
+      m_Calls: []
+  onMatchedShot:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!54 &382984353
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382984349}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &388910400
 GameObject:
   m_ObjectHideFlags: 0
@@ -1423,7 +1530,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1799745766788096594, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
       propertyPath: m_Text
-      value: 
+      value: Input Field
       objectReference: {fileID: 0}
     - target: {fileID: 2281125334320876300, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1907,7 +2014,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8576453336608636498, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
       propertyPath: m_RenderPostProcessing
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8576453336608636498, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
       propertyPath: m_Cameras.Array.data[0]
@@ -2455,18 +2562,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 03835ac6c670818418550ad827e87ce5, type: 3}
   m_PrefabInstance: {fileID: 657337100}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &495104103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 495104101}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5961af2285b9c6e45b0a3d1570c83eb0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!54 &495104104
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2536,6 +2631,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5961af2285b9c6e45b0a3d1570c83eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageMultiplier: 1
+  shotType: 0
+  onDie:
+    m_PersistentCalls:
+      m_Calls: []
+  onShot:
+    m_PersistentCalls:
+      m_Calls: []
+  onMatchedShot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!54 &551764135
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5399,7 +5505,7 @@ GameObject:
   - component: {fileID: 1102729670}
   - component: {fileID: 1102729673}
   - component: {fileID: 1102729672}
-  - component: {fileID: 1102729671}
+  - component: {fileID: 1102729674}
   m_Layer: 0
   m_Name: ElevatorSwitch
   m_TagString: Untagged
@@ -5415,7 +5521,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1102729669}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.76, z: 0}
+  m_LocalPosition: {x: 11.93, y: 0.76, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5424,24 +5530,6 @@ Transform:
   m_Father: {fileID: 382984350}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1102729671
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1102729669}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 079d7522c7c025d4ea33de91ff862f50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startPosition: {fileID: 1148594966}
-  endPosition: {fileID: 1148594966}
-  type: {fileID: 11400000, guid: 545e7742e8be2b74188083ab9b4a97dd, type: 2}
-  onDeleteElevatorSwitch:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &1102729672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5454,6 +5542,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5961af2285b9c6e45b0a3d1570c83eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageMultiplier: 1
+  shotType: 4
+  onDie:
+    m_PersistentCalls:
+      m_Calls: []
+  onShot:
+    m_PersistentCalls:
+      m_Calls: []
+  onMatchedShot:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 382984351}
+        m_TargetAssemblyTypeName: LanternTrip.ElevatorSystem, Assembly-CSharp
+        m_MethodName: StartElevatorMove
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!54 &1102729673
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5470,6 +5581,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!135 &1102729674
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1102729669}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 2
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1109546535
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5831,7 +5955,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1148594965}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: 16.390001, y: 2.3399982, z: -1.050003}
+  m_LocalPosition: {x: 16.390001, y: -0.8, z: -1.050003}
   m_LocalScale: {x: 10, y: 10, z: 26.73077}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8339,6 +8463,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5961af2285b9c6e45b0a3d1570c83eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageMultiplier: 1
+  shotType: 0
+  onDie:
+    m_PersistentCalls:
+      m_Calls: []
+  onShot:
+    m_PersistentCalls:
+      m_Calls: []
+  onMatchedShot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!54 &1632196334
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9868,6 +10003,37 @@ Transform:
   - {fileID: 1489992820}
   m_Father: {fileID: 214250897}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1841582364
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1841582365}
+  m_Layer: 0
+  m_Name: StartPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1841582365
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1841582364}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: 16.390001, y: -3.81, z: -1.050003}
+  m_LocalScale: {x: 10, y: 10, z: 26.73077}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 382984350}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1873335884 stripped
 Transform:
@@ -11823,6 +11989,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5961af2285b9c6e45b0a3d1570c83eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageMultiplier: 1
+  shotType: 0
+  onDie:
+    m_PersistentCalls:
+      m_Calls: []
+  onShot:
+    m_PersistentCalls:
+      m_Calls: []
+  onMatchedShot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &5013890416257299383
 MonoBehaviour:
   m_ObjectHideFlags: 0
