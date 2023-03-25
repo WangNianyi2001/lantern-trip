@@ -21,16 +21,15 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Mland
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
-  m_ValidKeywords:
+  m_Shader: {fileID: 4800000, guid: 42002be944728ae41910abb8541c8008, type: 3}
+  m_ValidKeywords: []
+  m_InvalidKeywords:
   - _NORMALMAP
-  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap:
-    RenderType: Opaque
+  stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -64,7 +63,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _IBL_LUT:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 7b4f5a12f3036b047887ad458e601948, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -73,6 +72,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalTex:
+        m_Texture: {fileID: 2800000, guid: b7f7fc0f3f00c3d459ce25dfe8607677, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -140,18 +143,18 @@ Material:
     - _StepSmoothness: 0.05
     - _Surface: 0
     - _UVSec: 0
-    - _WeightEnvLight: 0.1
-    - _WeightNPR: 1
-    - _WeightPBR: 1
+    - _WeightEnvLight: 0.302
+    - _WeightNPR: 0.868
+    - _WeightPBR: 0.93
     - _WorkflowMode: 1
     - _ZOffset: 0
     - _ZWrite: 1
     - _anisotropic: 0
     - _clearcoat: 0.5
     - _clearcoatGloss: 1
-    - _ior: 10
-    - _metallic: 0.495
-    - _roughness: 0.555
+    - _ior: 0.7
+    - _metallic: 0.325
+    - _roughness: 1
     - _sheen: 0.5
     - _sheenTint: 0.5
     - _specular: 1
@@ -162,8 +165,8 @@ Material:
     - _Color: {r: 0.53515285, g: 0.8018868, b: 0.5043313, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
-    - _NPR_Color1: {r: 1, g: 1, b: 1, a: 1}
-    - _NPR_Color2: {r: 1, g: 1, b: 1, a: 1}
+    - _NPR_Color1: {r: 0.31873804, g: 0.735849, b: 0.0323958, a: 1}
+    - _NPR_Color2: {r: 0.24049026, g: 0.7169812, b: 0, a: 1}
     - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimCol: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}

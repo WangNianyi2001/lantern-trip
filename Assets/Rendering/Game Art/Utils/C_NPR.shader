@@ -3,6 +3,7 @@ Shader "Custom/PBR_NPR"
     Properties
     {
         _MainTex ("BaseColor", 2D) = "white" {}
+        _NormalTex ("NormalTex", 2D) = "white" {}
         
         [Header(PBR Light)][Space(10)]
         _WeightPBR("Weight PBR", Range(0, 1))=1.0
@@ -148,6 +149,9 @@ Shader "Custom/PBR_NPR"
 
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
+
+            TEXTURE2D(_NormalTex);
+            SAMPLER(sampler_NormalTex);
 
             TEXTURE2D(_RampTex);
             SAMPLER(sampler_RampTex);
@@ -492,6 +496,11 @@ Shader "Custom/PBR_NPR"
                 float3 H = normalize(L + V);
                 float3 X = normalize(i.tangentWS);
                 float3 Y = normalize(i.bitangentWS);
+
+                // normal texture enabled
+                float3x3 TBN = float3x3(i.tangentWS, i.bitangentWS, i.normalWS);
+                float3 normalTS = SAMPLE_TEXTURE2D(_NormalTex, sampler_NormalTex, i.uv);
+                N = normalize(mul(normalTS, TBN));
                 
                 float NdotL = dot(N, L);
                 float NdotV = dot(N, V);
