@@ -1875,7 +1875,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2810346448126698523, guid: 9827efcfa323cbd4ba28e25477dd7cd7, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 120
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2810346448126698523, guid: 9827efcfa323cbd4ba28e25477dd7cd7, type: 3}
       propertyPath: m_SizeDelta.y
@@ -3042,6 +3042,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee36596796abab04682f18c4157a16c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coordinate: 0
+  camera: {fileID: 0}
+  orbitalCamera: {fileID: 0}
+  orbitAzimuthRange: {x: 0, y: 0}
+  orbitGain: 0
+  orbitDamp: 0
 --- !u!114 &626574644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9034,6 +9040,8 @@ MonoBehaviour:
   shoot: {fileID: 0}
   settings: {fileID: 11400000, guid: 62b0c7de78fc02b459e30c3d05659f0a, type: 2}
   burningRate: 1
+  speedBonusRate: 1
+  coldDebuffEnabled: 1
 --- !u!114 &285838523466391444
 MonoBehaviour:
   m_ObjectHideFlags: 0
