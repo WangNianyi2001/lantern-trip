@@ -6,7 +6,7 @@ namespace LanternTrip {
 	public class StickyZone : MonoBehaviour {
 		Trigger trigger;
 		List<Entity> entities = new List<Entity>();
-		Vector3 lastVelocity;
+		Vector3 lastPosition;
 
 		void Start() {
 			trigger = GetComponent<Trigger>();
@@ -21,11 +21,11 @@ namespace LanternTrip {
 		}
 
 		void FixedUpdate() {
-			Vector3 velocity = trigger.entity.Rigidbody.velocity;
-			Vector3 delta = velocity - lastVelocity;
-			lastVelocity = velocity;
+			Vector3 position = trigger.entity.Rigidbody.position;
+			Vector3 delta = position - lastPosition;
+			lastPosition = position;
 			foreach(var entity in entities)
-				entity.Rigidbody.AddForce(delta, ForceMode.VelocityChange);
+				entity.Rigidbody.MovePosition(entity.Rigidbody.position + delta);
 		}
 	}
 }
