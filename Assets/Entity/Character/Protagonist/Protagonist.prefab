@@ -47,8 +47,8 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 10
-  m_UseGravity: 0
-  m_IsKinematic: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
@@ -78,6 +78,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1db06959deeca74499642f65b31cbaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageMultiplier: 1
+  shotType: 0
+  onDie:
+    m_PersistentCalls:
+      m_Calls: []
+  onShot:
+    m_PersistentCalls:
+      m_Calls: []
+  onMatchedShot:
+    m_PersistentCalls:
+      m_Calls: []
   movementSettings: {fileID: 11400000, guid: 080db88ecc3bc9c459f6c14ee65f94dc, type: 2}
   animator: {fileID: 7331264469590878892}
   verticalSpeed: 2

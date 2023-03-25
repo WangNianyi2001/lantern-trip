@@ -22,6 +22,7 @@ namespace LanternTrip {
 		#endregion
 
 		#region Public interfaces
+		public Rigidbody Rigidbody => rigidbody;
 		public IEnumerable<ContactPoint> ContactingPoints => contactingPoints.Values;
 
 		public float Hp {
@@ -70,8 +71,8 @@ namespace LanternTrip {
 		protected void Start() {
 			// Get component references
 			rigidbody = GetComponent<Rigidbody>();
-			rigidbody.isKinematic = false;
-			rigidbody.useGravity = true;
+			//rigidbody.isKinematic = false;
+			//rigidbody.useGravity = true;
 
 			// Initialize
 			contactingPoints = new Dictionary<Collider, ContactPoint>();
