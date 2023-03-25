@@ -65,7 +65,7 @@ namespace LanternTrip {
 			if(lr.enabled) {
 				float speedMin = protagonist.speedRange.x, speedMax = protagonist.speedRange.y;
 				float speed = Mathf.Lerp(speedMin, speedMax, gameplay.previousChargeUpValue);
-				outVelocity = forward * speed + upward * protagonist.verticalSpeed;
+				outVelocity = forward * speed + upward * protagonist.verticalSpeed * speed * protagonist.shootingAngleRate;
 				outPosition = protagonist.transform.position + forward + upward;
 				Vector3[] positions = CalculateProjectilePositions().ToArray();
 				lr.positionCount = positions.Length;
