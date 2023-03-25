@@ -15,19 +15,23 @@ namespace LanternTrip {
 				position.y = collider.bounds.max.y;
 				Handles.Label(position, typeof(State).GetEnumName(state));
 
+				// Standing point
+				if(standingPoint.HasValue) {
+					var point = standingPoint.Value;
+
+					Gizmos.color = Color.red;
+					Gizmos.DrawSphere(point.point, .1f);
+
+					// Normal
+					Gizmos.color = Color.green;
+					Gizmos.DrawRay(point.point, point.normal);
+				}
+
 				// Input velocity
 				if(state == State.Walking) {
 					Gizmos.color = Color.blue;
 					Gizmos.DrawRay(rigidbody.position, walkingVelocity);
 				}
-
-				// Actual velocity
-				Gizmos.color = Color.red;
-				Gizmos.DrawRay(rigidbody.position, rigidbody.velocity);
-
-				// Forward
-				Gizmos.color = Color.magenta;
-				Gizmos.DrawRay(rigidbody.position, transform.forward);
 
 				// Zenith torque
 				Gizmos.color = Color.green;
