@@ -19,8 +19,8 @@ namespace LanternTrip
         void Start()
         {
             targetPosition = endPosition;
-            moveSpeed = 10.0f;
-            waitTime = 1.0f;
+            //moveSpeed = 10.0f;
+            //waitTime = 1.0f;
         }
 
         // Update is called once per frame
