@@ -21,10 +21,11 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Mland
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_Shader: {fileID: 4800000, guid: b7839dad95683814aa64166edc107ae2, type: 3}
   m_ValidKeywords:
   - _NORMALMAP
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _FLIPBOOKBLENDING_OFF
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -64,7 +65,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _IBL_LUT:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 7b4f5a12f3036b047887ad458e601948, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -73,6 +74,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalTex:
+        m_Texture: {fileID: 2800000, guid: b7f7fc0f3f00c3d459ce25dfe8607677, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -107,9 +112,14 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _Blend: 0
+    - _BlendOp: 0
     - _BumpScale: 1
+    - _CameraFadingEnabled: 0
+    - _CameraFarFadeDistance: 2
+    - _CameraNearFadeDistance: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
+    - _ColorMode: 0
     - _CubemapMip: 0
     - _Cull: 2
     - _CullMode: 2
@@ -117,8 +127,14 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DiffusePBR: 0.276
+    - _DistortionBlend: 0.5
+    - _DistortionEnabled: 0
+    - _DistortionStrength: 1
+    - _DistortionStrengthScaled: 0.1
     - _DstBlend: 0
     - _EnvironmentReflections: 1
+    - _FlipbookBlending: 0
+    - _FlipbookMode: 0
     - _FresnelPow: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
@@ -135,23 +151,26 @@ Material:
     - _RimThickness: 0.816
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
+    - _SoftParticlesEnabled: 0
+    - _SoftParticlesFarFadeDistance: 1
+    - _SoftParticlesNearFadeDistance: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _StepSmoothness: 0.05
     - _Surface: 0
     - _UVSec: 0
-    - _WeightEnvLight: 0.1
-    - _WeightNPR: 1
-    - _WeightPBR: 1
+    - _WeightEnvLight: 0.302
+    - _WeightNPR: 0.868
+    - _WeightPBR: 0.93
     - _WorkflowMode: 1
     - _ZOffset: 0
     - _ZWrite: 1
     - _anisotropic: 0
     - _clearcoat: 0.5
     - _clearcoatGloss: 1
-    - _ior: 10
-    - _metallic: 0.495
-    - _roughness: 0.555
+    - _ior: 0.7
+    - _metallic: 0.325
+    - _roughness: 1
     - _sheen: 0.5
     - _sheenTint: 0.5
     - _specular: 1
@@ -159,12 +178,15 @@ Material:
     - _subsurface: 0.467
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BaseColorAddSubDiff: {r: 0, g: 0, b: 0, a: 0}
+    - _CameraFadeParams: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
-    - _NPR_Color1: {r: 1, g: 1, b: 1, a: 1}
-    - _NPR_Color2: {r: 1, g: 1, b: 1, a: 1}
+    - _NPR_Color1: {r: 0.31873804, g: 0.735849, b: 0.0323958, a: 1}
+    - _NPR_Color2: {r: 0.24049026, g: 0.7169812, b: 0, a: 1}
     - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimCol: {r: 1, g: 1, b: 1, a: 1}
+    - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
