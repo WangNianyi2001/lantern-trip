@@ -2,7 +2,7 @@ using UnityEngine;
 using NaughtyAttributes;
 
 namespace LanternTrip {
-	public class Protagonist : Character {
+	public partial class Protagonist : Character {
 		[Header("Shooting")]
 		[Range(0, 4)] public float verticalSpeed;
 		[MinMaxSlider(1, 20)] public Vector2 speedRange;
@@ -34,6 +34,7 @@ namespace LanternTrip {
 				if(!target.HasValue)
 					return transform.forward;
 				Vector3 offset = target.Value - transform.position;
+				offset = offset.ProjectOnto(transform.up);
 				return offset.normalized;
 			}
 			else
