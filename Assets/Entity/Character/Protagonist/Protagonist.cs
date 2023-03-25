@@ -46,5 +46,10 @@ namespace LanternTrip {
 				gameplay.shoot.MakeShoot();
 			}
 		}
+
+		protected new void FixedUpdate() {
+			base.FixedUpdate();
+			//
+		}
 	}
 }
