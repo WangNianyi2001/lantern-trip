@@ -1,7 +1,7 @@
 using UnityEngine;
+using UnityEngine.Events;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace LanternTrip {
 	[RequireComponent(typeof(Rigidbody))]
@@ -9,10 +9,54 @@ namespace LanternTrip {
 		#region Core members
 		protected new Rigidbody rigidbody;
 		protected Dictionary<Collider, ContactPoint> contactingPoints = new Dictionary<Collider, ContactPoint>();
+		private float hp;
+		private bool undead;
+		#endregion
+
+		#region Public members
+		public float damageMultiplier = 1;
+		public Tinder.Type shotType = Tinder.Type.Invalid;
+		public UnityEvent onDie;
+		public UnityEvent onShot;
+		public UnityEvent onMatchedShot;
 		#endregion
 
 		#region Public interfaces
 		public IEnumerable<ContactPoint> ContactingPoints => contactingPoints.Values;
+
+		public float Hp {
+			get => Undead ? hp : Mathf.Infinity;
+			set {
+				hp = value;
+				if(Undead)
+					return;
+				if(hp <= 0) {
+					hp = 0;
+					Die();
+				}
+			}
+		}
+
+		public bool Undead {
+			get => undead;
+			set => undead = value;
+		}
+
+		public void TakeDamage(float amount) => Hp -= amount;
+
+		public void Shot(Arrow arrow) {
+			float damage = damageMultiplier;
+			if(arrow.Tinder?.type == shotType)
+				damage *= 2;
+			TakeDamage(damage);
+			onShot?.Invoke();
+			if(arrow.Tinder?.type == shotType)
+				onMatchedShot?.Invoke();
+		}
+
+		public void Die() {
+			onDie?.Invoke();
+		}
 		#endregion
 
 		#region Private method

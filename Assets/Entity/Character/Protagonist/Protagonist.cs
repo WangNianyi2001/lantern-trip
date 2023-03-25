@@ -40,12 +40,6 @@ namespace LanternTrip {
 				return base.CalculateExpectedDirection();
 		}
 
-		public override void Die() {
-			base.Die();
-
-			Debug.Log("Died");
-		}
-
 		public void Shoot() {
 			if(gameplay.Burn(1)) {
 				gameplay.shoot.MakeShoot();

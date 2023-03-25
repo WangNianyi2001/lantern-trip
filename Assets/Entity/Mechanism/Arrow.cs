@@ -19,7 +19,9 @@ namespace LanternTrip {
 			get => tinder;
 			set {
 				tinder = value;
+#pragma warning disable
 				particle.startColor = tinder?.mainColor ?? Color.white;
+#pragma warning restore
 			}
 		}
 
@@ -30,8 +32,8 @@ namespace LanternTrip {
 
 			particle.Stop();
 
-			Enemy enemy = collision.gameObject.GetComponent<Enemy>();
-			enemy?.TakeArrowDamage(this);
+			Entity entity = collision.gameObject.GetComponent<Entity>();
+			entity?.Shot(this);
 
 			StartCoroutine(FirstCollisionCoroutine());
 		}
