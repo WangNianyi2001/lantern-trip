@@ -1,11 +1,13 @@
 using UnityEngine;
+using NaughtyAttributes;
 
 namespace LanternTrip {
 	[CreateAssetMenu(menuName = "LanternTrip/NpcProfile")]
 	public class NpcProfile : ScriptableObject {
 		new public string name;
-		public int hp;
+		public bool undead;
+		[HideIf("undead")] public int hp;
 		public bool isEnemy;
-		[NaughtyAttributes.ShowIf("isEnemy")] public Tinder.Type type;
+		[ShowIf("isEnemy")] public Tinder.Type type;
 	}
 }

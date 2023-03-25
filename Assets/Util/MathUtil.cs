@@ -6,5 +6,9 @@ namespace LanternTrip {
 			planeNormal = planeNormal.normalized;
 			return v - Vector3.Dot(v, planeNormal) * planeNormal;
 		}
+
+		public static float Mod(float x, float divisor) {
+			return x - Mathf.Floor(x / divisor) * divisor;
+		}
 	}
 }

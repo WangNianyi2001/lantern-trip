@@ -1,10 +1,8 @@
 namespace LanternTrip {
 	public class Enemy : Npc {
-		public void TakeArrowDamage(Arrow arrow) {
-			int whole = profile.hp;
-			int half = (profile.hp + 1) / 2;
-			int damage = arrow.Tinder?.type == profile.type ? whole : half;
-			TakeDamage(damage);
+		protected new void Start() {
+			base.Start();
+			damageMultiplier = profile.hp / 2 * 1.01f;
 		}
 	}
 }

@@ -1,23 +1,17 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
+using System;
 
 namespace LanternTrip {
 	public partial class Character : Entity {
-		public struct Movement {
-			public enum State {
-				Passive,        // Character status is controlled externally.
-				Walking,        // Character is walking on ground.
-				Freefalling,    // Character is falling and doesn't receive player input.
-				Jumping,        // Character has just jumped.
-				Landing,        // Character has just landed on ground.
-				Dead,
-				Shooting,
-			}
-			public State state;
-
-			public Vector3 inputVelocity;
-			public Vector3 walkingVelocity;
+		public enum State {
+			Passive,        // Character status is controlled externally.
+			Walking,        // Character is walking on ground.
+			Freefalling,    // Character is falling and doesn't receive player input.
+			Jumping,        // Character has just jumped.
+			Landing,        // Character has just landed on ground.
+			Dead,
+			Shooting,
 		}
 
 		#region Inspector members
@@ -26,23 +20,25 @@ namespace LanternTrip {
 		#endregion
 
 		#region Core members
-		public Movement movement;
 		public CharacterAnimationController animationController;
+		[NonSerialized] public State state;
+		[NonSerialized] public Vector3 inputVelocity;
+		[NonSerialized] public Vector3 walkingVelocity;
 		#endregion
 
 		#region Core methods
-		protected virtual Vector3 InputVelocity => movement.inputVelocity;
+		protected virtual Vector3 InputVelocity => inputVelocity;
 
 		protected virtual void UpdateMovementState() {
-			switch(movement.state) {
-				case Movement.State.Walking:
+			switch(state) {
+				case State.Walking:
 					// If not standing on any point, freefall
 					if(!standingPoint.HasValue) {
-						movement.walkingVelocity = Vector3.zero;
-						movement.state = Movement.State.Freefalling;
+						walkingVelocity = Vector3.zero;
+						state = State.Freefalling;
 					}
 					break;
-				case Movement.State.Freefalling:
+				case State.Freefalling:
 					animationController.Freefalling = true;
 					animationController.Jumping = false;
 
@@ -51,26 +47,26 @@ namespace LanternTrip {
 						float fallingSpeed = Vector3.Dot(rigidbody.velocity, Physics.gravity);
 						if(fallingSpeed < 0)
 							break;
-						movement.state = Movement.State.Landing;
+						state = State.Landing;
 					}
 					break;
-				case Movement.State.Jumping:
+				case State.Jumping:
 					animationController.Jumping = true;
 					break;
-				case Movement.State.Landing:
+				case State.Landing:
 					animationController.Freefalling = false;
-					movement.state = Movement.State.Walking;
+					state = State.Walking;
 					break;
-				case Movement.State.Dead:
+				case State.Dead:
 					animationController.Dead = true;
 					break;
 			}
 			animationController.Moving =
-				(movement.state == Movement.State.Walking)
-				&& (movement.walkingVelocity.magnitude > .1f);
+				(state == State.Walking)
+				&& (walkingVelocity.magnitude > .1f);
 			animationController.Freefalling =
-				movement.state == Movement.State.Freefalling;
-			rigidbody.isKinematic = movement.state == Movement.State.Passive;
+				state == State.Freefalling;
+			rigidbody.isKinematic = state == State.Passive;
 		}
 
 		protected virtual float SlopeByNormal(Vector3 normal) {
@@ -79,7 +75,7 @@ namespace LanternTrip {
 		}
 
 		protected virtual Vector3 CalculateWalkingVelocity() {
-			if(movement.state == Movement.State.Shooting)
+			if(state == State.Shooting)
 				return Vector3.zero;
 			Vector3 targetVelocity = InputVelocity;
 			float speed = targetVelocity.magnitude;
@@ -145,7 +141,7 @@ namespace LanternTrip {
 			float speed = Mathf.Sqrt(2 * gravity * targetHeight);
 			Vector3 jumpingImpulse = transform.up * speed * rigidbody.mass;
 			rigidbody.AddForce(jumpingImpulse, ForceMode.Impulse);
-			movement.state = Movement.State.Freefalling;
+			state = State.Freefalling;
 
 		}
 		#endregion
@@ -167,10 +163,10 @@ namespace LanternTrip {
 
 		public bool CanMove {
 			get {
-				switch(movement.state) {
+				switch(state) {
 					default: return true;
-					case Movement.State.Passive:
-					case Movement.State.Dead:
+					case State.Passive:
+					case State.Dead:
 						return false;
 				}
 			}
@@ -178,21 +174,17 @@ namespace LanternTrip {
 
 		public bool CanShoot {
 			get {
-				bool idle = movement.state == Movement.State.Walking && InputVelocity.magnitude < .1f;
-				bool charging = movement.state == Movement.State.Shooting;
+				bool idle = state == State.Walking;
+				bool charging = state == State.Shooting;
 				return idle || charging;
 			}
 		}
 
 		public void Jump() {
-			if(movement.state != Movement.State.Walking)
+			if(state != State.Walking)
 				return;
-			movement.state = Movement.State.Jumping;
+			state = State.Jumping;
 			StartCoroutine(JumpCoroutine());
-		}
-
-		public virtual void Die() {
-			movement.state = Movement.State.Dead;
 		}
 		#endregion
 
@@ -203,26 +195,28 @@ namespace LanternTrip {
 			animationController = new CharacterAnimationController(this);
 
 			// Initialize
-			movement.state = Movement.State.Walking;
-			movement.inputVelocity = Vector3.zero;
+			state = State.Walking;
+			inputVelocity = Vector3.zero;
+
+			onDie.AddListener(() => state = State.Dead);
 		}
 
 		protected void FixedUpdate() {
 			UpdateMovementState();
 			if(CanMove) {
-				movement.walkingVelocity = CalculateWalkingVelocity();
-				Vector3 walkingForce = CalculateWalkingForce(movement.walkingVelocity);
+				walkingVelocity = CalculateWalkingVelocity();
+				Vector3 walkingForce = CalculateWalkingForce(walkingVelocity);
 				rigidbody.AddForce(walkingForce);
 			}
-			if(movement.state == Movement.State.Walking) {
+			if(state == State.Walking) {
 				if(movementSettings.jumping.autoJump) {
 					if(CalculateShouldAutoJump())
 						Jump();
 				}
 			}
-			switch(movement.state) {
-				case Movement.State.Passive:
-				case Movement.State.Dead:
+			switch(state) {
+				case State.Passive:
+				case State.Dead:
 					break;
 				default:
 					Vector3 zenithTorque = CalculateZenithTorque();

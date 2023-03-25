@@ -25,6 +25,7 @@ namespace LanternTrip {
 		float chargeUpSpeed = 0;
 		float chargeUpValue = 0;
 		int safezoneCounter = 0;
+		int coldzoneCounter = 0;
 		#endregion
 
 		#region Core methods
@@ -106,6 +107,13 @@ namespace LanternTrip {
 
 		[NonSerialized] public bool burning = false;
 
+		public float speedBonusRate = 1;
+		public bool coldDebuffEnabled = true;
+		public bool InCold => coldzoneCounter > 0;
+
+		public void EnterColdzone() => ++coldzoneCounter;
+		public void ExitColdzone() => --coldzoneCounter;
+
 		/// <summary>Try to load given type of tinder into first empty lantern and start burning.</summary>
 		/// <returns>`true` if succeed, `false` otherwise.</returns>
 		public bool LoadTinder(Tinder tinder) {
@@ -135,7 +143,7 @@ namespace LanternTrip {
 			return time == 0;
 		}
 
-		public void AddBonusTime(float time) => BonusTime += time;
+		public void GrantBonusTime(float time) => BonusTime += time;
 
 		public void ScrollSlot(int delta) {
 			if(currentLanterSlot == null) {
@@ -209,10 +217,15 @@ namespace LanternTrip {
 
 		void FixedUpdate() {
 			if(burning) {
-				bool burntOut = !Burn(Time.fixedDeltaTime * burningRate);
+				float burnTime = Time.fixedDeltaTime * burningRate;
+				if(coldDebuffEnabled && InCold) {
+					int redCount = lanternSlots.Where(slot => slot.tinder?.type == Tinder.Type.Red).Count();
+					burnTime *= redCount == 3 ? 1 : redCount > 0 ? 1.5f : 2;
+				}
+				bool burntOut = !Burn(burnTime);
 				if(activeBonuses.Count > 0)
 					DeactivateUnsatisfiedBonus();
-				if(burntOut)
+				if(burntOut && protagonist.state == Character.State.Dead)
 					protagonist.Die();
 			}
 			ChargeUpValue += ChargeUpSpeed * Time.fixedDeltaTime;

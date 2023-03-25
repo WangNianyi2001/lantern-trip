@@ -13,12 +13,12 @@ namespace LanternTrip {
 				Collider collider = rigidbody.GetComponent<Collider>();
 				Vector3 position = (collider.bounds.max + collider.bounds.min) / 2;
 				position.y = collider.bounds.max.y;
-				Handles.Label(position, typeof(Movement.State).GetEnumName(movement.state));
+				Handles.Label(position, typeof(State).GetEnumName(state));
 
 				// Input velocity
-				if(movement.state == Movement.State.Walking) {
+				if(state == State.Walking) {
 					Gizmos.color = Color.blue;
-					Gizmos.DrawRay(rigidbody.position, movement.walkingVelocity);
+					Gizmos.DrawRay(rigidbody.position, walkingVelocity);
 				}
 
 				// Actual velocity

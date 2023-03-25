@@ -76,6 +76,24 @@
                     "processors": "Normalize(max=1)",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "PlayerOrientCamera",
+                    "type": "Value",
+                    "id": "9d99db8a-6661-4fc1-a2ae-add7958f6d85",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "PlayerToggleOrientCamera",
+                    "type": "Button",
+                    "id": "b7907da6-5d4c-4178-9974-146a9cd86ad6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press(behavior=2)",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -208,6 +226,28 @@
                     "processors": "",
                     "groups": "PC",
                     "action": "PlayerChargeUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "64687d6f-ed44-4c23-851f-55cfa888b27a",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "InvertVector2(invertX=false)",
+                    "groups": "PC",
+                    "action": "PlayerOrientCamera",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b09b6574-8d9c-48ba-84bf-9da37d33d6ed",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "PlayerToggleOrientCamera",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

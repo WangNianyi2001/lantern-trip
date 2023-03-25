@@ -2,46 +2,46 @@ using UnityEngine;
 using NaughtyAttributes;
 
 namespace LanternTrip {
-	public class Protagonist : Character {
+	public partial class Protagonist : Character {
 		[Header("Shooting")]
 		[Range(0, 4)] public float verticalSpeed;
 		[MinMaxSlider(1, 20)] public Vector2 speedRange;
 
+		GameplayManager gameplay => GameplayManager.instance;
+
+		protected override Vector3 CalculateWalkingVelocity() {
+			return base.CalculateWalkingVelocity() * gameplay.speedBonusRate;
+		}
+
 		protected override void UpdateMovementState() {
 			base.UpdateMovementState();
-			switch(movement.state) {
-				case Movement.State.Walking:
-					if(CanShoot && GameplayManager.instance.ChargeUpValue > 0) {
-						movement.state = Movement.State.Shooting;
+			switch(state) {
+				case State.Walking:
+					if(CanShoot && gameplay.ChargeUpValue > 0) {
+						state = State.Shooting;
 					}
 					break;
-				case Movement.State.Shooting:
-					if(GameplayManager.instance.ChargeUpValue == 0)
-						movement.state = Movement.State.Walking;
+				case State.Shooting:
+					if(gameplay.ChargeUpValue == 0)
+						state = State.Walking;
 					break;
 			}
 		}
 
 		protected override Vector3 CalculateExpectedDirection() {
-			if(movement.state == Movement.State.Shooting) {
-				Vector3? target = GameplayManager.instance.shoot.Position;
+			if(state == State.Shooting) {
+				Vector3? target = gameplay.shoot.TargetPosition;
 				if(!target.HasValue)
 					return transform.forward;
 				Vector3 offset = target.Value - transform.position;
+				offset = offset.ProjectOnto(transform.up);
 				return offset.normalized;
 			}
 			else
 				return base.CalculateExpectedDirection();
 		}
 
-		public override void Die() {
-			base.Die();
-
-			Debug.Log("Died");
-		}
-
 		public void Shoot() {
-			GameplayManager gameplay = GameplayManager.instance;
 			if(gameplay.Burn(1)) {
 				gameplay.shoot.MakeShoot();
 			}
