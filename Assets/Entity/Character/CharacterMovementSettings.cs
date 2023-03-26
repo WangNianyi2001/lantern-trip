@@ -10,7 +10,7 @@ namespace LanternTrip {
 			[Range(0, 100)] public float accelerationGain;
 			[Range(0, 100)] public float maxAcceleration;
 			[Range(0, 20)] public float torqueGain;
-			[Range(0, 5)] public float speed;
+			[Range(0, 50)] public float speed;
 			[Range(0, 90)] public float maxSlopeAngle;
 		}
 		public Walking walking;
