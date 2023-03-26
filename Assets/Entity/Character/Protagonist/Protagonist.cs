@@ -6,6 +6,7 @@ namespace LanternTrip {
 		[Header("Shooting")]
 		[Range(0, 4)] public float verticalSpeed;
 		[MinMaxSlider(1, 20)] public Vector2 speedRange;
+		[Range(0, 1)] public float shootingAngleRate;
 
 		GameplayManager gameplay => GameplayManager.instance;
 
