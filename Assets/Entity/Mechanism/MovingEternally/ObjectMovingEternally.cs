@@ -14,7 +14,7 @@ namespace LanternTrip
         public Entity objectToMove;
         [Range(0, 5)] public float waitTime;
         public float timer = 0;
-        [Range(0, 20)] public float moveSpeed;
+        [Range(0, 100)] public float moveSpeed;
 
         void Start()
         {
