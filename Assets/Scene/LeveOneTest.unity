@@ -2596,19 +2596,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3000564703986441677, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.06426384
+      value: -0.064274244
       objectReference: {fileID: 0}
     - target: {fileID: 3000564703986441677, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.0005669904
+      value: 0.0005670815
       objectReference: {fileID: 0}
     - target: {fileID: 3000564703986441677, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.997894
+      value: 0.99789333
       objectReference: {fileID: 0}
     - target: {fileID: 3000564703986441677, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.00880427
+      value: 0.008804256
       objectReference: {fileID: 0}
     - target: {fileID: 3000564704245377486, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
       propertyPath: m_FollowOffset.x
@@ -5505,7 +5505,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 778130300}
-  - component: {fileID: 778130301}
   m_Layer: 0
   m_Name: MovingCube_R
   m_TagString: Untagged
@@ -5530,24 +5529,6 @@ Transform:
   m_Father: {fileID: 1270615171}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
---- !u!114 &778130301
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 778130299}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e8bcfd7ff96deb4ea38405a10b774bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startPosition: {fileID: 1993933035}
-  endPosition: {fileID: 725453618}
-  objectToMove: {fileID: 0}
-  waitTime: 1.19
-  timer: 0
-  moveSpeed: 100
 --- !u!1 &808784337 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: fd356a1bfe5a49d4fa5045710630f712, type: 3}
@@ -9303,7 +9284,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1247571446}
-  - component: {fileID: 1247571447}
   m_Layer: 0
   m_Name: MovingCube_L
   m_TagString: Untagged
@@ -9328,24 +9308,6 @@ Transform:
   m_Father: {fileID: 1270615171}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1247571447
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1247571445}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e8bcfd7ff96deb4ea38405a10b774bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startPosition: {fileID: 1009148160}
-  endPosition: {fileID: 478691789}
-  objectToMove: {fileID: 0}
-  waitTime: 1.19
-  timer: 0
-  moveSpeed: 100
 --- !u!1 &1253196491
 GameObject:
   m_ObjectHideFlags: 0
