@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 
 public class StumblingSphere : MonoBehaviour
 {
     public float TimeInterval = 0.5f;
-    
+    public float TimeToDestroy = 2.0f;
     public GameObject Sphere;
     private Transform Slot1;
     private Transform Slot2;
@@ -32,17 +34,40 @@ public class StumblingSphere : MonoBehaviour
     {
         while (Sphere!=null)
         {
-            var go = GameObject.Instantiate(Sphere);
-            go.transform.position = Slot1.position;
+            var go1 = GameObject.Instantiate(Sphere);
+            go1.transform.position = Slot1.position;
+            SpawActor(TimeToDestroy, go1);
+            yield return new WaitForSeconds(TimeInterval);
+
+            var go2 = GameObject.Instantiate(Sphere);
+            go2.transform.position = Slot2.position;
+            SpawActor(TimeToDestroy, go2);
             yield return new WaitForSeconds(TimeInterval);
             
-            go = GameObject.Instantiate(Sphere);
-            go.transform.position = Slot2.position;
-            yield return new WaitForSeconds(TimeInterval);
-            
-            go = GameObject.Instantiate(Sphere);
-            go.transform.position = Slot3.position;
+            var go3 = GameObject.Instantiate(Sphere);
+            go3.transform.position = Slot3.position;
+            SpawActor(TimeToDestroy, go3);
             yield return new WaitForSeconds(TimeInterval);
         }
+    }
+
+    private void SpawActor(float _TimeToDestroy, GameObject go)
+    {
+        var cur_TimeToDestroy = _TimeToDestroy;
+        go.UpdateAsObservable()
+            .Subscribe(_ =>
+            {
+                cur_TimeToDestroy -= Time.deltaTime;
+                if (cur_TimeToDestroy < 0)
+                    GameObject.Destroy(go);
+            });
+        go.OnCollisionEnterAsObservable()
+            .Where(collision => collision.collider.CompareTag("Player"))
+            .Subscribe(collision =>
+            {
+                Debug.Log("1");
+                GameObject.Destroy(go);
+            })
+            ;
     }
 }
