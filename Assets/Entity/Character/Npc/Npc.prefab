@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -160,6 +160,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 695c78a11f5452e4f8abaa24dc2a4569, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageMultiplier: 1
+  shotType: 0
+  onDie:
+    m_PersistentCalls:
+      m_Calls: []
+  onShot:
+    m_PersistentCalls:
+      m_Calls: []
+  onMatchedShot:
+    m_PersistentCalls:
+      m_Calls: []
   movementSettings: {fileID: 11400000, guid: f6edc9d0b8cf6dc488820f3529b26ea0, type: 2}
   animator: {fileID: 0}
   profile: {fileID: 11400000, guid: 2e513760f8da2e54b95450f671369168, type: 2}

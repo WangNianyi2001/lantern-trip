@@ -44,9 +44,10 @@ namespace LanternTrip {
 
 					// If landed, land
 					if(standingPoint.HasValue) {
-						float fallingSpeed = Vector3.Dot(rigidbody.velocity, Physics.gravity);
-						if(fallingSpeed < 0)
-							break;
+						// 如果不注释，会导致角色在斜坡上滑落时无法判定落地
+						// float fallingSpeed = Vector3.Dot(rigidbody.velocity, Physics.gravity);
+						// if(fallingSpeed < 0)
+						// 	break;
 						state = State.Landing;
 					}
 					break;
