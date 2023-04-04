@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.Events;
-using DSUsable = PixelCrushers.DialogueSystem.Wrappers.Usable;
 
-namespace LanternTrip {
+namespace LanternTrip
+{
 	[RequireComponent(typeof(Entity))]
 	public class TinderSource : MonoBehaviour {
 		/// <summary>Temporary solution for getting current tinder.</summary>
