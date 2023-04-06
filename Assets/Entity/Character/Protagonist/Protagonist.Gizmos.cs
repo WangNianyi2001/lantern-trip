@@ -6,7 +6,7 @@ namespace LanternTrip {
 			base.OnDrawGizmos();
 
 			// Shooting
-			if(state == State.Shooting) {
+			if(state == "Shooting") {
 				Gizmos.color = Color.cyan;
 				Gizmos.DrawRay(new Ray(transform.position, CalculateExpectedDirection()));
 

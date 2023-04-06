@@ -17,20 +17,20 @@ namespace LanternTrip {
 		protected override void UpdateMovementState() {
 			base.UpdateMovementState();
 			switch(state) {
-				case State.Walking:
+				case "Walking":
 					if(CanShoot && gameplay.ChargeUpValue > 0) {
-						state = State.Shooting;
+						state = "Shooting";
 					}
 					break;
-				case State.Shooting:
+				case "Shooting":
 					if(gameplay.ChargeUpValue == 0)
-						state = State.Walking;
+						state = "Walking";
 					break;
 			}
 		}
 
 		protected override Vector3 CalculateExpectedDirection() {
-			if(state == State.Shooting) {
+			if(state == "Shooting") {
 				Vector3? target = gameplay.shoot.TargetPosition;
 				if(!target.HasValue)
 					return transform.forward;
@@ -41,6 +41,8 @@ namespace LanternTrip {
 			else
 				return base.CalculateExpectedDirection();
 		}
+
+		public bool CanShoot => state == "Walking" || state == "Shooting";
 
 		public void Shoot() {
 			if(gameplay.Burn(1)) {

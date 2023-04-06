@@ -13,7 +13,7 @@ namespace LanternTrip {
 				Collider collider = rigidbody.GetComponent<Collider>();
 				Vector3 position = (collider.bounds.max + collider.bounds.min) / 2;
 				position.y = collider.bounds.max.y;
-				Handles.Label(position, typeof(State).GetEnumName(state));
+				Handles.Label(position, state);
 
 				// Standing point
 				if(standingPoint.HasValue) {
@@ -28,7 +28,7 @@ namespace LanternTrip {
 				}
 
 				// Input velocity
-				if(state == State.Walking) {
+				if(state == "Walking") {
 					Gizmos.color = Color.blue;
 					Gizmos.DrawRay(rigidbody.position, walkingVelocity);
 				}
