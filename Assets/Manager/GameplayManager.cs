@@ -15,6 +15,7 @@ namespace LanternTrip {
 		public InputManager input;
 		public UiManager ui;
 		public ShootManager shoot;
+		new public CameraManager camera;
 		[Expandable] public GameSettings settings;
 		#endregion
 
@@ -225,7 +226,7 @@ namespace LanternTrip {
 				bool burntOut = !Burn(burnTime);
 				if(activeBonuses.Count > 0)
 					DeactivateUnsatisfiedBonus();
-				if(burntOut && protagonist.state == Character.State.Dead)
+				if(burntOut && protagonist.state == "Dead")
 					protagonist.Die();
 			}
 			ChargeUpValue += ChargeUpSpeed * Time.fixedDeltaTime;

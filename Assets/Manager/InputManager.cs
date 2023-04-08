@@ -14,10 +14,7 @@ namespace LanternTrip {
 		PlayerInput playerInput;
 		Vector2 mousePosition = new Vector2();
 		Vector3 rawInputMovement;
-		bool isOrientingCamera = false;
-		float orbitDistance = 1;
-		CinemachineOrbitalTransposer orbit;
-		Vector2 targetOrbitOrientation, actualOrbitOrientation;
+		bool orientingCamera = false;
 		#endregion
 
 		#region Inspector members
@@ -25,8 +22,6 @@ namespace LanternTrip {
 		new public Camera camera;
 		public CinemachineVirtualCamera orbitalCamera;
 		[MinMaxSlider(0, 90)] public Vector2 orbitAzimuthRange;
-		[Range(0, 2)] public float orbitGain;
-		[Range(0, 5)] public float orbitDamp;
 		#endregion
 
 		#region Public interfaces
@@ -77,15 +72,24 @@ namespace LanternTrip {
 		}
 
 		public void OnPlayerToggleOrientCamera(InputValue value) {
-			isOrientingCamera = value.Get<float>() > .5f;
+			orientingCamera = value.Get<float>() > .5f;
+		}
+		public void OnPlayerToggleCameraMode(InputValue _) {
+			switch(gameplay.camera.Mode) {
+				case CameraMode.Orbital:
+					gameplay.camera.SetFollowing(FollowingCameraMode.PositiveY);
+					break;
+				case CameraMode.Following:
+					gameplay.camera.Mode = CameraMode.Orbital;
+					break;
+			}
 		}
 		public void OnPlayerOrientCamera(InputValue value) {
-			if(!isOrientingCamera || !orbit)
+			if(!orientingCamera || gameplay.camera.Mode != CameraMode.Orbital)
 				return;
-
-			Vector2 raw = value.Get<Vector2>() * orbitGain;
-			targetOrbitOrientation.y += raw.x;
-			targetOrbitOrientation.x += raw.y;
+			Vector2 raw = value.Get<Vector2>();
+			gameplay.camera.Azimuth += raw.x * Mathf.PI / 180;
+			gameplay.camera.Zenith += raw.y * Mathf.PI / 180;
 		}
 		#endregion
 
@@ -96,14 +100,6 @@ namespace LanternTrip {
 
 			// Initialize main game
 			GainPlayerControl();
-
-			if(orbitalCamera) {
-				var transposer = orbitalCamera.GetCinemachineComponent(CinemachineCore.Stage.Body);
-				if(transposer is CinemachineOrbitalTransposer) {
-					orbit = transposer as CinemachineOrbitalTransposer;
-					orbitDistance = orbit.m_FollowOffset.magnitude;
-				}
-			}
 		}
 
 		void FixedUpdate() {
@@ -125,13 +121,6 @@ namespace LanternTrip {
 			q = Quaternion.Euler(euler);
 			v = q * v;
 			protagonist.inputVelocity = v;
-
-			// Orbital camera orientation
-			if(orbit) {
-				targetOrbitOrientation.x = Mathf.Clamp(targetOrbitOrientation.x, orbitAzimuthRange.x, orbitAzimuthRange.y);
-				actualOrbitOrientation = Vector2.Lerp(actualOrbitOrientation, targetOrbitOrientation, Mathf.Exp(-orbitDamp));
-				orbit.m_FollowOffset = Quaternion.Euler(actualOrbitOrientation) * Vector3.forward * -orbitDistance;
-			}
 		}
 		#endregion
 	}

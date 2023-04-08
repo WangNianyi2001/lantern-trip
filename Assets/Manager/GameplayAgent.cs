@@ -35,5 +35,8 @@ namespace LanternTrip {
 		public void ExitSafezone() => gameplay.ExitSafezone();
 		public void EnterColdzone() => gameplay.EnterColdzone();
 		public void ExitColdzone() => gameplay.ExitColdzone();
+
+		public void SetOrbitalCamera() => gameplay.camera.Mode = CameraMode.Orbital;
+		public void SetFollowingCamera(FollowingCameraMode mode) => gameplay.camera.SetFollowing(mode);
 	}
 }

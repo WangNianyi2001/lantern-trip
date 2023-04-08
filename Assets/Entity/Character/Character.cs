@@ -4,16 +4,6 @@ using System;
 
 namespace LanternTrip {
 	public partial class Character : Entity {
-		public enum State {
-			Passive,        // Character status is controlled externally.
-			Walking,        // Character is walking on ground.
-			Freefalling,    // Character is falling and doesn't receive player input.
-			Jumping,        // Character has just jumped.
-			Landing,        // Character has just landed on ground.
-			Dead,
-			Shooting,
-		}
-
 		#region Inspector members
 		public CharacterMovementSettings movementSettings;
 		public Animator animator;
@@ -21,7 +11,7 @@ namespace LanternTrip {
 
 		#region Core members
 		public CharacterAnimationController animationController;
-		[NonSerialized] public State state;
+		[NonSerialized] public string state;
 		[NonSerialized] public Vector3 inputVelocity;
 		[NonSerialized] public Vector3 walkingVelocity;
 		#endregion
@@ -31,14 +21,14 @@ namespace LanternTrip {
 
 		protected virtual void UpdateMovementState() {
 			switch(state) {
-				case State.Walking:
+				case "Walking":
 					// If not standing on any point, freefall
 					if(!standingPoint.HasValue) {
 						walkingVelocity = Vector3.zero;
-						state = State.Freefalling;
+						state = "Freefalling";
 					}
 					break;
-				case State.Freefalling:
+				case "Freefalling":
 					animationController.Freefalling = true;
 					animationController.Jumping = false;
 
@@ -48,26 +38,25 @@ namespace LanternTrip {
 						// float fallingSpeed = Vector3.Dot(rigidbody.velocity, Physics.gravity);
 						// if(fallingSpeed < 0)
 						// 	break;
-						state = State.Landing;
+						state = "Landing";
 					}
 					break;
-				case State.Jumping:
+				case "Jumping":
 					animationController.Jumping = true;
 					break;
-				case State.Landing:
+				case "Landing":
 					animationController.Freefalling = false;
-					state = State.Walking;
+					state = "Walking";
 					break;
-				case State.Dead:
+				case "Dead":
 					animationController.Dead = true;
 					break;
 			}
 			animationController.Moving =
-				(state == State.Walking)
+				(state == "Walking")
 				&& (walkingVelocity.magnitude > .1f);
 			animationController.Freefalling =
-				state == State.Freefalling;
-			rigidbody.isKinematic = state == State.Passive;
+				state == "Freefalling";
 		}
 
 		protected virtual float SlopeByNormal(Vector3 normal) {
@@ -76,7 +65,7 @@ namespace LanternTrip {
 		}
 
 		protected virtual Vector3 CalculateWalkingVelocity() {
-			if(state == State.Shooting)
+			if(state == "Shooting")
 				return Vector3.zero;
 			Vector3 targetVelocity = InputVelocity;
 			float speed = targetVelocity.magnitude;
@@ -142,7 +131,7 @@ namespace LanternTrip {
 			float speed = Mathf.Sqrt(2 * gravity * targetHeight);
 			Vector3 jumpingImpulse = transform.up * speed * rigidbody.mass;
 			rigidbody.AddForce(jumpingImpulse, ForceMode.Impulse);
-			state = State.Freefalling;
+			state = "Freefalling";
 
 		}
 		#endregion
@@ -162,29 +151,10 @@ namespace LanternTrip {
 			}
 		}
 
-		public bool CanMove {
-			get {
-				switch(state) {
-					default: return true;
-					case State.Passive:
-					case State.Dead:
-						return false;
-				}
-			}
-		}
-
-		public bool CanShoot {
-			get {
-				bool idle = state == State.Walking;
-				bool charging = state == State.Shooting;
-				return idle || charging;
-			}
-		}
-
 		public void Jump() {
-			if(state != State.Walking)
+			if(state != "Walking")
 				return;
-			state = State.Jumping;
+			state = "Jumping";
 			StartCoroutine(JumpCoroutine());
 		}
 		#endregion
@@ -196,33 +166,28 @@ namespace LanternTrip {
 			animationController = new CharacterAnimationController(this);
 
 			// Initialize
-			state = State.Walking;
+			state = "Walking";
 			inputVelocity = Vector3.zero;
 
-			onDie.AddListener(() => state = State.Dead);
+			onDie.AddListener(() => state = "Dead");
 		}
 
 		protected void FixedUpdate() {
 			UpdateMovementState();
-			if(CanMove) {
+			if(state != "Dead") {
 				walkingVelocity = CalculateWalkingVelocity();
 				Vector3 walkingForce = CalculateWalkingForce(walkingVelocity);
 				rigidbody.AddForce(walkingForce);
 			}
-			if(state == State.Walking) {
+			if(state == "Walking") {
 				if(movementSettings.jumping.autoJump) {
 					if(CalculateShouldAutoJump())
 						Jump();
 				}
 			}
-			switch(state) {
-				case State.Passive:
-				case State.Dead:
-					break;
-				default:
-					Vector3 zenithTorque = CalculateZenithTorque();
-					rigidbody.AddTorque(zenithTorque);
-					break;
+			if(state != "Dead") {
+				Vector3 zenithTorque = CalculateZenithTorque();
+				rigidbody.AddTorque(zenithTorque);
 			}
 
 			animationController.Update();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
+using LanternTrip;
 
 public class StumblingSphere : MonoBehaviour
 {
@@ -65,7 +66,8 @@ public class StumblingSphere : MonoBehaviour
             .Where(collision => collision.collider.CompareTag("Player"))
             .Subscribe(collision =>
             {
-                Debug.Log("1");
+                var player = collision.collider.GetComponent<Protagonist>();
+                player.TakeDamage(10f);
                 GameObject.Destroy(go);
             })
             ;
