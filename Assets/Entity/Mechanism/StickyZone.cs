@@ -8,8 +8,16 @@ namespace LanternTrip {
 		HashSet<Collider> colliders = new HashSet<Collider>(16);
 		Vector3 lastPosition;
 
-		void OnTriggerEnter(Collider c) => colliders.Add(c);
-		void OnTriggerExit(Collider c) => colliders.Remove(c);
+		bool IsInterested(Transform t) => !(transform.IsChildOf(t) || t.IsChildOf(transform));
+
+		void OnTriggerEnter(Collider c) {
+			if(IsInterested(c.transform))
+				colliders.Add(c);
+		}
+		void OnTriggerExit(Collider c) {
+			if(IsInterested(c.transform))
+				colliders.Remove(c);
+		}
 
 		void Start() => rb = GetComponent<Rigidbody>();
 

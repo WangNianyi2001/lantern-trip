@@ -13,6 +13,7 @@ namespace LanternTrip {
 
 		public Transform elevatorSwitch;
 		public Transform elevatorPosition;
+		Rigidbody elevatorRb;
 		//Trigger trigger;
 
 		public UnityEvent onDeleteElevatorSwitch;
@@ -33,14 +34,22 @@ namespace LanternTrip {
 			//Destroy(elevator.gameObject);
 		}
 		private IEnumerator ElevatorMoveToPosition() {
+			Debug.Log(elevatorRb);
+			while((elevatorRb.position - targetPosition.position).magnitude > 0.1f) {
+				Vector3 moveVector = Vector3.MoveTowards(elevatorRb.position, targetPosition.position, moveSpeed * Time.deltaTime);
+				elevatorRb.MovePosition(moveVector);
 
-			while(Vector3.Magnitude((elevatorPosition.position - targetPosition.position)) > 0.1f) {
-				elevatorPosition.localPosition = Vector3.MoveTowards(elevatorPosition.localPosition, targetPosition.localPosition, moveSpeed * Time.deltaTime);
-
-				yield return 0;
+				yield return new WaitForEndOfFrame();
 			}
 
 		} /**/
+
+		void Start() {
+			elevatorRb = elevatorPosition.GetComponentInChildren<Rigidbody>();
+			elevatorRb.useGravity = false;
+			elevatorRb.isKinematic = true;
+			elevatorRb.constraints &= ~RigidbodyConstraints.FreezePosition;
+		}
 	}
 
 }
