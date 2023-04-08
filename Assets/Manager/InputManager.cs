@@ -75,14 +75,17 @@ namespace LanternTrip {
 			orientingCamera = value.Get<float>() > .5f;
 		}
 		public void OnPlayerToggleCameraMode(InputValue _) {
-			var mode = gameplay.camera.Mode;
-			var enumValues = typeof(GameCameraMode).GetEnumValues();
-			int n = enumValues.GetLength(0);
-			int i = ((int)mode + 1) % n;
-			gameplay.camera.Mode = (GameCameraMode)enumValues.GetValue(i);
+			switch(gameplay.camera.Mode) {
+				case CameraMode.Orbital:
+					gameplay.camera.SetFollowing(FollowingCameraMode.PositiveY);
+					break;
+				case CameraMode.Following:
+					gameplay.camera.Mode = CameraMode.Orbital;
+					break;
+			}
 		}
 		public void OnPlayerOrientCamera(InputValue value) {
-			if(!orientingCamera)
+			if(!orientingCamera || gameplay.camera.Mode != CameraMode.Orbital)
 				return;
 			Vector2 raw = value.Get<Vector2>();
 			gameplay.camera.Azimuth += raw.x * Mathf.PI / 180;
