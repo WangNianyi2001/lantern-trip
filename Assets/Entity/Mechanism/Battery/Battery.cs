@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using LanternTrip;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
@@ -59,10 +60,12 @@ public class Battery : MonoBehaviour
                 if (cur_TimeToDestroy < 0f) GameObject.Destroy(go);
             })
             ;
-        go.OnTriggerEnterAsObservable()
-            .Where(collision => collision.CompareTag("Player"))
+        go.OnCollisionEnterAsObservable()
+            .Where(collision => collision.collider.CompareTag("Player"))
             .Subscribe(collision =>
             {
+                var player = collision.collider.GetComponent<Protagonist>();
+                player.TakeDamage(10f);
                 GameObject.Destroy(go);
             })
             ;
