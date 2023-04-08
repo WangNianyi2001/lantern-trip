@@ -15,6 +15,7 @@ namespace LanternTrip {
 		public InputManager input;
 		public UiManager ui;
 		public ShootManager shoot;
+		new public CameraManager camera;
 		[Expandable] public GameSettings settings;
 		#endregion
 
