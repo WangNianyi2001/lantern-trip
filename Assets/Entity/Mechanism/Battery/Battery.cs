@@ -10,6 +10,8 @@ public class Battery : MonoBehaviour
 {
     public GameObject bullet;
 
+    public int level = 1;
+
     public float TimeInterval = 0.5f;
 
     private float cur_TimeInterval;
@@ -47,11 +49,32 @@ public class Battery : MonoBehaviour
         cur_TimeInterval = TimeInterval;
         var go = GameObject.Instantiate(bullet);
         go.transform.position = transform.position;
-        var dir = other.transform.position - transform.position;
+
+        Vector3 dir;
+        switch (level)
+        {
+            // 1级炮台，朝着主角的方向射击
+            case 1:
+                dir = other.transform.position - transform.position;
+                break;
+            // 0级炮台：朝着子物体的方向射击
+            case 0:
+                dir = transform.GetChild(0).position - transform.position;
+                break;
+            default:
+                dir = other.transform.position - transform.position;
+                break;
+        }
+
         dir.y = 0;
+
+        var angle = Vector3.Dot(dir, Vector3.right);
+        transform.rotation = Quaternion.identity;
+        transform.Rotate(Vector3.up, angle);
 
         var cur_TimeToDestroy = TimeToDestroy;
 
+        
         go.UpdateAsObservable()
             .Subscribe(_ =>
             {
