@@ -34,8 +34,8 @@ namespace LanternTrip {
 
 			if(path.controlRotation) {
 				position.height = EditorGUIUtility.singleLineHeight;
-				var pEuler = property.FindPropertyRelative("rulerAngles");
-				EditorGUI.PropertyField(position, pEuler);
+				var pRotation = property.FindPropertyRelative("rotation");
+				EditorGUI.PropertyField(position, pRotation);
 			}
 
 			if(EditorGUI.EndChangeCheck())
