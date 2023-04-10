@@ -8,7 +8,6 @@ namespace LanternTrip {
 		[Min(0)] public float speed = 1;
 		public bool reversed;
 		public bool alternate;
-		public bool repeat;
 		public bool forever;
 		public bool beginOnEnable;
 		[Expandable] [Instance] public MovingPath path;
@@ -41,12 +40,16 @@ namespace LanternTrip {
 			delta *= direction;
 			float expectedProgress = Progress + delta;
 			Progress = expectedProgress;
-			if(Progress != expectedProgress) {  // ╣╫м╥ак
+			if(Progress != expectedProgress) {  // О©╫О©╫м╥О©╫О©╫
 				if(!forever) {
 					if(--bounceLeft <= 0)
 						return false;
 				}
-				direction *= -1;
+				if(alternate) {
+					direction *= -1;
+				} else {
+					Progress = direction > 0 ? 0 : path.MaxProgress;
+				}
 			}
 
 			return true;
