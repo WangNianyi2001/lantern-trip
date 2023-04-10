@@ -13,7 +13,7 @@ namespace LanternTrip {
 				return base.GetPropertyHeight(property, label);
 			}
 			path = target as MovingPath;
-			if(!path.controlRotation)
+			if(!path.useRotation)
 				return EditorGUIUtility.singleLineHeight;
 			else
 				return 2 * EditorGUIUtility.singleLineHeight;
@@ -32,7 +32,7 @@ namespace LanternTrip {
 			EditorGUI.PropertyField(position, pPosition);
 			position.y += EditorGUIUtility.singleLineHeight;
 
-			if(path.controlRotation) {
+			if(path.useRotation) {
 				position.height = EditorGUIUtility.singleLineHeight;
 				var pRotation = property.FindPropertyRelative("rotation");
 				EditorGUI.PropertyField(position, pRotation);

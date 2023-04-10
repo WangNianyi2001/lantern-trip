@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace LanternTrip {
 	public class MovingPath : ScriptableObject {
@@ -12,13 +13,15 @@ namespace LanternTrip {
 
 		bool IsLocal => coordinateMode == CoordinateMode.Local && coordinateLocalBase != null;
 
-		public bool controlRotation;
+		public bool useRotation;
 		[Serializable]
 		public struct Anchor {
 			public Vector3 position;
-			public Vector3 rotation;
+			public Quaternion rotation;
 		}
 		public List<Anchor> anchors;
+
+		public float MaxProgress => anchors.Count - 1;
 
 		public float LengthByIndex(int i) {
 			if(i < 0 || i >= anchors.Count - 1)
@@ -34,32 +37,43 @@ namespace LanternTrip {
 			}
 		}
 
-		public KeyValuePair<int, float> ProgressByDistance(float d) {
+		public float ProgressByDistance(float d) {
 			if(d < 0)
-				return new KeyValuePair<int, float>(0, 0);
+				return 0;
 			int i;
 			for(i = 0; i < anchors.Count - 1; ++i) {
 				float sd = LengthByIndex(i);
 				if(sd >= d)
-					return new KeyValuePair<int, float>(i, d / sd);
+					return i + d / sd;
 				d -= sd;
 			}
-			return new KeyValuePair<int, float>(anchors.Count - 2, 1);
+			return anchors.Count - 1;
 		}
 
-		public Vector3 Position(KeyValuePair<int, float> progress) {
-			Vector3 a = anchors[progress.Key].position, b = anchors[progress.Key + 1].position;
-			Vector3 res = Vector3.Lerp(a, b, progress.Value);
-			if(IsLocal)
-				res = coordinateLocalBase.localToWorldMatrix.MultiplyPoint(res);
-			return res;
+		Vector3 _Position(int i) => IsLocal ? coordinateLocalBase.localToWorldMatrix.MultiplyPoint(anchors[i].position) : anchors[i].position;
+		Quaternion _Rotation(int i) => IsLocal ? coordinateLocalBase.rotation * anchors[i].rotation : anchors[i].rotation;
+		public Vector3 Position(float progress) {
+			if(progress <= 0)
+				return _Position(0);
+			if(progress >= anchors.Count - 1)
+				return _Position(anchors.Count - 1);
+
+			int i = (int)Mathf.Floor(progress);
+			float f = progress - i;
+
+			Vector3 a = _Position(i), b = _Position(i + 1);
+			return Vector3.Lerp(a, b, f);
 		}
-		public Quaternion Rotation(KeyValuePair<int, float> progress) {
-			Quaternion a = Quaternion.Euler(anchors[progress.Key].rotation), b = Quaternion.Euler(anchors[progress.Key + 1].rotation);
-			Quaternion res = Quaternion.Lerp(a, b, progress.Value);
-			if(IsLocal)
-				res = coordinateLocalBase.rotation * res;
-			return res;
+		public Quaternion Rotation(float progress) {
+			if(progress <= 0)
+				return _Rotation(0);
+			if(progress >= anchors.Count - 1)
+				return _Rotation(anchors.Count - 1);
+
+			int i = (int)Mathf.Floor(progress);
+			float f = progress - i;
+			Quaternion a = _Rotation(i), b = _Rotation(i + 1);
+			return Quaternion.Lerp(a, b, f);
 		}
 
 		[NonSerialized] public int currentSelectIndex = -1;
@@ -68,9 +82,9 @@ namespace LanternTrip {
 			if(IsLocal) {
 				anchors = anchors.Select(a => {
 					a.position = coordinateLocalBase.localToWorldMatrix.MultiplyPoint(a.position);
-					Quaternion q = Quaternion.Euler(a.rotation);
+					Quaternion q = a.rotation;
 					q = coordinateLocalBase.rotation * q;
-					a.rotation = q.eulerAngles;
+					a.rotation = q;
 					return a;
 				}).ToList();
 			}
@@ -83,8 +97,8 @@ namespace LanternTrip {
 				Gizmos.color = color;
 				Gizmos.DrawSphere(anchor.position, radius);
 
-				if(controlRotation) {
-					var q = Quaternion.Euler(anchor.rotation);
+				if(useRotation) {
+					var q = anchor.rotation;
 					var p = anchor.position;
 					float l = .2f * (selected ? 1.2f : 1);
 					Gizmos.color = Color.red;

@@ -1,52 +1,70 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 using NaughtyAttributes;
 
 namespace LanternTrip {
 	public class MoveAlongPath : MonoBehaviour {
-		//public enum MoveMode { ByDistance, BySegment }
-		//public MoveMode moveMode;
 		[Min(0)] public float speed = 1;
+		public bool reversed;
+		public bool alternate;
+		public bool repeat;
 		public bool beginOnEnable;
 		[Expandable] [Instance] public MovingPath path;
 
 		Coroutine movingCoroutine = null;
-		float distance = 0;
+		float progress = 0;
+		float direction = 1;
 
-		void UpdateProgress(KeyValuePair<int, float> progress) {
+		void UpdateProgress(float progress) {
 			transform.position = path.Position(progress);
-			transform.rotation = path.Rotation(progress);
+			if(path.useRotation)
+				transform.rotation = path.Rotation(progress);
 		}
 
-		public float Distance {
-			get => distance;
+		public float Progress {
+			get => progress;
 			set {
-				var p = path.ProgressByDistance(value);
-				UpdateProgress(p);
-				distance = value;
+				progress = Mathf.Clamp(value, 0, path.MaxProgress);
+				UpdateProgress(progress);
 			}
+		}
+
+		bool Next() {
+			if(movingCoroutine == null)
+				return false;
+
+			float expectedProgress = Progress + Time.fixedDeltaTime * speed * direction;
+			Progress = expectedProgress;
+			if(Progress != expectedProgress) {  // µ½Í·ÁË
+				if(!alternate)
+					return false;
+				direction *= -1;
+			}
+
+			return true;
 		}
 
 		IEnumerator MovingCoroutine() {
 			yield return new WaitForFixedUpdate();
 			while(true) {
-				if(movingCoroutine == null) {
+				if(!Next()) {
 					StopMoving();
 					yield break;
 				}
-				var nextD = Distance + speed * Time.fixedDeltaTime;
-				if(nextD >= path.Length)
-					break;
-				Distance = nextD;
 				yield return new WaitForFixedUpdate();
 			}
-			Distance = path.Length;
-			StopMoving();
 		}
 
 		[ContextMenu("Start Moving")]
 		public void StartMoving() {
+			if(!reversed) {
+				direction = 1;
+				Progress = 0;
+			}
+			else {
+				direction = -1;
+				Progress = path.MaxProgress;
+			}
 			movingCoroutine = StartCoroutine(MovingCoroutine());
 		}
 
