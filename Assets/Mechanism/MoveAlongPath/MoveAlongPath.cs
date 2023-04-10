@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using NaughtyAttributes;
+using System;
 
 namespace LanternTrip {
 	public class MoveAlongPath : MonoBehaviour {
@@ -14,9 +15,8 @@ namespace LanternTrip {
 
 		Coroutine movingCoroutine = null;
 		float progress = 0;
-		float direction = 1;
-		float paused = 1;
-		int bounceLeft = 0;
+		[NonSerialized] public float direction = 1;
+		[NonSerialized] public int bounceLeft = 0;
 
 		void UpdateProgress(float progress) {
 			transform.position = path.Position(progress);
@@ -31,14 +31,14 @@ namespace LanternTrip {
 				UpdateProgress(progress);
 			}
 		}
+		public bool Moving => movingCoroutine != null;
 
 		bool Next() {
-			if(movingCoroutine == null)
+			if(!Moving)
 				return false;
 
 			float delta = Time.fixedDeltaTime * speed;
 			delta *= direction;
-			delta *= paused;
 			float expectedProgress = Progress + delta;
 			Progress = expectedProgress;
 			if(Progress != expectedProgress) {  // µΩÕ∑¡À
@@ -65,6 +65,14 @@ namespace LanternTrip {
 
 		[ContextMenu("Start Moving")]
 		public void StartMoving() {
+			if(path == null) {
+				Debug.LogWarning("Path is null");
+				return;
+			}
+			if(path.anchors.Count <= 1) {
+				Debug.LogWarning("Path to move along must has at least 2 anchors");
+				return;
+			}
 			if(!reversed) {
 				direction = 1;
 				Progress = 0;
@@ -75,18 +83,17 @@ namespace LanternTrip {
 			}
 			if(!forever)
 				bounceLeft = alternate ? 2 : 1;
+			ContinueMoving();
+		}
+
+		[ContextMenu("Continue Moving")]
+		public void ContinueMoving() {
 			movingCoroutine = StartCoroutine(MovingCoroutine());
 		}
 
-		[ContextMenu("Pause Moving")]
-		public void PauseMoving() => paused = 0;
-
-		[ContextMenu("Continue Moving")]
-		public void ContinueMoving() => paused = 1;
-
 		[ContextMenu("Stop Moving")]
 		public void StopMoving() {
-			if(movingCoroutine != null) {
+			if(Moving) {
 				StopCoroutine(movingCoroutine);
 				movingCoroutine = null;
 			}
@@ -102,9 +109,7 @@ namespace LanternTrip {
 		}
 
 		void OnDrawGizmos() {
-			if(path) {
-				path.DrawGizmos();
-			}
+			path?.DrawGizmos();
 		}
 	}
 }

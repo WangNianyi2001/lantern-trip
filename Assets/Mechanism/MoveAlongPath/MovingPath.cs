@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using System.Linq;
-using System.Security.Cryptography;
 
 namespace LanternTrip {
 	public class MovingPath : ScriptableObject {
@@ -78,28 +77,19 @@ namespace LanternTrip {
 
 		[NonSerialized] public int currentSelectIndex = -1;
 		public void DrawGizmos() {
-			IList<Anchor> anchors = this.anchors;
-			if(IsLocal) {
-				anchors = anchors.Select(a => {
-					a.position = coordinateLocalBase.localToWorldMatrix.MultiplyPoint(a.position);
-					Quaternion q = a.rotation;
-					q = coordinateLocalBase.rotation * q;
-					a.rotation = q;
-					return a;
-				}).ToList();
-			}
+			if(anchors == null)
+				return;
 			for(int i = 0; i < anchors.Count(); ++i) {
-				var anchor = anchors[i];
 				var selected = i == currentSelectIndex;
+				var q = _Rotation(i);
+				var p = _Position(i);
 
 				var color = selected ? Color.red : Color.yellow;
 				var radius = selected ? .1f : .05f;
 				Gizmos.color = color;
-				Gizmos.DrawSphere(anchor.position, radius);
+				Gizmos.DrawSphere(p, radius);
 
 				if(useRotation) {
-					var q = anchor.rotation;
-					var p = anchor.position;
 					float l = .2f * (selected ? 1.2f : 1);
 					Gizmos.color = Color.red;
 					Gizmos.DrawLine(p, p + q * Vector3.right * l);
@@ -111,8 +101,8 @@ namespace LanternTrip {
 
 				if(i > 0) {
 					Gizmos.color = Color.white;
-					var prev = anchors[i - 1];
-					Gizmos.DrawLine(anchor.position, prev.position);
+					var prev = _Position(i - 1);
+					Gizmos.DrawLine(p, prev);
 				}
 			}
 		}
