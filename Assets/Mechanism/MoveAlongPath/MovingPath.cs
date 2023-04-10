@@ -10,6 +10,8 @@ namespace LanternTrip {
 		public CoordinateMode coordinateMode;
 		[ShowIf("coordinateMode", CoordinateMode.Local)] [AllowNesting] public Transform coordinateLocalBase;
 
+		bool IsLocal => coordinateMode == CoordinateMode.Local && coordinateLocalBase != null;
+
 		public bool controlRotation;
 		[Serializable]
 		public struct Anchor {
@@ -18,10 +20,52 @@ namespace LanternTrip {
 		}
 		public List<Anchor> anchors;
 
+		public float LengthByIndex(int i) {
+			if(i < 0 || i >= anchors.Count - 1)
+				throw new IndexOutOfRangeException();
+			return Vector3.Distance(anchors[i].position, anchors[i + 1].position);
+		}
+		public float Length {
+			get {
+				float res = 0;
+				for(int i = 0; i < anchors.Count - 1; ++i)
+					res += LengthByIndex(i);
+				return res;
+			}
+		}
+
+		public KeyValuePair<int, float> ProgressByDistance(float d) {
+			if(d < 0)
+				return new KeyValuePair<int, float>(0, 0);
+			int i;
+			for(i = 0; i < anchors.Count - 1; ++i) {
+				float sd = LengthByIndex(i);
+				if(sd >= d)
+					return new KeyValuePair<int, float>(i, d / sd);
+				d -= sd;
+			}
+			return new KeyValuePair<int, float>(anchors.Count - 2, 1);
+		}
+
+		public Vector3 Position(KeyValuePair<int, float> progress) {
+			Vector3 a = anchors[progress.Key].position, b = anchors[progress.Key + 1].position;
+			Vector3 res = Vector3.Lerp(a, b, progress.Value);
+			if(IsLocal)
+				res = coordinateLocalBase.localToWorldMatrix.MultiplyPoint(res);
+			return res;
+		}
+		public Quaternion Rotation(KeyValuePair<int, float> progress) {
+			Quaternion a = Quaternion.Euler(anchors[progress.Key].rotation), b = Quaternion.Euler(anchors[progress.Key + 1].rotation);
+			Quaternion res = Quaternion.Lerp(a, b, progress.Value);
+			if(IsLocal)
+				res = coordinateLocalBase.rotation * res;
+			return res;
+		}
+
 		[NonSerialized] public int currentSelectIndex = -1;
 		public void DrawGizmos() {
 			IList<Anchor> anchors = this.anchors;
-			if(coordinateMode == CoordinateMode.Local && coordinateLocalBase != null) {
+			if(IsLocal) {
 				anchors = anchors.Select(a => {
 					a.position = coordinateLocalBase.localToWorldMatrix.MultiplyPoint(a.position);
 					Quaternion q = Quaternion.Euler(a.rotation);

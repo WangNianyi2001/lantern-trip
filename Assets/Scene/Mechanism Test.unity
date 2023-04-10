@@ -541,6 +541,38 @@ Transform:
   m_Father: {fileID: 443402040}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &861392504
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 861392505}
+  m_Layer: 0
+  m_Name: Move Along Path Anchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &861392505
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 861392504}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 3, z: 13}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1101397079}
+  m_Father: {fileID: 1836396126}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &870239927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -554,12 +586,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coordinateMode: 0
-  coordinateLocalBase: {fileID: 1101397079}
+  coordinateLocalBase: {fileID: 861392505}
   controlRotation: 1
   anchors:
   - position: {x: 0, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0}
-  - position: {x: 1, y: 0, z: 0}
+  - position: {x: 4, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0}
 --- !u!1 &1101397078
 GameObject:
@@ -575,7 +607,7 @@ GameObject:
   - component: {fileID: 1101397081}
   - component: {fileID: 1101397080}
   m_Layer: 0
-  m_Name: Path Mover
+  m_Name: Move Along Path
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -588,13 +620,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1101397078}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3, z: 13}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1836396126}
-  m_RootOrder: 2
+  m_Father: {fileID: 861392505}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1101397080
 MonoBehaviour:
@@ -608,6 +640,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97592d7508fbb39419a331235afff45f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 1
+  beginOnEnable: 1
   path: {fileID: 870239927}
 --- !u!65 &1101397081
 BoxCollider:
@@ -1242,7 +1276,7 @@ Transform:
   m_Children:
   - {fileID: 443402040}
   - {fileID: 1745244879}
-  - {fileID: 1101397079}
+  - {fileID: 861392505}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1396,7 +1430,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1055107332898707402, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 1055107332898707402, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
       propertyPath: m_SizeDelta.y
@@ -1684,7 +1718,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3000564703986441677, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000017170802
+      value: -0.0000000171708
       objectReference: {fileID: 0}
     - target: {fileID: 3000564703986441677, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
       propertyPath: m_LocalRotation.y
@@ -1692,7 +1726,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3000564703986441677, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0000000011059597
+      value: 0.0000000011059595
       objectReference: {fileID: 0}
     - target: {fileID: 3965524502344228308, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
       propertyPath: m_AnchorMax.y
