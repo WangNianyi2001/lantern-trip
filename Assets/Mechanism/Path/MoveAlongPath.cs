@@ -17,17 +17,11 @@ namespace LanternTrip {
 		[NonSerialized] public float direction = 1;
 		[NonSerialized] public int bounceLeft = 0;
 
-		void UpdateProgress(float progress) {
-			transform.position = path.Position(progress);
-			if(path.useRotation)
-				transform.rotation = path.Rotation(progress);
-		}
-
 		public float Progress {
 			get => progress;
 			set {
 				progress = Mathf.Clamp(value, 0, path.MaxProgress);
-				UpdateProgress(progress);
+				path.Apply(transform, progress);
 			}
 		}
 		public bool Moving => movingCoroutine != null;
