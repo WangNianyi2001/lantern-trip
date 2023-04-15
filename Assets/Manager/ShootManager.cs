@@ -8,15 +8,41 @@ namespace LanternTrip {
 
 		Transform targetAnchor;
 		Vector3 outVelocity;
-		Vector3 outPosition;
 
+		public ShootingSettings settings;
 		public new Camera camera;
 		public GameObject arrowPrefab;
 		public GameObject targetPrefab;
 		public LineRenderer lr;
+		public Vector3 localOutPosition;
 
-		Vector3 forward => protagonist.transform.forward;
-		Vector3 upward => protagonist.transform.up;
+		Vector3 OutPosition => protagonist.transform.localToWorldMatrix.MultiplyPoint(localOutPosition);
+		Vector3 CalculateOutVelocity() {
+			Vector3 delta = OutPosition - TargetPosition.Value;
+
+			float dz = Mathf.Lerp(settings.range.x, settings.range.y, gameplay.ChargeUpValue), dy = delta.y;
+			
+			float g = Physics.gravity.magnitude;
+			float tMax = settings.maxTime;
+			float sMax = settings.maxSlope;
+
+			float s1 = (g / 2 * Mathf.Pow(tMax, 2) - dy) / dz;
+
+			float s, t;
+			if(sMax < s1) {
+				s = sMax;
+				t = Mathf.Sqrt(2 * (sMax * dz + dy) / g);
+			}
+			else {
+				s = s1;
+				t = tMax;
+			}
+
+			float vz = dz / t, vy = s * vz;
+
+			Vector3 res = new Vector3(0, vy, vz) * tMax;
+			return protagonist.transform.localToWorldMatrix.MultiplyVector(res);
+		}
 
 		public Vector3? TargetPosition {
 			get => targetAnchor.gameObject.activeSelf ? targetAnchor.position : null;
@@ -31,23 +57,26 @@ namespace LanternTrip {
 		}
 
 		public void MakeShoot() {
-			GameObject arrowObj = Instantiate(arrowPrefab, outPosition, Quaternion.LookRotation(forward, protagonist.transform.up));
+			GameObject arrowObj = Instantiate(
+				arrowPrefab, OutPosition,
+				Quaternion.LookRotation(protagonist.transform.forward, protagonist.transform.up)
+			);
 			Arrow arrow = arrowObj.GetComponent<Arrow>();
 			arrow.Tinder = gameplay.currentLanterSlot.tinder;
 			arrow.GetComponent<Rigidbody>().velocity = outVelocity;
 		}
 
 		public IEnumerable<Vector3> CalculateProjectilePositions() {
-			float dt = .1f;
-			Vector3 pos = outPosition;
+			float dt = .02f;
+			Vector3 pos = OutPosition;
 			Vector3 vel = outVelocity;
 			Vector3 dv = Physics.gravity * dt;
 			for(float t = 0; t < 10; t += dt) {
 				vel += dv;
 				pos += vel * dt;
+				yield return pos;
 				if(pos.y < 0)
 					break;
-				yield return pos;
 			}
 		}
 
@@ -64,12 +93,10 @@ namespace LanternTrip {
 			targetAnchor.rotation = Quaternion.identity;
 
 			// Update velocity
-			lr.enabled = protagonist.state == "Shooting";
-			if(lr.enabled) {
-				float speedMin = protagonist.speedRange.x, speedMax = protagonist.speedRange.y;
-				float speed = Mathf.Lerp(speedMin, speedMax, gameplay.previousChargeUpValue);
-				outVelocity = forward * speed + upward * protagonist.verticalSpeed * speed * protagonist.shootingAngleRate;
-				outPosition = protagonist.transform.position + forward + upward;
+			var isAiming = protagonist.state == "Shooting";
+			lr.enabled = isAiming;
+			if(isAiming) {
+				outVelocity = CalculateOutVelocity();
 				Vector3[] positions = CalculateProjectilePositions().ToArray();
 				lr.positionCount = positions.Length;
 				lr.SetPositions(positions);
