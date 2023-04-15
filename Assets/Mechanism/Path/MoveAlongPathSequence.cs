@@ -7,14 +7,13 @@ namespace LanternTrip {
 	public class MoveAlongPathSequence : MonoBehaviour {
 		#region Internal fields
 		float progress = 0;
-		float direction = 1;
 		Coroutine movingCoroutine = null;
 		int targetIndex;
 		#endregion
 
 		#region Serialized fields
 		[Min(0)] public float speed = 1;
-		public bool alternate = false;
+		public float direction = 1;
 		[Expandable] [Instance] public List<MovingPath> paths = new List<MovingPath>();
 		#endregion
 
