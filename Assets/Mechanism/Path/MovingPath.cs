@@ -75,6 +75,12 @@ namespace LanternTrip {
 			return Quaternion.Lerp(a, b, f);
 		}
 
+		public void Apply(Transform t, float progress) {
+			t.position = Position(progress);
+			if(useRotation)
+				t.rotation = Rotation(progress);
+		}
+
 		[NonSerialized] public int currentSelectIndex = -1;
 		public void DrawGizmos() {
 			if(anchors == null)
