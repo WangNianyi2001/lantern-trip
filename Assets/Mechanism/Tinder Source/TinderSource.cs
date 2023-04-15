@@ -19,16 +19,10 @@ namespace LanternTrip {
 		public UnityEvent onDeliver;
 
 		public void OnApproach() {
-			if(!isActiveAndEnabled)
-				return;
-
 			onApproach.Invoke();
 			current = this;
 		}
 		public void OnLeave() {
-			if(!isActiveAndEnabled)
-				return;
-
 			onLeave.Invoke();
 			current = null;
 		}
@@ -41,8 +35,10 @@ namespace LanternTrip {
 			GameplayManager.instance.LoadTinder(type);
 			onDeliver.Invoke();
 
+			OnLeave();
 			current = null;
 			tinder.gameObject.SetActive(false);
+			enabled = false;
 		}
 
 #if UNITY_EDITOR
