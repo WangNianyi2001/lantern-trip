@@ -4,6 +4,8 @@ using System.Linq;
 
 namespace LanternTrip {
 	public class ShootManager : ManagerBase {
+		static int raycastMask;
+
 		Transform targetAnchor;
 		Vector3 outVelocity;
 		Vector3 outPosition;
@@ -50,13 +52,14 @@ namespace LanternTrip {
 		}
 
 		void Start() {
+			raycastMask = LayerMask.GetMask(new string[] { "Default", "Ground" });
 			targetAnchor = Instantiate(targetPrefab, transform).transform;
 		}
 
 		void FixedUpdate() {
 			Ray ray = camera.ScreenPointToRay(gameplay.input.MousePosition);
 			RaycastHit hit;
-			Physics.Raycast(ray, out hit, Mathf.Infinity, ~0, QueryTriggerInteraction.Ignore);
+			Physics.Raycast(ray, out hit, Mathf.Infinity, raycastMask, QueryTriggerInteraction.Ignore);
 			TargetPosition = hit.collider ? hit.point : null;
 			targetAnchor.rotation = Quaternion.identity;
 
