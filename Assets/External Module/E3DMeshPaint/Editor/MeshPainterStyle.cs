@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using UnityEngine.Rendering;
 using System.IO;
 using System.Collections;
 #if UNITY_EDITOR 
@@ -15,12 +12,7 @@ public class MeshPainterStyle : Editor
     private UnityEngine.Object monoScript;
 
     private MeshShaderType configData;
-
-    private Tool LastTool = Tool.None;
-
-    string contolTexName = "";
-
-    bool isPaint;
+	bool isPaint;
     bool showUV = false;
     float brushSize = 16f;
     float brushStronger = 0.5f;
@@ -342,7 +334,7 @@ public class MeshPainterStyle : Editor
                     MaskTex = (Texture2D)seletMeshrender.sharedMaterial.GetTexture(MeshPainterStringUtility.shaderControlTexName);//Get the Control map from the shader
                     //============================================================2020-11-06=====================================================================//
                 }
-                catch (System.Exception e)
+                catch
                 {
                     // if (showUV)
                     // {
