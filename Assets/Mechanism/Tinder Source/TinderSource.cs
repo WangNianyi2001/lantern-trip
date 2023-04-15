@@ -1,16 +1,19 @@
 using UnityEngine;
 using UnityEngine.Events;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
-namespace LanternTrip
-{
+namespace LanternTrip {
 	[RequireComponent(typeof(Entity))]
+	[ExecuteAlways]
 	public class TinderSource : MonoBehaviour {
 		/// <summary>Temporary solution for getting current tinder.</summary>
 		/// <remarks>Might be changed in the future.</remarks>
 		public static TinderSource current = null;
 
-		Trigger trigger;
 		public Tinder type;
+		public Transform tinder;
 		public UnityEvent onApproach;
 		public UnityEvent onLeave;
 		public UnityEvent onDeliver;
@@ -39,9 +42,36 @@ namespace LanternTrip
 			onDeliver.Invoke();
 
 			current = null;
-			gameObject.SetActive(false);
-			// Alternatively:
-			// Destroy(gameObject);
+			tinder.gameObject.SetActive(false);
+		}
+
+#if UNITY_EDITOR
+		void EditprUpdateTinder() {
+			var renderer = tinder?.GetComponentInChildren<MeshRenderer>();
+			if(renderer) {
+				var material = renderer.sharedMaterial;
+				if(material == null)
+					material = renderer.sharedMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+				else if(AssetDatabase.Contains(material))
+					material = renderer.sharedMaterial = new Material(material);
+				Color color = type?.mainColor ?? Color.white;
+				material.color = color;
+			}
+		}
+		void EditorUpdate() {
+			if(tinder) {
+				EditprUpdateTinder();
+			}
+		}
+#endif
+
+		void Update() {
+#if UNITY_EDITOR
+			if(!Application.isPlaying) {
+				EditorUpdate();
+				return;
+			}
+#endif
 		}
 	}
 }
