@@ -14,9 +14,8 @@ namespace LanternTrip {
 		public GameObject arrowPrefab;
 		public GameObject targetPrefab;
 		public LineRenderer lr;
-		public Vector3 localOutPosition;
 
-		Vector3 OutPosition => protagonist.transform.localToWorldMatrix.MultiplyPoint(localOutPosition);
+		Vector3 OutPosition => protagonist.transform.localToWorldMatrix.MultiplyPoint(settings.outPosition);
 		Vector3 CalculateOutVelocity() {
 			Vector3 delta = OutPosition - TargetPosition.Value;
 
