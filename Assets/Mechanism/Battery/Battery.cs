@@ -10,13 +10,15 @@ public class Battery : MonoBehaviour
 {
     public GameObject bullet;
 
-    public int level = 1;
+    [Header("炮弹等级")]public int level = 1;
 
-    public float TimeInterval = 0.5f;
+    [Header("炮弹速度")]public float BulletSpeed = 1.0f;
+    
+    [Header("发射时间间隔")]public float TimeInterval = 0.5f;
 
     private float cur_TimeInterval;
 
-    public float TimeToDestroy = 2.0f;
+    [Header("炮弹销毁时间")]public float TimeToDestroy = 2.0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -78,7 +80,7 @@ public class Battery : MonoBehaviour
         go.UpdateAsObservable()
             .Subscribe(_ =>
             {
-                go.transform.Translate(dir * Time.deltaTime);
+                go.transform.Translate(dir * Time.deltaTime * BulletSpeed);
                 cur_TimeToDestroy -= Time.deltaTime;
                 if (cur_TimeToDestroy < 0f) GameObject.Destroy(go);
             })
