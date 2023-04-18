@@ -19,8 +19,8 @@ namespace LanternTrip {
 		Vector3 CalculateOutVelocity() {
 			Vector3 delta = OutPosition - TargetPosition.Value;
 
-			float dz = Mathf.Lerp(settings.range.x, settings.range.y, gameplay.ChargeUpValue), dy = delta.y;
-			
+			float dz = Mathf.Lerp(settings.range.x, settings.range.y, gameplay.previousChargeUpValue), dy = delta.y;
+
 			float g = Physics.gravity.magnitude;
 			float tMax = settings.maxTime;
 			float sMax = settings.maxSlope;
@@ -30,7 +30,10 @@ namespace LanternTrip {
 			float s, t;
 			if(sMax < s1) {
 				s = sMax;
-				t = Mathf.Sqrt(2 * (sMax * dz + dy) / g);
+				float temp = sMax * dz + dy;    // Might be negative
+				if(temp <= 0)
+					return outVelocity;
+				t = Mathf.Sqrt(2 * temp / g);
 			}
 			else {
 				s = s1;
@@ -66,11 +69,11 @@ namespace LanternTrip {
 		}
 
 		public IEnumerable<Vector3> CalculateProjectilePositions() {
-			float dt = .02f;
+			float dt = .05f;
 			Vector3 pos = OutPosition;
 			Vector3 vel = outVelocity;
 			Vector3 dv = Physics.gravity * dt;
-			for(float t = 0; t < 10; t += dt) {
+			for(float t = 0; t < settings.maxTime; t += dt) {
 				vel += dv;
 				pos += vel * dt;
 				yield return pos;
@@ -84,7 +87,7 @@ namespace LanternTrip {
 			targetAnchor = Instantiate(targetPrefab, transform).transform;
 		}
 
-		void FixedUpdate() {
+		void Update() {
 			Ray ray = camera.ScreenPointToRay(gameplay.input.MousePosition);
 			RaycastHit hit;
 			Physics.Raycast(ray, out hit, Mathf.Infinity, raycastMask, QueryTriggerInteraction.Ignore);
