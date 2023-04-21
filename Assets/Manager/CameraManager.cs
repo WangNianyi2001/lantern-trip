@@ -24,18 +24,20 @@ namespace LanternTrip {
 		public bool useRayCast = true;
 		public LayerMask rayCastLayer;
 		[MinMaxSlider(-90, 90)] public Vector2 zenithRange;
+		[Range(0, 1)] public float damp;
 		#endregion
 
 		#region Internal fields
 		CinemachineOrbitalTransposer orbitTransposer;
 		CinemachineComposer composer;
 		float distance;
+		Vector3 followOffset;
 		#endregion
 
 		#region Public interfaces
 		public Vector3 FollowOffset {
-			get => orbitTransposer.m_FollowOffset - AimOffset;
-			set => orbitTransposer.m_FollowOffset = value + AimOffset;
+			get => followOffset - AimOffset;
+			set => followOffset = value + AimOffset;
 		}
 		public Vector3 AimOffset => composer.m_TrackedObjectOffset;
 		public Ray FollowRay {
@@ -104,6 +106,7 @@ namespace LanternTrip {
 		void Start() {
 			orbitTransposer = vCam.GetCinemachineComponent(CinemachineCore.Stage.Body) as CinemachineOrbitalTransposer;
 			composer = vCam.GetCinemachineComponent(CinemachineCore.Stage.Aim) as CinemachineComposer;
+			followOffset = orbitTransposer.m_FollowOffset;
 			Mode = Mode;
 			distance = FollowOffset.magnitude;
 		}
@@ -125,6 +128,14 @@ namespace LanternTrip {
 					castedDistance = (hit.point - ray.origin).magnitude * .9f;
 			}
 			FollowOffset = FollowOffset.normalized * castedDistance;
+		}
+
+		void FixedUpdate() {
+			orbitTransposer.m_FollowOffset = Vector3.Lerp(
+				orbitTransposer.m_FollowOffset,
+				followOffset,
+				1 - Mathf.Exp(-Time.fixedDeltaTime / damp)
+			);
 		}
 
 		private void OnDrawGizmos() {
