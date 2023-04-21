@@ -16,6 +16,7 @@ namespace LanternTrip {
 
 	public class CameraManager : ManagerBase {
 		#region Serialized fields
+		public new Camera camera;
 		public CinemachineVirtualCamera vCam;
 		[SerializeField] CameraMode mode;
 		[Range(0, Mathf.PI / 2)] public float followingZenith;

@@ -59,7 +59,7 @@ namespace LanternTrip {
 		}
 
 		public void OnPlayerBow(InputValue _) {
-			gameplay.HoldingBow ^= true;
+			gameplay.protagonist.HoldingBow ^= true;
 		}
 
 		public void OnPlayerAim(InputValue value) {
