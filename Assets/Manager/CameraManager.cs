@@ -1,6 +1,7 @@
 using UnityEngine;
 using Cinemachine;
 using System;
+using NaughtyAttributes;
 
 namespace LanternTrip {
 	public enum CameraMode {
@@ -14,17 +15,36 @@ namespace LanternTrip {
 	}
 
 	public class CameraManager : ManagerBase {
+		#region Serialized fields
 		public CinemachineVirtualCamera vCam;
 		[SerializeField] CameraMode mode;
 		[Range(0, Mathf.PI / 2)] public float followingZenith;
 		[Range(0, 50)] public float followingDistance;
 		[Range(0, 50)] public float orbitalDistance;
-		
-		CinemachineOrbitalTransposer orbitTransposer;
+		public bool useRayCast = true;
+		public LayerMask rayCastLayer;
+		[MinMaxSlider(-90, 90)] public Vector2 zenithRange;
+		#endregion
 
+		#region Internal fields
+		CinemachineOrbitalTransposer orbitTransposer;
+		CinemachineComposer composer;
+		float distance;
+		#endregion
+
+		#region Public interfaces
 		public Vector3 FollowOffset {
-			get => orbitTransposer.m_FollowOffset;
-			set => orbitTransposer.m_FollowOffset = value;
+			get => orbitTransposer.m_FollowOffset - AimOffset;
+			set => orbitTransposer.m_FollowOffset = value + AimOffset;
+		}
+		public Vector3 AimOffset => composer.m_TrackedObjectOffset;
+		public Ray FollowRay {
+			get {
+				var offset = AimOffset;
+				var from = orbitTransposer.FollowTarget.position + offset;
+				var direction = Quaternion.Euler(0, Azimuth * 180 / Mathf.PI, 0) * FollowOffset;
+				return new Ray(from, direction);
+			}
 		}
 
 		public float Zenith {
@@ -40,8 +60,8 @@ namespace LanternTrip {
 			}
 		}
 		public float Distance {
-			get => FollowOffset.magnitude;
-			set => FollowOffset = FollowOffset.normalized * value;
+			get => distance;
+			set => distance = value;
 		}
 
 		public void SetFollowing(FollowingCameraMode mode) {
@@ -78,10 +98,40 @@ namespace LanternTrip {
 				}
 			}
 		}
+		#endregion
 
+		#region Life cycle
 		void Start() {
 			orbitTransposer = vCam.GetCinemachineComponent(CinemachineCore.Stage.Body) as CinemachineOrbitalTransposer;
+			composer = vCam.GetCinemachineComponent(CinemachineCore.Stage.Aim) as CinemachineComposer;
 			Mode = Mode;
+			distance = FollowOffset.magnitude;
 		}
+
+		void Update() {
+			// Lock zenith
+			float z = Zenith * 180 / Mathf.PI;
+			z = Mathf.Clamp(z, zenithRange.x, zenithRange.y);
+			z = z * Mathf.PI / 180;
+			Zenith = z;
+
+			// Ray cast camera position
+			var castedDistance = distance;
+			if(useRayCast) {
+				RaycastHit hit;
+				Ray ray = FollowRay;
+				Physics.Raycast(ray, out hit, distance, rayCastLayer);
+				if(hit.collider != null)
+					castedDistance = (hit.point - ray.origin).magnitude * .9f;
+			}
+			FollowOffset = FollowOffset.normalized * castedDistance;
+		}
+
+		private void OnDrawGizmos() {
+			if(!Application.isPlaying)
+				return;
+			Gizmos.DrawRay(FollowRay);
+		}
+		#endregion
 	}
 }

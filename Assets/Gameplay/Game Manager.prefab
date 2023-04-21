@@ -1853,7 +1853,6 @@ MonoBehaviour:
   arrowPrefab: {fileID: 8656822942093738308, guid: 37a0a6c73db5dc142bdcb80981153595, type: 3}
   targetPrefab: {fileID: 6172788449549094687, guid: 130f8c8064bc69542aa86b1b8b8a3df0, type: 3}
   lr: {fileID: 5723226112974535696}
-  localOutPosition: {x: 0, y: 1.5, z: 0.3}
 --- !u!1 &3000564702756479995
 GameObject:
   m_ObjectHideFlags: 0
@@ -2907,8 +2906,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3000564703727012331}
-  m_LocalRotation: {x: 5.820766e-11, y: -0.99996114, z: -0.0088225, w: 0}
-  m_LocalPosition: {x: 2.7555356, y: -14.783195, z: 49.925068}
+  m_LocalRotation: {x: -4.0745363e-10, y: 0.99996114, z: 0.008822492, w: -0.000000067055225}
+  m_LocalPosition: {x: 79.39339, y: -16.695591, z: 56.278305}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2982,8 +2981,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3000564703986441672}
-  m_LocalRotation: {x: 0.0005670815, y: 0.99789333, z: 0.008804256, w: -0.064274244}
-  m_LocalPosition: {x: 9.17, y: 15.2, z: 39.41}
+  m_LocalRotation: {x: 0.000567672, y: 0.997889, z: 0.008804212, w: -0.064341195}
+  m_LocalPosition: {x: 86, y: 17, z: 35.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3127,6 +3126,11 @@ MonoBehaviour:
   followingZenith: 0.8
   followingDistance: 30
   orbitalDistance: 10
+  useRayCast: 1
+  rayCastLayer:
+    serializedVersion: 2
+    m_Bits: 9
+  zenithRange: {x: -10, y: 60}
 --- !u!1 &3000564704245377483
 GameObject:
   m_ObjectHideFlags: 0
