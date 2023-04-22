@@ -14,7 +14,6 @@ namespace LanternTrip {
 		new public Protagonist protagonist;
 		public InputManager input;
 		public UiManager ui;
-		public ShootManager shoot;
 		new public CameraManager camera;
 		[Expandable] public GameSettings settings;
 		#endregion
@@ -166,17 +165,6 @@ namespace LanternTrip {
 			burning = safezoneCounter == 0;
 		}
 
-		public bool HoldingBow {
-			get => protagonist.animationController.HoldingBow;
-			set {
-				if(value == HoldingBow)
-					return;
-
-				protagonist.animationController.HoldingBow = value;
-				shoot.enabled = value;
-			}
-		}
-
 		[NonSerialized] public float previousChargeUpValue = 0;
 		public float ChargeUpSpeed {
 			get => chargeUpSpeed;
@@ -193,7 +181,7 @@ namespace LanternTrip {
 				value = Mathf.Clamp01(value);
 				if(value != 0)
 					previousChargeUpValue = value;
-				if(HoldingBow && protagonist.CanShoot)
+				if(protagonist.CanShoot)
 					chargeUpValue = value;
 				else
 					chargeUpValue = 0;

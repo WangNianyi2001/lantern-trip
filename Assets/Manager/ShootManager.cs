@@ -31,9 +31,12 @@ namespace LanternTrip {
 			if(sMax < s1) {
 				s = sMax;
 				float temp = sMax * dz + dy;    // Might be negative
-				if(temp <= 0)
-					return outVelocity;
-				t = Mathf.Sqrt(2 * temp / g);
+				if(temp <= 0) {
+					s = s1;
+					t = tMax;
+				}
+				else
+					t = Mathf.Sqrt(2 * temp / g);
 			}
 			else {
 				s = s1;
