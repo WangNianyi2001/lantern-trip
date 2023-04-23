@@ -172,7 +172,8 @@ namespace LanternTrip {
 			onDie.AddListener(() => state = "Dead");
 		}
 
-		protected void FixedUpdate() {
+		protected new void Update() {
+			base.Update();
 			UpdateMovementState();
 			if(state != "Dead") {
 				walkingVelocity = CalculateWalkingVelocity();
