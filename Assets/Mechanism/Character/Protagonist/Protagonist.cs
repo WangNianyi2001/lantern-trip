@@ -2,6 +2,7 @@ using UnityEngine;
 using NaughtyAttributes;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace LanternTrip {
 	public partial class Protagonist : Character {
@@ -92,6 +93,11 @@ namespace LanternTrip {
 				}
 			}
 		}
+
+		IEnumerator DyingCoroutine() {
+			yield return new WaitForSeconds(2);
+			gameplay.RestoreLastCheckpoint();
+		}
 		#endregion
 
 		#region Public interfaces
@@ -149,6 +155,11 @@ namespace LanternTrip {
 			lineRenderer.enabled = false;
 			if(CanShoot)
 				DoShootingFrame();
+		}
+
+		protected override void OnDie() {
+			base.OnDie();
+			StartCoroutine(DyingCoroutine());
 		}
 		#endregion
 	}

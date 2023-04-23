@@ -87,7 +87,7 @@ namespace LanternTrip {
 			contactingPoints.Remove(collision.collider);
 		}
 
-		protected void OnDie() {
+		protected virtual void OnDie() {
 			onDie?.Invoke();
 		}
 		#endregion

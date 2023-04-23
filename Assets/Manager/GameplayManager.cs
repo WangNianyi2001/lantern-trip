@@ -1,24 +1,27 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using NaughtyAttributes;
 using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace LanternTrip {
+	[ExecuteAlways]
 	[RequireComponent(typeof(InputManager))]
 	public class GameplayManager : ManagerBase {
 		public static GameplayManager instance;
+		public static string lastCheckpointName;
 
-		#region Inspector members
+		#region Serialized members
 		new public Protagonist protagonist;
 		public InputManager input;
 		public UiManager ui;
 		new public CameraManager camera;
 		[Expandable] public GameSettings settings;
+		public Checkpoint startingCheckpoint;
 		#endregion
 
-		#region Core members
+		#region Internal members
 		[NonSerialized] public LanternSlot[] lanternSlots;
 		float bonusTime;
 		List<Bonus> activeBonuses = new List<Bonus>();
@@ -28,7 +31,7 @@ namespace LanternTrip {
 		int coldzoneCounter = 0;
 		#endregion
 
-		#region Core methods
+		#region Internal methods
 		public float BonusTime {
 			get => bonusTime;
 			set {
@@ -94,14 +97,23 @@ namespace LanternTrip {
 			activeBonuses.AddRange(survivedList);
 		}
 
-		IEnumerator StartingCoroutine() {
-			yield return new WaitForEndOfFrame();
-			ui.slotTrack.Current = lanternSlots[0];
+		bool IsDuplicatedOnStart() {
+			if(instance == null)
+				return false;
+			return instance == this;
 		}
 		#endregion
 
 		#region Public interfaces
 		[Range(0, 10)] public float burningRate = 1;
+
+		public Checkpoint LastCheckpoint {
+			get => GameObject.Find(lastCheckpointName)?.GetComponent<Checkpoint>();
+			set => lastCheckpointName = value?.gameObject?.name;
+		}
+		public void RestoreLastCheckpoint() {
+			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+		}
 
 		public LanternSlot currentLanterSlot => ui.slotTrack.Current;
 
@@ -129,7 +141,6 @@ namespace LanternTrip {
 		}
 
 		public void LoadTinderFromCurrentSource() {
-			Debug.Log($"Load tinder from {TinderSource.current?.name ?? "((null))"}");
 			TinderSource.current?.Deliver();
 		}
 
@@ -192,19 +203,38 @@ namespace LanternTrip {
 
 		#region Life cycle
 		void Awake() {
+			if(!Application.isPlaying)
+				return;
+
+			if(IsDuplicatedOnStart()) {
+				Destroy(gameObject);
+				return;
+			}
+
 			instance = this;
 		}
 
+		void OnRestart() {
+			var cp = LastCheckpoint ?? startingCheckpoint;
+			cp?.Restore();
+		}
+
 		void Start() {
+			if(!Application.isPlaying)
+				return;
+
 			// Initialize lantern slots
 			lanternSlots = new LanternSlot[settings.lanternSlotCount];
 			for(int i = 0; i < settings.lanternSlotCount; ++i)
 				lanternSlots[i] = new LanternSlot(ui.CreateLanternSlot());
+			ui.slotTrack.Current = lanternSlots[0];
 
-			StartCoroutine(StartingCoroutine());
+			OnRestart();
 		}
 
 		void FixedUpdate() {
+			if(!Application.isPlaying)
+				return;
 			if(burning) {
 				float burnTime = Time.fixedDeltaTime * burningRate;
 				if(coldDebuffEnabled && InCold) {
@@ -218,6 +248,18 @@ namespace LanternTrip {
 					protagonist.SendMessage("OnDie");
 			}
 			ChargeUpValue += ChargeUpSpeed * Time.fixedDeltaTime;
+		}
+
+		void EditorUpdate() {
+			instance = this;
+			OnRestart();
+		}
+
+		void Update() {
+			if(!Application.isPlaying) {
+				EditorUpdate();
+				return;
+			}
 		}
 		#endregion
 	}
