@@ -143,7 +143,9 @@ namespace LanternTrip {
 			});
 		}
 
-		protected void Update() {
+		protected new void Update() {
+			base.Update();
+
 			lineRenderer.enabled = false;
 			if(CanShoot)
 				DoShootingFrame();

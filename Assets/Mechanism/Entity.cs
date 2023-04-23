@@ -13,12 +13,13 @@ namespace LanternTrip {
 		private bool undead;
 		#endregion
 
-		#region Public members
+		#region Serialized members
 		public float damageMultiplier = 1;
 		public Tinder.Type shotType = Tinder.Type.Invalid;
 		public UnityEvent onDie;
 		public UnityEvent onShot;
 		public UnityEvent onMatchedShot;
+		public float deathY = -100;
 		#endregion
 
 		#region Public interfaces
@@ -33,7 +34,7 @@ namespace LanternTrip {
 					return;
 				if(hp <= 0) {
 					hp = 0;
-					Die();
+					OnDie();
 				}
 			}
 		}
@@ -54,10 +55,6 @@ namespace LanternTrip {
 			if(arrow.Tinder?.type == shotType)
 				onMatchedShot?.Invoke();
 		}
-
-		public void Die() {
-			onDie?.Invoke();
-		}
 		#endregion
 
 		#region Private method
@@ -69,13 +66,13 @@ namespace LanternTrip {
 
 		#region Life cycle
 		protected void Start() {
-			// Get component references
 			rigidbody = GetComponent<Rigidbody>();
-			//rigidbody.isKinematic = false;
-			//rigidbody.useGravity = true;
-
-			// Initialize
 			contactingPoints = new Dictionary<Collider, ContactPoint>();
+		}
+
+		protected void Update() {
+			if(transform.position.y < deathY)
+				OnDie();
 		}
 
 		protected void OnCollisionEnter(Collision collision) {
@@ -88,6 +85,10 @@ namespace LanternTrip {
 
 		protected void OnCollisionExit(Collision collision) {
 			contactingPoints.Remove(collision.collider);
+		}
+
+		protected void OnDie() {
+			onDie?.Invoke();
 		}
 		#endregion
 	}
