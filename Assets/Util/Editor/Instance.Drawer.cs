@@ -1,5 +1,7 @@
 using UnityEditor;
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace LanternTrip {
 	[CustomPropertyDrawer(typeof(InstanceAttribute))]
@@ -15,6 +17,8 @@ namespace LanternTrip {
 				}
 				if(GUI.Button(position, $"Create {label.text}")) {
 					var type = fieldInfo.FieldType;
+					if(typeof(IList).IsAssignableFrom(type) && type.IsGenericType)
+						type = type.GetGenericArguments()[0];
 					Object value;
 					if(typeof(ScriptableObject).IsAssignableFrom(type))
 						value = ScriptableObject.CreateInstance(type);
