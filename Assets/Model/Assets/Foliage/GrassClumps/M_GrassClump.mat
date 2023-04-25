@@ -11,7 +11,6 @@ Material:
   m_Shader: {fileID: -6465566751694194690, guid: 127c3186681313247a4da31a61340a62, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords:
-  - _ALPHATEST_ON
   - _METALLICSPECGLOSSMAP
   - _NORMALMAP
   m_LightmapFlags: 4
@@ -47,8 +46,20 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_16d07aa1f708e884ac7e7ac5161f5f43_Texture_1:
+        m_Texture: {fileID: 2800000, guid: dac8f2087bcc6984aa276e0ee9e8081e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_1f641dfc237f278e9ba415e0a104849c_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 93d4cecbbee190a44a6d0e4c74c7af61, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_31C88003_Texture_1:
         m_Texture: {fileID: 2800000, guid: dac8f2087bcc6984aa276e0ee9e8081e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_48ae2669a019978c905d5616a9eefb14_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 2edfda6decc6cd94aad50458b00ca356, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_6835B666_Texture_1:
@@ -75,10 +86,23 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - Vector1_126AB0A9: -0.54
     - Vector1_52D460: 1
+    - Vector1_68A3EDBC: 0.1
     - Vector1_C9B08A23: 0.378
     - Vector1_D917138D: 1
     - _AlphaClip: 1
@@ -93,6 +117,7 @@ Material:
     - _GlossyReflections: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
+    - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Smoothness: 0.5
