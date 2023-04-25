@@ -68,7 +68,7 @@ namespace LanternTrip {
 
 		public void OnPlayerChargeUp(InputValue value) {
 			float raw = value.Get<float>();
-			gameplay.ChargeUpSpeed = raw;
+			gameplay.protagonist.ChargeUpSpeed = raw;
 		}
 
 		public void OnPlayerToggleOrientCamera(InputValue value) {

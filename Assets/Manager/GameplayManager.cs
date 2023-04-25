@@ -25,8 +25,6 @@ namespace LanternTrip {
 		[NonSerialized] public LanternSlot[] lanternSlots;
 		float bonusTime;
 		List<Bonus> activeBonuses = new List<Bonus>();
-		float chargeUpSpeed = 0;
-		float chargeUpValue = 0;
 		int safezoneCounter = 0;
 		int coldzoneCounter = 0;
 		#endregion
@@ -175,30 +173,6 @@ namespace LanternTrip {
 				safezoneCounter = 0;
 			burning = safezoneCounter == 0;
 		}
-
-		[NonSerialized] public float previousChargeUpValue = 0;
-		public float ChargeUpSpeed {
-			get => chargeUpSpeed;
-			set {
-				value = Mathf.Clamp01(value);
-				chargeUpSpeed = value;
-				if(chargeUpSpeed == 0)
-					chargeUpValue = 0;
-			}
-		}
-		public float ChargeUpValue {
-			get => chargeUpValue;
-			set {
-				value = Mathf.Clamp01(value);
-				if(value != 0)
-					previousChargeUpValue = value;
-				if(protagonist.CanShoot)
-					chargeUpValue = value;
-				else
-					chargeUpValue = 0;
-				protagonist.animationController.ChargingUpValue = chargeUpValue;
-			}
-		}
 		#endregion
 
 		#region Life cycle
@@ -247,7 +221,6 @@ namespace LanternTrip {
 				if(burntOut && protagonist.state != "Dead")
 					protagonist.SendMessage("OnDie");
 			}
-			ChargeUpValue += ChargeUpSpeed * Time.fixedDeltaTime;
 		}
 
 		void EditorUpdate() {

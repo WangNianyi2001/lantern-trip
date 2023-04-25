@@ -10,6 +10,9 @@ namespace LanternTrip {
 
 		#region Internal fields
 		Transform shootTarget;
+		float chargeUpSpeed = 0;
+		float chargeUpValue = 0;
+		float previousChargeUpValue = 0;
 		#endregion
 
 		#region Serialized fields
@@ -30,12 +33,12 @@ namespace LanternTrip {
 			base.UpdateMovementState();
 			switch(state) {
 				case "Walking":
-					if(CanShoot && gameplay.ChargeUpValue > 0) {
+					if(CanShoot && ChargeUpValue > 0) {
 						state = "Shooting";
 					}
 					break;
 				case "Shooting":
-					if(gameplay.ChargeUpValue == 0)
+					if(ChargeUpValue == 0)
 						state = "Walking";
 					break;
 			}
@@ -67,7 +70,9 @@ namespace LanternTrip {
 		Vector3 ClampedShootTargetPosition {
 			get {
 				Vector3 delta = ShootTargetPosition.Value - transform.position;
-				float distance = Mathf.Lerp(shootingRange.x, shootingRange.y, gameplay.previousChargeUpValue);
+				float distance = Mathf.Lerp(shootingRange.x, shootingRange.y, previousChargeUpValue);
+				if(distance > delta.magnitude)
+					distance = Mathf.Max(delta.magnitude, shootingRange.x);
 				delta = delta.normalized * distance;
 				return delta + transform.position;
 			}
@@ -85,7 +90,7 @@ namespace LanternTrip {
 				ShootTargetPosition = hit.point;
 
 				// If charged-up, render expected shooting curve
-				if(gameplay.ChargeUpValue > 0) {
+				if(ChargeUpValue > 0) {
 					var points = YieldShootingCurveCoordinates(shooter.totalTime).ToArray();
 					lineRenderer.positionCount = points.Length;
 					lineRenderer.SetPositions(points);
@@ -102,6 +107,29 @@ namespace LanternTrip {
 
 		#region Public interfaces
 		public bool CanShoot => HoldingBow && (state == "Walking" || state == "Shooting");
+
+		public float ChargeUpSpeed {
+			get => chargeUpSpeed;
+			set {
+				value = Mathf.Clamp01(value);
+				chargeUpSpeed = value;
+				if(chargeUpSpeed == 0)
+					chargeUpValue = 0;
+			}
+		}
+		public float ChargeUpValue {
+			get => chargeUpValue;
+			set {
+				value = Mathf.Clamp01(value);
+				if(value != 0)
+					previousChargeUpValue = value;
+				if(CanShoot)
+					chargeUpValue = value;
+				else
+					chargeUpValue = 0;
+				animationController.ChargingUpValue = chargeUpValue;
+			}
+		}
 
 		public Vector3? ShootTargetPosition {
 			get => shootTarget.gameObject.activeInHierarchy ? shootTarget.position : null;
@@ -155,6 +183,10 @@ namespace LanternTrip {
 			lineRenderer.enabled = false;
 			if(CanShoot)
 				DoShootingFrame();
+		}
+
+		protected void FixedUpdate() {
+			ChargeUpValue += ChargeUpSpeed * Time.fixedDeltaTime;
 		}
 
 		protected override void OnDie() {
