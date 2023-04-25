@@ -43,7 +43,7 @@ public class ControlObjectRotation : MonoBehaviour
             yield return null;
         }
 
-        transform.rotation = targetRotation;
+        //transform.rotation = targetRotation;
         isRotating = false;
     }
 
@@ -52,7 +52,7 @@ public class ControlObjectRotation : MonoBehaviour
         isRotating = true;
         Vector3 targetPosition = targetObject.transform.position;
         Quaternion startRotation = transform.rotation;
-        Quaternion endRotation = Quaternion.AngleAxis(rotationAngle, rotationAxis) * startRotation;
+        //Quaternion endRotation = Quaternion.AngleAxis(rotationAngle, rotationAxis) * startRotation;
         float t = 0f;
         while (t < rotationTime)
         {
@@ -60,7 +60,7 @@ public class ControlObjectRotation : MonoBehaviour
             transform.RotateAround(targetPosition, rotationAxis, rotationAngle * Time.deltaTime / rotationTime);
             yield return null;
         }
-        transform.rotation = endRotation;
+        //transform.rotation = endRotation;
         isRotating = false;
 
     }
