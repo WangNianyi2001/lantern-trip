@@ -4,6 +4,7 @@ using NaughtyAttributes;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace LanternTrip {
 	[ExecuteAlways]
@@ -14,7 +15,7 @@ namespace LanternTrip {
 
 		#region Serialized members
 		new public Protagonist protagonist;
-		public InputManager input;
+		[NonSerialized] public InputManager input;
 		public UiManager ui;
 		new public CameraManager camera;
 		[Expandable] public GameSettings settings;
@@ -25,19 +26,17 @@ namespace LanternTrip {
 		[NonSerialized] public LanternSlot[] lanternSlots;
 		float bonusTime;
 		List<Bonus> activeBonuses = new List<Bonus>();
-		float chargeUpSpeed = 0;
-		float chargeUpValue = 0;
 		int safezoneCounter = 0;
 		int coldzoneCounter = 0;
+		int cinder = 0;
 		#endregion
 
 		#region Internal methods
-		public float BonusTime {
-			get => bonusTime;
-			set {
-				bonusTime = value;
-				ui.bonusSlot.SetValue(value);
-			}
+		IEnumerator StartCoroutine() {
+			yield return new WaitForEndOfFrame();
+
+			ui.slotTrack.Current = lanternSlots[0];
+			Cinder = Cinder;
 		}
 
 		float BurnBonus(float time) {
@@ -119,6 +118,14 @@ namespace LanternTrip {
 
 		[NonSerialized] public bool burning = false;
 
+		public float BonusTime {
+			get => bonusTime;
+			set {
+				bonusTime = value;
+				ui.bonusSlot.SetValue(value);
+			}
+		}
+
 		public float speedBonusRate = 1;
 		public bool coldDebuffEnabled = true;
 		public bool InCold => coldzoneCounter > 0;
@@ -176,27 +183,11 @@ namespace LanternTrip {
 			burning = safezoneCounter == 0;
 		}
 
-		[NonSerialized] public float previousChargeUpValue = 0;
-		public float ChargeUpSpeed {
-			get => chargeUpSpeed;
+		public int Cinder {
+			get => cinder;
 			set {
-				value = Mathf.Clamp01(value);
-				chargeUpSpeed = value;
-				if(chargeUpSpeed == 0)
-					chargeUpValue = 0;
-			}
-		}
-		public float ChargeUpValue {
-			get => chargeUpValue;
-			set {
-				value = Mathf.Clamp01(value);
-				if(value != 0)
-					previousChargeUpValue = value;
-				if(protagonist.CanShoot)
-					chargeUpValue = value;
-				else
-					chargeUpValue = 0;
-				protagonist.animationController.ChargingUpValue = chargeUpValue;
+				cinder = value;
+				ui.cinderNumberText.text = cinder.ToString();
 			}
 		}
 		#endregion
@@ -223,13 +214,15 @@ namespace LanternTrip {
 			if(!Application.isPlaying)
 				return;
 
+			input = GetComponent<InputManager>();
+
 			// Initialize lantern slots
 			lanternSlots = new LanternSlot[settings.lanternSlotCount];
 			for(int i = 0; i < settings.lanternSlotCount; ++i)
 				lanternSlots[i] = new LanternSlot(ui.CreateLanternSlot());
-			ui.slotTrack.Current = lanternSlots[0];
 
 			OnRestart();
+			StartCoroutine(StartCoroutine());
 		}
 
 		void FixedUpdate() {
@@ -247,7 +240,6 @@ namespace LanternTrip {
 				if(burntOut && protagonist.state != "Dead")
 					protagonist.SendMessage("OnDie");
 			}
-			ChargeUpValue += ChargeUpSpeed * Time.fixedDeltaTime;
 		}
 
 		void EditorUpdate() {
