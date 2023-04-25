@@ -1,12 +1,14 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace LanternTrip {
 	public class UiManager : MonoBehaviour {
-		#region Inspector members
+		#region Serialized members
 		public SlotTrack slotTrack;
 		public GameObject lanternSlotUIPrefab;
 		public BonusSlotUI bonusSlot;
 		public GameObject interactionDirectionEntryPrefab;
+		public Text cinderNumberText;
 		#endregion
 
 		#region Public interfaces
@@ -16,6 +18,5 @@ namespace LanternTrip {
 			return ui.GetComponent<LanternSlotUI>();
 		}
 		#endregion
-
 	}
 }
