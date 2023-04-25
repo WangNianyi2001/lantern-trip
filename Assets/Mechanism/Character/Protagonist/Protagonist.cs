@@ -22,6 +22,8 @@ namespace LanternTrip {
 		public GameObject shootTargetPrefab;
 		public LineRenderer lineRenderer;
 		public LayerMask shootingLayerMask;
+		[Range(1, 100)] public float deathBurnSpeed;
+		[Range(0, 5)] public float deathTime;
 		#endregion
 
 		#region Internal functions
@@ -100,7 +102,15 @@ namespace LanternTrip {
 		}
 
 		IEnumerator DyingCoroutine() {
-			yield return new WaitForSeconds(2);
+			while(true) {
+				float bt = deathBurnSpeed * Time.fixedDeltaTime;
+				if(gameplay.TimeLeft <= bt)
+					break;
+				gameplay.Burn(bt);
+				yield return new WaitForFixedUpdate();
+			}
+			gameplay.Burn(gameplay.TimeLeft);
+			yield return new WaitForSeconds(deathTime);
 			gameplay.RestoreLastCheckpoint();
 		}
 		#endregion

@@ -10,8 +10,11 @@ namespace LanternTrip {
 	[ExecuteAlways]
 	[RequireComponent(typeof(InputManager))]
 	public class GameplayManager : ManagerBase {
+		#region Static members
 		public static GameplayManager instance;
-		public static string lastCheckpointName;
+		static string lastCheckpointName;
+		static float cinder = 0;
+		#endregion
 
 		#region Serialized members
 		new public Protagonist protagonist;
@@ -28,7 +31,6 @@ namespace LanternTrip {
 		List<Bonus> activeBonuses = new List<Bonus>();
 		int safezoneCounter = 0;
 		int coldzoneCounter = 0;
-		int cinder = 0;
 		#endregion
 
 		#region Internal methods
@@ -55,15 +57,19 @@ namespace LanternTrip {
 		float BurnLanterns(float time) {
 			if(lanternSlots.All(slot => slot.tinder == null))
 				return time;
-			float maxTimeLeft = lanternSlots.Select(slot => slot.timeLeft).Max();
+			float maxTimeLeft = MaxLanternTimeLeft;
 			if(maxTimeLeft < time) {
-				foreach(var slot in lanternSlots)
-					slot.Burn(maxTimeLeft);
+				foreach(var slot in lanternSlots) {
+					if(slot.Burn(maxTimeLeft))
+						Cinder += maxTimeLeft;
+				}
 				return time - maxTimeLeft;
 			}
 			else {
-				foreach(var slot in lanternSlots)
-					slot.Burn(time);
+				foreach(var slot in lanternSlots) {
+					if(slot.Burn(time))
+						Cinder += time;
+				}
 				return 0;
 			}
 		}
@@ -151,6 +157,8 @@ namespace LanternTrip {
 			TinderSource.current?.Deliver();
 		}
 
+		public float MaxLanternTimeLeft => lanternSlots.Select(slot => slot.timeLeft).Max();
+		public float TimeLeft => MaxLanternTimeLeft + BonusTime;
 		public bool Burn(float time) {
 			if(time == 0)
 				return true;
@@ -183,11 +191,12 @@ namespace LanternTrip {
 			burning = safezoneCounter == 0;
 		}
 
-		public int Cinder {
+		public float Cinder {
 			get => cinder;
 			set {
 				cinder = value;
-				ui.cinderNumberText.text = cinder.ToString();
+				int v = Mathf.FloorToInt(cinder);
+				ui.cinderNumberText.text = v.ToString();
 			}
 		}
 		#endregion

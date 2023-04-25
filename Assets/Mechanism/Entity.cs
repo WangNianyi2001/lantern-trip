@@ -11,6 +11,7 @@ namespace LanternTrip {
 		protected Dictionary<Collider, ContactPoint> contactingPoints = new Dictionary<Collider, ContactPoint>();
 		private float hp;
 		private bool undead;
+		private bool dead = false;
 		#endregion
 
 		#region Serialized members
@@ -71,8 +72,10 @@ namespace LanternTrip {
 		}
 
 		protected void Update() {
-			if(transform.position.y < deathY)
-				OnDie();
+			if(!dead) {
+				if(transform.position.y < deathY)
+					OnDie();
+			}
 		}
 
 		protected void OnCollisionEnter(Collision collision) {
@@ -88,6 +91,7 @@ namespace LanternTrip {
 		}
 
 		protected virtual void OnDie() {
+			dead = true;
 			onDie?.Invoke();
 		}
 		#endregion
