@@ -27,7 +27,7 @@ namespace StylizedGrass
         public static bool compatibleVersion = true;
         public static bool untestedVersion = false;
 
-#if !URP //Enabled when com.unity.render-pipelines.universal is below 7.2.0
+#if !URP && false //Enabled when com.unity.render-pipelines.universal is below 7.2.0
         [InitializeOnLoad]
         sealed class PackageInstaller : Editor
         {

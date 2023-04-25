@@ -4,6 +4,7 @@ using NaughtyAttributes;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace LanternTrip {
 	[ExecuteAlways]
@@ -14,7 +15,7 @@ namespace LanternTrip {
 
 		#region Serialized members
 		new public Protagonist protagonist;
-		public InputManager input;
+		[NonSerialized] public InputManager input;
 		public UiManager ui;
 		new public CameraManager camera;
 		[Expandable] public GameSettings settings;
@@ -27,15 +28,15 @@ namespace LanternTrip {
 		List<Bonus> activeBonuses = new List<Bonus>();
 		int safezoneCounter = 0;
 		int coldzoneCounter = 0;
+		int cinder = 0;
 		#endregion
 
 		#region Internal methods
-		public float BonusTime {
-			get => bonusTime;
-			set {
-				bonusTime = value;
-				ui.bonusSlot.SetValue(value);
-			}
+		IEnumerator StartCoroutine() {
+			yield return new WaitForEndOfFrame();
+
+			ui.slotTrack.Current = lanternSlots[0];
+			Cinder = Cinder;
 		}
 
 		float BurnBonus(float time) {
@@ -117,6 +118,14 @@ namespace LanternTrip {
 
 		[NonSerialized] public bool burning = false;
 
+		public float BonusTime {
+			get => bonusTime;
+			set {
+				bonusTime = value;
+				ui.bonusSlot.SetValue(value);
+			}
+		}
+
 		public float speedBonusRate = 1;
 		public bool coldDebuffEnabled = true;
 		public bool InCold => coldzoneCounter > 0;
@@ -173,6 +182,14 @@ namespace LanternTrip {
 				safezoneCounter = 0;
 			burning = safezoneCounter == 0;
 		}
+
+		public int Cinder {
+			get => cinder;
+			set {
+				cinder = value;
+				ui.cinderNumberText.text = cinder.ToString();
+			}
+		}
 		#endregion
 
 		#region Life cycle
@@ -197,13 +214,15 @@ namespace LanternTrip {
 			if(!Application.isPlaying)
 				return;
 
+			input = GetComponent<InputManager>();
+
 			// Initialize lantern slots
 			lanternSlots = new LanternSlot[settings.lanternSlotCount];
 			for(int i = 0; i < settings.lanternSlotCount; ++i)
 				lanternSlots[i] = new LanternSlot(ui.CreateLanternSlot());
-			ui.slotTrack.Current = lanternSlots[0];
 
 			OnRestart();
+			StartCoroutine(StartCoroutine());
 		}
 
 		void FixedUpdate() {
