@@ -36,12 +36,12 @@ namespace StylizedGrass
             {
                 RetreivePackageList();
 
-                if (EditorUtility.DisplayDialog("Stylized Grass Shader v" + INSTALLED_VERSION, "This package requires the Universal Render Pipeline " + MIN_URP_VERSION + " or newer, would you like to install or update it now?", "OK", "Later"))
+                /*if (EditorUtility.DisplayDialog("Stylized Grass Shader v" + INSTALLED_VERSION, "This package requires the Universal Render Pipeline " + MIN_URP_VERSION + " or newer, would you like to install or update it now?", "OK", "Later"))
                 {
 					Debug.Log("Universal Render Pipeline <b>v" + lastestURPVersion + "</b> will start installing in a moment. Please refer to the URP documentation for set up instructions");
 					
                     InstallURP();
-                }
+                }*/
             }
 
             private static PackageInfo[] packages;
