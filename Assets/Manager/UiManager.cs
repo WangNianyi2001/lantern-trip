@@ -1,21 +1,34 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+using System.Collections;
 
 namespace LanternTrip {
-	public class UiManager : MonoBehaviour {
+	public class UiManager : ManagerBase {
 		#region Serialized members
 		public SlotTrack slotTrack;
 		public GameObject lanternSlotUIPrefab;
-		public BonusSlotUI bonusSlot;
+		public GameObject bonusSlotPrefab;
+		public GameObject selectorPrefab;
 		public GameObject interactionDirectionEntryPrefab;
 		public Text cinderNumberText;
 		#endregion
 
-		#region Public interfaces
-		public LanternSlotUI CreateLanternSlot() {
-			GameObject ui = Instantiate(lanternSlotUIPrefab, slotTrack.transform);
-			ui.transform.SetSiblingIndex(bonusSlot.transform.GetSiblingIndex());
-			return ui.GetComponent<LanternSlotUI>();
+		[NonSerialized] public BonusSlotUI bonusSlot;
+
+		#region Life cycle
+		private void Start() {
+			foreach(Transform t in slotTrack.transform)
+				Destroy(t.gameObject);
+
+			bonusSlot = Instantiate(bonusSlotPrefab, slotTrack.transform).GetComponent<BonusSlotUI>();
+			slotTrack.selector = Instantiate(selectorPrefab, slotTrack.transform).GetComponent<Image>();
+
+			gameplay.lanternSlots = new LanternSlot[gameplay.settings.lanternSlotCount];
+			for(int i = 0; i < gameplay.settings.lanternSlotCount; ++i)
+				gameplay.lanternSlots[i] = new LanternSlot(Instantiate(lanternSlotUIPrefab, slotTrack.transform).GetComponent<LanternSlotUI>());
+
+			slotTrack.Current = gameplay.lanternSlots[0];
 		}
 		#endregion
 	}

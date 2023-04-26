@@ -128,7 +128,7 @@ namespace LanternTrip {
 			}
 			gameplay.Burn(gameplay.TimeLeft);
 			yield return new WaitForSeconds(deathTime);
-			gameplay.RestoreLastCheckpoint();
+			gameplay.RestartLevel();
 		}
 		#endregion
 

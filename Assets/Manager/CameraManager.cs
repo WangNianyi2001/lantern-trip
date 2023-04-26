@@ -102,6 +102,10 @@ namespace LanternTrip {
 				}
 			}
 		}
+
+		public void ResetVCam() {
+			vCam.LookAt = vCam.Follow = gameplay.protagonist.transform;
+		}
 		#endregion
 
 		#region Life cycle
@@ -112,10 +116,6 @@ namespace LanternTrip {
 			followOffset = orbitTransposer.m_FollowOffset;
 			Mode = Mode;
 			distance = FollowOffset.magnitude;
-		}
-
-		void ResetVCam() {
-			vCam.LookAt = vCam.Follow = gameplay.protagonist.transform;
 		}
 
 		void Update() {

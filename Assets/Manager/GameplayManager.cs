@@ -37,13 +37,6 @@ namespace LanternTrip {
 		#endregion
 
 		#region Internal methods
-		IEnumerator StartCoroutine() {
-			yield return new WaitForEndOfFrame();
-
-			ui.slotTrack.Current = lanternSlots[0];
-			Cinder = Cinder;
-		}
-
 		float BurnBonus(float time) {
 			if(BonusTime >= time) {
 				BonusTime -= time;
@@ -105,12 +98,6 @@ namespace LanternTrip {
 			activeBonuses.AddRange(survivedList);
 		}
 
-		bool IsDuplicatedOnStart() {
-			if(instance == null)
-				return false;
-			return instance == this;
-		}
-
 		IEnumerator ConversationCoroutine(PixelCrushers.DialogueSystem.ConversationController controller) {
 			yield return new WaitUntil(() => !controller.isActive);
 			ResumePhysics();
@@ -121,11 +108,8 @@ namespace LanternTrip {
 		[Range(0, 10)] public float burningRate = 1;
 
 		public Checkpoint LastCheckpoint {
-			get => GameObject.Find(lastCheckpointName)?.GetComponent<Checkpoint>();
+			get => GameObject.Find(lastCheckpointName)?.GetComponent<Checkpoint>() ?? startingCheckpoint;
 			set => lastCheckpointName = value?.gameObject?.name;
-		}
-		public void RestoreLastCheckpoint() {
-			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 		}
 
 		public LanternSlot currentLanterSlot => ui.slotTrack.Current;
@@ -219,6 +203,10 @@ namespace LanternTrip {
 				return;
 			audio.PlayOneShot(clip);
 		}
+
+		public void RestartLevel() {
+			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+		}
 		#endregion
 
 		#region Life cycle
@@ -226,30 +214,28 @@ namespace LanternTrip {
 			if(!Application.isPlaying)
 				return;
 
-			if(IsDuplicatedOnStart()) {
+			if(instance != null && instance != this) {
+				Debug.Log("Gameplay instance is not self, destroying.");
 				Destroy(gameObject);
 				return;
 			}
 
 			instance = this;
-		}
-
-		void OnRestart() {
-			var cp = LastCheckpoint ?? startingCheckpoint;
-			cp?.Restore();
+			DontDestroyOnLoad(gameObject);
+			var name = SceneManager.GetActiveScene().name;
+			SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => {
+				if(scene.name != name)
+					return;
+				Start();
+			};
 		}
 
 		void Start() {
-			if(!Application.isPlaying)
-				return;
-
-			// Initialize lantern slots
-			lanternSlots = new LanternSlot[settings.lanternSlotCount];
-			for(int i = 0; i < settings.lanternSlotCount; ++i)
-				lanternSlots[i] = new LanternSlot(ui.CreateLanternSlot());
-
-			OnRestart();
-			StartCoroutine(StartCoroutine());
+			protagonist = FindObjectOfType<Protagonist>();
+			Cinder = Cinder;
+			LastCheckpoint?.Restore();
+			camera.ResetVCam();
+			safezoneCounter = 0;
 		}
 
 		void FixedUpdate() {
@@ -271,7 +257,7 @@ namespace LanternTrip {
 
 		void EditorUpdate() {
 			instance = this;
-			OnRestart();
+			Start();
 		}
 
 		void Update() {
