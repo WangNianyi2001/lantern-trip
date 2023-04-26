@@ -226,16 +226,22 @@ namespace LanternTrip {
 			SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => {
 				if(scene.name != name)
 					return;
-				Start();
+				Reset();
 			};
 		}
 
-		void Start() {
+		void Reset() {
 			protagonist = FindObjectOfType<Protagonist>();
 			Cinder = Cinder;
 			LastCheckpoint?.Restore();
 			camera.ResetVCam();
 			safezoneCounter = 0;
+		}
+
+		void Start() {
+			if(!Application.isPlaying)
+				return;
+			Reset();
 		}
 
 		void FixedUpdate() {
@@ -257,7 +263,7 @@ namespace LanternTrip {
 
 		void EditorUpdate() {
 			instance = this;
-			Start();
+			Reset();
 		}
 
 		void Update() {
