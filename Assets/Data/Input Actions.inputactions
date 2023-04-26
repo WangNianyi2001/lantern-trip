@@ -320,6 +320,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Game Over",
+            "id": "eba2b774-c151-480a-83bb-1cdfd25b332c",
+            "actions": [
+                {
+                    "name": "Replay",
+                    "type": "Button",
+                    "id": "b9e6b62c-165a-4c7e-8dc1-030dd10f9f3a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press(behavior=1)",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3250d6bb-170d-4c67-b1fc-fc43aae5c4f2",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Replay",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [
