@@ -11,6 +11,7 @@ namespace LanternTrip {
 		[SerializeField] protected AudioSource mainAudio;
 		[SerializeField] protected AudioSource stepAudio;
 		public AudioClip[] footstepClips;
+		public AudioClip jumpAudio;
 		#endregion
 
 		#region Core members
@@ -18,12 +19,14 @@ namespace LanternTrip {
 		[NonSerialized] public string state;
 		[NonSerialized] public Vector3 inputVelocity;
 		[NonSerialized] public Vector3 walkingVelocity;
+		protected delegate void OnStateTransitDelegate(string from, string to);
+		protected OnStateTransitDelegate OnStateTransit;
 		#endregion
 
 		#region Core methods
 		protected virtual Vector3 InputVelocity => inputVelocity;
 
-		protected virtual void UpdateMovementState() {
+		protected virtual void UpdateState() {
 			switch(state) {
 				case "Walking":
 					// If not standing on any point, freefall
@@ -56,6 +59,7 @@ namespace LanternTrip {
 					animationController.Dead = true;
 					break;
 			}
+
 			animationController.Moving =
 				(state == "Walking")
 				&& (walkingVelocity.magnitude > .1f);
@@ -159,12 +163,14 @@ namespace LanternTrip {
 			if(state != "Walking")
 				return;
 			state = "Jumping";
+			PlaySfx(jumpAudio);
 			StartCoroutine(JumpCoroutine());
 		}
 
 		public void PlaySfx(AudioClip clip) {
 			if(!mainAudio)
 				return;
+			Debug.Log($"Playing SFX {clip}", clip);
 			mainAudio.PlayOneShot(clip);
 		}
 
@@ -197,7 +203,12 @@ namespace LanternTrip {
 
 		protected new void Update() {
 			base.Update();
-			UpdateMovementState();
+			var old = state;
+			UpdateState();
+			if(old != state) {
+				Debug.Log($"State transit: {old} => {state}");
+				OnStateTransit(old, state);
+			}
 			if(state != "Dead") {
 				walkingVelocity = CalculateWalkingVelocity();
 				Vector3 walkingForce = CalculateWalkingForce(walkingVelocity);
