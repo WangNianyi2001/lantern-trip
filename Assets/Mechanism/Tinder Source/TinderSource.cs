@@ -14,6 +14,7 @@ namespace LanternTrip {
 
 		public Tinder type;
 		public Transform tinder;
+		public new AudioSource audio;
 		public UnityEvent onApproach;
 		public UnityEvent onLeave;
 		public UnityEvent onDeliver;
@@ -38,25 +39,29 @@ namespace LanternTrip {
 			OnLeave();
 			current = null;
 			tinder.gameObject.SetActive(false);
+			audio?.Stop();
 			enabled = false;
 		}
 
 #if UNITY_EDITOR
-		void EditprUpdateTinder() {
-			var renderer = tinder?.GetComponentInChildren<MeshRenderer>();
-			if(renderer) {
-				var material = renderer.sharedMaterial;
-				if(material == null)
-					material = renderer.sharedMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-				else if(AssetDatabase.Contains(material))
-					material = renderer.sharedMaterial = new Material(material);
-				Color color = type?.mainColor ?? Color.white;
-				material.color = color;
-			}
-		}
 		void EditorUpdate() {
 			if(tinder) {
-				EditprUpdateTinder();
+				var renderer = tinder?.GetComponentInChildren<MeshRenderer>();
+				if(renderer) {
+					var material = renderer.sharedMaterial;
+					if(material == null)
+						material = renderer.sharedMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+					else if(AssetDatabase.Contains(material))
+						material = renderer.sharedMaterial = new Material(material);
+					Color color = type?.mainColor ?? Color.white;
+					material.color = color;
+				}
+				if(audio)
+					audio.playOnAwake = true;
+			}
+			else {
+				if(audio)
+					audio.playOnAwake = false;
 			}
 		}
 #endif
