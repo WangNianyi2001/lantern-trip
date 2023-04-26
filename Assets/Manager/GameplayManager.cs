@@ -185,7 +185,12 @@ namespace LanternTrip {
 			set {
 				cinder = value;
 				int v = Mathf.FloorToInt(cinder);
-				ui.cinderNumberText.text = v.ToString();
+				try {
+					ui.cinderNumberText.text = v.ToString();
+				}
+				catch(Exception e) {
+					Debug.LogError(e);
+				}
 			}
 		}
 
@@ -206,12 +211,13 @@ namespace LanternTrip {
 
 		public void RestartLevel() {
 			if(Cinder <= settings.respawnCinderCost) {
-				SceneManager.LoadScene(settings.gameOverScene);
+				SceneLoader.instance.LoadAsync(settings.gameOverScene);
+				Destroy(gameObject);
 				return;
 			}
 			Cinder -= settings.respawnCinderCost;
 			LoadTinder(settings.respawnGift);
-			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+			SceneLoader.instance.LoadAsync(SceneManager.GetActiveScene().name);
 		}
 		#endregion
 
@@ -242,6 +248,9 @@ namespace LanternTrip {
 			LastCheckpoint?.Restore();
 			camera.ResetVCam();
 			safezoneCounter = 0;
+			if(Application.isPlaying) {
+				SceneLoader.instance.gameObject.SetActive(false);
+			}
 		}
 
 		void Start() {
