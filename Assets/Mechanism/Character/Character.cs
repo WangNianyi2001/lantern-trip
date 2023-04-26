@@ -204,10 +204,8 @@ namespace LanternTrip {
 			base.Update();
 			var old = state;
 			UpdateState();
-			if(old != state) {
-				Debug.Log($"State transit: {old} => {state}");
+			if(old != state)
 				OnStateTransit(old, state);
-			}
 			if(state != "Dead") {
 				walkingVelocity = CalculateWalkingVelocity();
 				Vector3 walkingForce = CalculateWalkingForce(walkingVelocity);

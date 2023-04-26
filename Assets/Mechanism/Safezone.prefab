@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5064786285271076853}
   - component: {fileID: 1426241217296295271}
   - component: {fileID: 3159053996059292087}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Range
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 871871334162675892}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Safezone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -174,6 +174,10 @@ PrefabInstance:
     - target: {fileID: 6013149077492541682, guid: 3739837cd866d164d8f52f5299489ffb, type: 3}
       propertyPath: m_Name
       value: Trigger
+      objectReference: {fileID: 0}
+    - target: {fileID: 6013149077492541682, guid: 3739837cd866d164d8f52f5299489ffb, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6632661913214074574, guid: 3739837cd866d164d8f52f5299489ffb, type: 3}
       propertyPath: onExit.m_PersistentCalls.m_Calls.Array.size
