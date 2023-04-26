@@ -14,6 +14,7 @@ namespace LanternTrip {
 		PositiveY, NegativeY,
 	}
 
+	[ExecuteAlways]
 	public class CameraManager : ManagerBase {
 		#region Serialized fields
 		public new Camera camera;
@@ -105,6 +106,7 @@ namespace LanternTrip {
 
 		#region Life cycle
 		void Start() {
+			ResetVCam();
 			orbitTransposer = vCam.GetCinemachineComponent(CinemachineCore.Stage.Body) as CinemachineOrbitalTransposer;
 			composer = vCam.GetCinemachineComponent(CinemachineCore.Stage.Aim) as CinemachineComposer;
 			followOffset = orbitTransposer.m_FollowOffset;
@@ -112,7 +114,16 @@ namespace LanternTrip {
 			distance = FollowOffset.magnitude;
 		}
 
+		void ResetVCam() {
+			vCam.LookAt = vCam.Follow = gameplay.protagonist.transform;
+		}
+
 		void Update() {
+			if(!Application.isPlaying) {
+				ResetVCam();
+				return;
+			}
+
 			// Lock zenith
 			float z = Zenith * 180 / Mathf.PI;
 			z = Mathf.Clamp(z, zenithRange.x, zenithRange.y);

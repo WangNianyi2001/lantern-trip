@@ -153,10 +153,6 @@ namespace LanternTrip {
 			return true;
 		}
 
-		public void LoadTinderFromCurrentSource() {
-			TinderSource.current?.Deliver();
-		}
-
 		public float MaxLanternTimeLeft => lanternSlots.Select(slot => slot.timeLeft).Max();
 		public float TimeLeft => MaxLanternTimeLeft + BonusTime;
 		public bool Burn(float time) {

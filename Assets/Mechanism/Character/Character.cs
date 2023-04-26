@@ -8,6 +8,7 @@ namespace LanternTrip {
 		#region Serialized members
 		public CharacterMovementSettings movementSettings;
 		public Animator animator;
+		[SerializeField] protected AudioSource mainAudio;
 		[SerializeField] protected AudioSource stepAudio;
 		public AudioClip[] footstepClips;
 		#endregion
@@ -161,14 +162,19 @@ namespace LanternTrip {
 			StartCoroutine(JumpCoroutine());
 		}
 
+		public void PlaySfx(AudioClip clip) {
+			if(!mainAudio)
+				return;
+			mainAudio.PlayOneShot(clip);
+		}
+
 		public void PlayStepSound() {
 			if(!stepAudio)
 				return;
 			if(footstepClips == null || footstepClips.Count() == 0)
 				return;
 			int i = Mathf.FloorToInt(UnityEngine.Random.value * footstepClips.Count());
-			stepAudio.clip = footstepClips[i];
-			stepAudio.Play();
+			stepAudio.PlayOneShot(footstepClips[i]);
 		}
 		#endregion
 
@@ -181,6 +187,10 @@ namespace LanternTrip {
 			// Initialize
 			state = "Walking";
 			inputVelocity = Vector3.zero;
+			if(mainAudio)
+				mainAudio.playOnAwake = false;
+			if(stepAudio)
+				stepAudio.playOnAwake = false;
 
 			onDie.AddListener(() => state = "Dead");
 		}

@@ -8,36 +8,18 @@ namespace LanternTrip {
 	[RequireComponent(typeof(Entity))]
 	[ExecuteAlways]
 	public class TinderSource : MonoBehaviour {
-		/// <summary>Temporary solution for getting current tinder.</summary>
-		/// <remarks>Might be changed in the future.</remarks>
-		public static TinderSource current = null;
-
 		public Tinder type;
 		public Transform tinder;
 		public new AudioSource audio;
-		public UnityEvent onApproach;
-		public UnityEvent onLeave;
 		public UnityEvent onDeliver;
 
-		public void OnApproach() {
-			onApproach.Invoke();
-			current = this;
-		}
-		public void OnLeave() {
-			onLeave.Invoke();
-			current = null;
-		}
 		public void Deliver() {
 			if(!isActiveAndEnabled)
-				return;
-			if(current != this)
 				return;
 
 			GameplayManager.instance.LoadTinder(type);
 			onDeliver.Invoke();
 
-			OnLeave();
-			current = null;
 			tinder.gameObject.SetActive(false);
 			audio?.Stop();
 			enabled = false;

@@ -16,6 +16,7 @@ namespace LanternTrip {
 		#endregion
 
 		#region Serialized fields
+		public PixelCrushers.DialogueSystem.ProximitySelector selector;
 		[Header("Shooting")]
 		public Shooter shooter;
 		[MinMaxSlider(1, 20)] public Vector2 shootingRange;
