@@ -1,12 +1,15 @@
 using UnityEngine;
-using System.Collections;
 using System;
+using System.Collections;
+using System.Linq;
 
 namespace LanternTrip {
 	public partial class Character : Entity {
-		#region Inspector members
+		#region Serialized members
 		public CharacterMovementSettings movementSettings;
 		public Animator animator;
+		[SerializeField] protected AudioSource stepAudio;
+		public AudioClip[] footstepClips;
 		#endregion
 
 		#region Core members
@@ -156,6 +159,16 @@ namespace LanternTrip {
 				return;
 			state = "Jumping";
 			StartCoroutine(JumpCoroutine());
+		}
+
+		public void PlayStepSound() {
+			if(!stepAudio)
+				return;
+			if(footstepClips == null || footstepClips.Count() == 0)
+				return;
+			int i = Mathf.FloorToInt(UnityEngine.Random.value * footstepClips.Count());
+			stepAudio.clip = footstepClips[i];
+			stepAudio.Play();
 		}
 		#endregion
 
