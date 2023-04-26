@@ -24,6 +24,8 @@ namespace LanternTrip {
 		public PixelCrushers.DialogueSystem.DialogueSystemController ds;
 		[Expandable] public GameSettings settings;
 		public Checkpoint startingCheckpoint;
+		public new AudioSource audio;
+		public AudioClip collectTinderAudio;
 		#endregion
 
 		#region Internal members
@@ -32,7 +34,6 @@ namespace LanternTrip {
 		List<Bonus> activeBonuses = new List<Bonus>();
 		int safezoneCounter = 0;
 		int coldzoneCounter = 0;
-		float timeScale;
 		#endregion
 
 		#region Internal methods
@@ -156,6 +157,7 @@ namespace LanternTrip {
 			if(currentLanterSlot == null)
 				return false;
 			currentLanterSlot.Load(tinder, true);
+			PlaySfx(collectTinderAudio);
 			ActivateSatisfiedBonus();
 			return true;
 		}
@@ -210,6 +212,12 @@ namespace LanternTrip {
 			PausePhysics();
 			ds.StartConversation(name);
 			StartCoroutine(ConversationCoroutine(ds.ConversationController));
+		}
+
+		public void PlaySfx(AudioClip clip) {
+			if(!audio)
+				return;
+			audio.PlayOneShot(clip);
 		}
 		#endregion
 

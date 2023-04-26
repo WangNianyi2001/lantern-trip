@@ -170,7 +170,6 @@ namespace LanternTrip {
 		public void PlaySfx(AudioClip clip) {
 			if(!mainAudio)
 				return;
-			Debug.Log($"Playing SFX {clip}", clip);
 			mainAudio.PlayOneShot(clip);
 		}
 
