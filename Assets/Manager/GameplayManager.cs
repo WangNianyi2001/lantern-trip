@@ -205,6 +205,12 @@ namespace LanternTrip {
 		}
 
 		public void RestartLevel() {
+			if(Cinder <= settings.respawnCinderCost) {
+				SceneManager.LoadScene(settings.gameOverScene);
+				return;
+			}
+			Cinder -= settings.respawnCinderCost;
+			LoadTinder(settings.respawnGift);
 			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 		}
 		#endregion
