@@ -46,8 +46,9 @@ namespace LanternTrip {
 			protagonist?.Jump();
 		}
 
-		public void OnPlayerLoadTinder(InputValue _) {
-			gameplay.LoadTinderFromCurrentSource();
+		public void OnPlayerInteract(InputValue _) {
+			var selector = gameplay.protagonist.selector;
+			selector.UseCurrentSelection();
 		}
 
 		public void OnPlayerScrollSlot(InputValue value) {

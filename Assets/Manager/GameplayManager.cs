@@ -18,11 +18,14 @@ namespace LanternTrip {
 
 		#region Serialized members
 		new public Protagonist protagonist;
-		[NonSerialized] public InputManager input;
+		public InputManager input;
 		public UiManager ui;
 		new public CameraManager camera;
+		public PixelCrushers.DialogueSystem.DialogueSystemController ds;
 		[Expandable] public GameSettings settings;
 		public Checkpoint startingCheckpoint;
+		public new AudioSource audio;
+		public AudioClip collectTinderAudio;
 		#endregion
 
 		#region Internal members
@@ -107,6 +110,11 @@ namespace LanternTrip {
 				return false;
 			return instance == this;
 		}
+
+		IEnumerator ConversationCoroutine(PixelCrushers.DialogueSystem.ConversationController controller) {
+			yield return new WaitUntil(() => !controller.isActive);
+			ResumePhysics();
+		}
 		#endregion
 
 		#region Public interfaces
@@ -149,12 +157,9 @@ namespace LanternTrip {
 			if(currentLanterSlot == null)
 				return false;
 			currentLanterSlot.Load(tinder, true);
+			PlaySfx(collectTinderAudio);
 			ActivateSatisfiedBonus();
 			return true;
-		}
-
-		public void LoadTinderFromCurrentSource() {
-			TinderSource.current?.Deliver();
 		}
 
 		public float MaxLanternTimeLeft => lanternSlots.Select(slot => slot.timeLeft).Max();
@@ -199,6 +204,21 @@ namespace LanternTrip {
 				ui.cinderNumberText.text = v.ToString();
 			}
 		}
+
+		public void PausePhysics() => Time.timeScale = 0;
+		public void ResumePhysics() => Time.timeScale = 1;
+
+		public void StartConversation(string name) {
+			PausePhysics();
+			ds.StartConversation(name);
+			StartCoroutine(ConversationCoroutine(ds.ConversationController));
+		}
+
+		public void PlaySfx(AudioClip clip) {
+			if(!audio)
+				return;
+			audio.PlayOneShot(clip);
+		}
 		#endregion
 
 		#region Life cycle
@@ -222,8 +242,6 @@ namespace LanternTrip {
 		void Start() {
 			if(!Application.isPlaying)
 				return;
-
-			input = GetComponent<InputManager>();
 
 			// Initialize lantern slots
 			lanternSlots = new LanternSlot[settings.lanternSlotCount];

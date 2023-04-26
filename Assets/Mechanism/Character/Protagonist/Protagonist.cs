@@ -16,14 +16,20 @@ namespace LanternTrip {
 		#endregion
 
 		#region Serialized fields
+		public PixelCrushers.DialogueSystem.ProximitySelector selector;
+
 		[Header("Shooting")]
 		public Shooter shooter;
 		[MinMaxSlider(1, 20)] public Vector2 shootingRange;
 		public GameObject shootTargetPrefab;
 		public LineRenderer lineRenderer;
 		public LayerMask shootingLayerMask;
+
+		[Header("Death")]
 		[Range(1, 100)] public float deathBurnSpeed;
 		[Range(0, 5)] public float deathTime;
+
+		public AudioClip bowAimAudio;
 		#endregion
 
 		#region Internal functions
@@ -31,8 +37,8 @@ namespace LanternTrip {
 			return base.CalculateWalkingVelocity() * gameplay.speedBonusRate;
 		}
 
-		protected override void UpdateMovementState() {
-			base.UpdateMovementState();
+		protected override void UpdateState() {
+			base.UpdateState();
 			switch(state) {
 				case "Walking":
 					if(CanShoot && ChargeUpValue > 0) {
@@ -42,6 +48,17 @@ namespace LanternTrip {
 				case "Shooting":
 					if(ChargeUpValue == 0)
 						state = "Walking";
+					break;
+			}
+		}
+
+		protected new void OnStateTransit(string from, string to) {
+			switch(to) {
+				case "Shooting":
+					PlaySfx(bowAimAudio);
+					break;
+				case "Jumping":
+					PlaySfx(jumpAudio);
 					break;
 			}
 		}
@@ -174,6 +191,8 @@ namespace LanternTrip {
 
 		#region Life cycle
 		protected new void Start() {
+			base.OnStateTransit = OnStateTransit;
+
 			base.Start();
 
 			shootTarget = Instantiate(shootTargetPrefab).transform;

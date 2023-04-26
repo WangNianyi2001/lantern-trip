@@ -7,6 +7,8 @@ namespace LanternTrip {
 		public Entity entity;
 		public ParticleSystem particle;
 		Tinder tinder;
+		public new AudioSource audio;
+		public AudioClip hitAudio;
 
 		bool firstCollision = false;
 
@@ -34,6 +36,7 @@ namespace LanternTrip {
 
 			Entity entity = collision.gameObject.GetComponent<Entity>();
 			entity?.Shot(this);
+			audio?.PlayOneShot(hitAudio);
 
 			StartCoroutine(FirstCollisionCoroutine());
 		}
