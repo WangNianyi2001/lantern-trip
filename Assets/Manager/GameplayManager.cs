@@ -18,9 +18,10 @@ namespace LanternTrip {
 
 		#region Serialized members
 		new public Protagonist protagonist;
-		[NonSerialized] public InputManager input;
+		public InputManager input;
 		public UiManager ui;
 		new public CameraManager camera;
+		public PixelCrushers.DialogueSystem.DialogueSystemController ds;
 		[Expandable] public GameSettings settings;
 		public Checkpoint startingCheckpoint;
 		#endregion
@@ -31,6 +32,7 @@ namespace LanternTrip {
 		List<Bonus> activeBonuses = new List<Bonus>();
 		int safezoneCounter = 0;
 		int coldzoneCounter = 0;
+		float timeScale;
 		#endregion
 
 		#region Internal methods
@@ -106,6 +108,11 @@ namespace LanternTrip {
 			if(instance == null)
 				return false;
 			return instance == this;
+		}
+
+		IEnumerator ConversationCoroutine(PixelCrushers.DialogueSystem.ConversationController controller) {
+			yield return new WaitUntil(() => !controller.isActive);
+			ResumePhysics();
 		}
 		#endregion
 
@@ -195,6 +202,15 @@ namespace LanternTrip {
 				ui.cinderNumberText.text = v.ToString();
 			}
 		}
+
+		public void PausePhysics() => Time.timeScale = 0;
+		public void ResumePhysics() => Time.timeScale = 1;
+
+		public void StartConversation(string name) {
+			PausePhysics();
+			ds.StartConversation(name);
+			StartCoroutine(ConversationCoroutine(ds.ConversationController));
+		}
 		#endregion
 
 		#region Life cycle
@@ -218,8 +234,6 @@ namespace LanternTrip {
 		void Start() {
 			if(!Application.isPlaying)
 				return;
-
-			input = GetComponent<InputManager>();
 
 			// Initialize lantern slots
 			lanternSlots = new LanternSlot[settings.lanternSlotCount];

@@ -49,7 +49,6 @@ namespace LanternTrip {
 		public void OnPlayerInteract(InputValue _) {
 			var selector = gameplay.protagonist.selector;
 			selector.UseCurrentSelection();
-			Debug.Log(selector.CurrentUsable.transform.parent);
 		}
 
 		public void OnPlayerScrollSlot(InputValue value) {
