@@ -86,7 +86,7 @@ namespace LanternTrip {
 			}
 		}
 		public void OnPlayerOrientCamera(InputValue value) {
-			if(!orientingCamera || gameplay.camera.Mode != CameraMode.Orbital)
+			if(gameplay.camera.Mode != CameraMode.Orbital)
 				return;
 			Vector2 raw = value.Get<Vector2>();
 			gameplay.camera.Azimuth += raw.x * Mathf.PI / 180;
@@ -101,6 +101,7 @@ namespace LanternTrip {
 
 			// Initialize main game
 			GainPlayerControl();
+			Cursor.lockState = CursorLockMode.Locked;
 		}
 
 		void FixedUpdate() {
