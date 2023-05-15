@@ -9,11 +9,11 @@ namespace LanternTrip {
 		GameplayManager gameplay => GameplayManager.instance;
 
 		#region Internal fields
-		Transform shootTarget;
 		float chargeUpSpeed = 0;
 		float chargeUpValue = 0;
 		float previousChargeUpValue = 0;
 		bool dashCding = false;
+		Vector3 cachedShootTargetPosition;
 		#endregion
 
 		#region Serialized fields
@@ -22,7 +22,7 @@ namespace LanternTrip {
 		[Header("Shooting")]
 		public Shooter shooter;
 		[MinMaxSlider(1, 20)] public Vector2 shootingRange;
-		public GameObject shootTargetPrefab;
+		public RectTransform shootingUi;
 		public LineRenderer lineRenderer;
 		public LayerMask shootingLayerMask;
 
@@ -175,26 +175,25 @@ namespace LanternTrip {
 		}
 
 		public Vector3? ShootTargetPosition {
-			get => shootTarget.gameObject.activeInHierarchy ? shootTarget.position : null;
+			get {
+				if(!shootingUi.gameObject.activeInHierarchy)
+					return null;
+				return cachedShootTargetPosition;
+			}
 			set {
-				if(!HoldingBow || !value.HasValue) {
-					shootTarget.gameObject.SetActive(false);
+				if(!HoldingBow || !value.HasValue) 
 					return;
-				}
-				shootTarget.position = value.Value;
-				shootTarget.gameObject.SetActive(true);
+				cachedShootTargetPosition = value.Value;
 			}
 		}
 
 		public bool HoldingBow {
 			get => animationController.HoldingBow;
 			set {
-				if(value == HoldingBow)
-					return;
-
 				animationController.HoldingBow = value;
 				if(value == false)
 					ShootTargetPosition = null;
+				shootingUi.gameObject.SetActive(value);
 			}
 		}
 
@@ -222,8 +221,8 @@ namespace LanternTrip {
 
 			base.Start();
 
-			shootTarget = Instantiate(shootTargetPrefab).transform;
 			ShootTargetPosition = null;
+			HoldingBow = false;
 
 			shooter.preShoot.AddListener(arrowObj => {
 				var arrow = arrowObj.GetComponent<Arrow>();
