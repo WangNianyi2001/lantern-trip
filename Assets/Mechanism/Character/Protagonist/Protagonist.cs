@@ -13,6 +13,7 @@ namespace LanternTrip {
 		float chargeUpSpeed = 0;
 		float chargeUpValue = 0;
 		float previousChargeUpValue = 0;
+		bool dashCding = false;
 		#endregion
 
 		#region Serialized fields
@@ -36,6 +37,7 @@ namespace LanternTrip {
 		[Range(0, 10)] public float movingDash;
 		[Tooltip("¾²Ö¹Ê± dash ¾àÀë")]
 		[Range(-5, 5)] public float standingDash;
+		[Min(0)] public float dashCd;
 
 		public AudioClip bowAimAudio;
 		#endregion
@@ -138,6 +140,12 @@ namespace LanternTrip {
 			yield return new WaitForSeconds(deathTime);
 			gameplay.RestartLevel();
 		}
+
+		IEnumerator EnrollDashCd() {
+			dashCding = true;
+			yield return new WaitForSeconds(dashCd);
+			dashCding = false;
+		}
 		#endregion
 
 		#region Public interfaces
@@ -197,10 +205,13 @@ namespace LanternTrip {
 		}
 
 		public void Dash() {
+			if(dashCding)
+				return;
 			bool moving = walkingVelocity.magnitude > .1f;
 			var distance = moving ? movingDash : standingDash;
 			Rigidbody.MovePosition(Rigidbody.position + walkingVelocity.normalized * distance);
 			gameplay.Burn(dashConsuming);
+			StartCoroutine(EnrollDashCd());
 		}
 		#endregion
 
