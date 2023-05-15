@@ -29,6 +29,14 @@ namespace LanternTrip {
 		[Range(1, 100)] public float deathBurnSpeed;
 		[Range(0, 5)] public float deathTime;
 
+		[Header("Dash")]
+		[Tooltip("Dash 一次消耗的燃烧火种数")]
+		[Min(0)] public float dashConsuming;
+		[Tooltip("移动中 dash 距离")]
+		[Range(0, 10)] public float movingDash;
+		[Tooltip("静止时 dash 距离")]
+		[Range(-5, 5)] public float standingDash;
+
 		public AudioClip bowAimAudio;
 		#endregion
 
@@ -186,6 +194,13 @@ namespace LanternTrip {
 			if(!gameplay.Burn(1))
 				return;
 			shooter.Shoot(ClampedShootTargetPosition);
+		}
+
+		public void Dash() {
+			bool moving = walkingVelocity.magnitude > .1f;
+			var distance = moving ? movingDash : standingDash;
+			Rigidbody.MovePosition(Rigidbody.position + walkingVelocity.normalized * distance);
+			gameplay.Burn(dashConsuming);
 		}
 		#endregion
 

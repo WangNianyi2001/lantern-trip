@@ -87,18 +87,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "PlayerToggleOrientCamera",
-                    "type": "Button",
-                    "id": "b7907da6-5d4c-4178-9974-146a9cd86ad6",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "Press(behavior=2)",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "PlayerToggleCameraMode",
                     "type": "Button",
                     "id": "f828681f-5a7f-4024-87a5-39e430b3d72b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PlayerDash",
+                    "type": "Button",
+                    "id": "275d8628-0857-4e22-9d48-593982f52f54",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "Press",
@@ -175,7 +175,7 @@
                 {
                     "name": "",
                     "id": "78004256-8555-496d-a806-4aab84c2719d",
-                    "path": "<Keyboard>/f",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
@@ -251,23 +251,23 @@
                 },
                 {
                     "name": "",
-                    "id": "b09b6574-8d9c-48ba-84bf-9da37d33d6ed",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PC",
-                    "action": "PlayerToggleOrientCamera",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "117dd8db-253e-4fb8-a7cc-cf6efa0c9479",
                     "path": "<Mouse>/middleButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
                     "action": "PlayerToggleCameraMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c00f1894-12bb-478f-9a53-a855221fc4ad",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "PlayerDash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

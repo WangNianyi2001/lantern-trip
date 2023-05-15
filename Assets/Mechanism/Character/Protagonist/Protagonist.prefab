@@ -103,6 +103,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9b3501dabc634564fb0b8bf5fedd6b65, type: 3}
   - {fileID: 8300000, guid: 9d323a12b7e8da14ea0b1be5d5464610, type: 3}
   - {fileID: 8300000, guid: 8a6ce18626fab354485028b60449a141, type: 3}
+  jumpAudio: {fileID: 8300000, guid: df3e254cfbfcfcf46a4ca7d334d7152b, type: 3}
   selector: {fileID: 8265590633230078067}
   shooter: {fileID: 7229362482282808462}
   shootingRange: {x: 1, y: 20}
@@ -113,7 +114,9 @@ MonoBehaviour:
     m_Bits: 9
   deathBurnSpeed: 50
   deathTime: 1
-  jumpAudio: {fileID: 8300000, guid: df3e254cfbfcfcf46a4ca7d334d7152b, type: 3}
+  dashConsuming: 1
+  movingDash: 5
+  standingDash: -2
   bowAimAudio: {fileID: 8300000, guid: 971867d12e138bb40a89da757716f565, type: 3}
 --- !u!114 &8265590633230078067
 MonoBehaviour:
