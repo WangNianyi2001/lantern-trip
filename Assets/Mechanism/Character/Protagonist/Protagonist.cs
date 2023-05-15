@@ -9,10 +9,11 @@ namespace LanternTrip {
 		GameplayManager gameplay => GameplayManager.instance;
 
 		#region Internal fields
-		Transform shootTarget;
 		float chargeUpSpeed = 0;
 		float chargeUpValue = 0;
 		float previousChargeUpValue = 0;
+		bool dashCding = false;
+		Vector3 cachedShootTargetPosition;
 		#endregion
 
 		#region Serialized fields
@@ -21,13 +22,22 @@ namespace LanternTrip {
 		[Header("Shooting")]
 		public Shooter shooter;
 		[MinMaxSlider(1, 20)] public Vector2 shootingRange;
-		public GameObject shootTargetPrefab;
+		public RectTransform shootingUi;
 		public LineRenderer lineRenderer;
 		public LayerMask shootingLayerMask;
 
 		[Header("Death")]
 		[Range(1, 100)] public float deathBurnSpeed;
 		[Range(0, 5)] public float deathTime;
+
+		[Header("Dash")]
+		[Tooltip("Dash 一次消耗的燃烧火种数")]
+		[Min(0)] public float dashConsuming;
+		[Tooltip("移动中 dash 距离")]
+		[Range(0, 10)] public float movingDash;
+		[Tooltip("静止时 dash 距离")]
+		[Range(-5, 5)] public float standingDash;
+		[Min(0)] public float dashCd;
 
 		public AudioClip bowAimAudio;
 		#endregion
@@ -130,6 +140,12 @@ namespace LanternTrip {
 			yield return new WaitForSeconds(deathTime);
 			gameplay.RestartLevel();
 		}
+
+		IEnumerator EnrollDashCd() {
+			dashCding = true;
+			yield return new WaitForSeconds(dashCd);
+			dashCding = false;
+		}
 		#endregion
 
 		#region Public interfaces
@@ -159,26 +175,25 @@ namespace LanternTrip {
 		}
 
 		public Vector3? ShootTargetPosition {
-			get => shootTarget.gameObject.activeInHierarchy ? shootTarget.position : null;
+			get {
+				if(!shootingUi.gameObject.activeInHierarchy)
+					return null;
+				return cachedShootTargetPosition;
+			}
 			set {
-				if(!HoldingBow || !value.HasValue) {
-					shootTarget.gameObject.SetActive(false);
+				if(!HoldingBow || !value.HasValue) 
 					return;
-				}
-				shootTarget.position = value.Value;
-				shootTarget.gameObject.SetActive(true);
+				cachedShootTargetPosition = value.Value;
 			}
 		}
 
 		public bool HoldingBow {
 			get => animationController.HoldingBow;
 			set {
-				if(value == HoldingBow)
-					return;
-
 				animationController.HoldingBow = value;
 				if(value == false)
 					ShootTargetPosition = null;
+				shootingUi.gameObject.SetActive(value);
 			}
 		}
 
@@ -186,6 +201,17 @@ namespace LanternTrip {
 			if(!gameplay.Burn(1))
 				return;
 			shooter.Shoot(ClampedShootTargetPosition);
+		}
+
+		public void Dash() {
+			if(dashCding)
+				return;
+			bool moving = walkingVelocity.magnitude > .1f;
+			var distance = moving ? movingDash : standingDash;
+			distance *= gameplay.speedBonusRate;
+			Rigidbody.MovePosition(Rigidbody.position + transform.forward * distance);
+			gameplay.Burn(dashConsuming);
+			StartCoroutine(EnrollDashCd());
 		}
 		#endregion
 
@@ -195,8 +221,8 @@ namespace LanternTrip {
 
 			base.Start();
 
-			shootTarget = Instantiate(shootTargetPrefab).transform;
 			ShootTargetPosition = null;
+			HoldingBow = false;
 
 			shooter.preShoot.AddListener(arrowObj => {
 				var arrow = arrowObj.GetComponent<Arrow>();

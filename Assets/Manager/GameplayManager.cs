@@ -124,7 +124,7 @@ namespace LanternTrip {
 			}
 		}
 
-		public float speedBonusRate = 1;
+		[NonSerialized] public float speedBonusRate = 1;
 		public bool coldDebuffEnabled = true;
 		public bool InCold => coldzoneCounter > 0;
 
