@@ -209,7 +209,8 @@ namespace LanternTrip {
 				return;
 			bool moving = walkingVelocity.magnitude > .1f;
 			var distance = moving ? movingDash : standingDash;
-			Rigidbody.MovePosition(Rigidbody.position + walkingVelocity.normalized * distance);
+			distance *= gameplay.speedBonusRate;
+			Rigidbody.MovePosition(Rigidbody.position + transform.forward * distance);
 			gameplay.Burn(dashConsuming);
 			StartCoroutine(EnrollDashCd());
 		}
