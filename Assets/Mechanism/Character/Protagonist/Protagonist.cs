@@ -83,7 +83,7 @@ namespace LanternTrip {
 				if(!ShootTargetPosition.HasValue)
 					return transform.forward;
 				Vector3 offset = ShootTargetPosition.Value - transform.position;
-				offset = offset.ProjectOnto(transform.up);
+				offset = offset.ProjectOntoNormal(transform.up);
 				return offset.normalized;
 			}
 			else

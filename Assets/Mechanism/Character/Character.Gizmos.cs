@@ -43,6 +43,13 @@ namespace LanternTrip {
 					float distance = movementSettings.jumping.autoJumpHeight - movementSettings.jumping.autoJumpBottomSlitHeight;
 					PhysicsUtility.DrawCircularSectorSweepGizmos(autoJumpSector, distance);
 				}
+
+				// Compensate
+				if(compensateSlopeGravity) {
+					Vector3 acceleration = CalculateGravityCompensation();
+					Gizmos.color = Color.yellow;
+					Gizmos.DrawLine(transform.position, transform.position + acceleration);
+				}
 			}
 		}
 	}
