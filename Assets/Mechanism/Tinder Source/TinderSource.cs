@@ -32,7 +32,7 @@ namespace LanternTrip {
 				if(renderer) {
 					var material = renderer.sharedMaterial;
 					if(material == null)
-						material = renderer.sharedMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+						material = renderer.sharedMaterial = new Material(Shader.Find("HDRP/Lit"));
 					else if(AssetDatabase.Contains(material))
 						material = renderer.sharedMaterial = new Material(material);
 					Color color = type?.mainColor ?? Color.white;
