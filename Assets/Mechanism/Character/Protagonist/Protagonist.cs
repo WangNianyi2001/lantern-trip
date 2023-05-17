@@ -25,6 +25,7 @@ namespace LanternTrip {
 		public RectTransform shootingUi;
 		public LineRenderer lineRenderer;
 		public LayerMask shootingLayerMask;
+		[Range(0, 1)] public float holdingMovementSpeedDebuff;
 
 		[Header("Death")]
 		[Range(1, 100)] public float deathBurnSpeed;
@@ -44,7 +45,11 @@ namespace LanternTrip {
 
 		#region Internal functions
 		protected override Vector3 CalculateWalkingVelocity() {
-			return base.CalculateWalkingVelocity() * gameplay.speedBonusRate;
+			var v = base.CalculateWalkingVelocity();
+			v *= gameplay.speedBonusRate;
+			if(HoldingBow)
+				v *= holdingMovementSpeedDebuff;
+			return v;
 		}
 
 		protected override void UpdateState() {
