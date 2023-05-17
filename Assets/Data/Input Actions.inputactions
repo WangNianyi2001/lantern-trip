@@ -37,7 +37,7 @@
                     "type": "Value",
                     "id": "b5cccc2d-78e5-424e-9bcf-1defde51d316",
                     "expectedControlType": "Axis",
-                    "processors": "Normalize(min=-1,max=1),Invert",
+                    "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
                 },
@@ -184,15 +184,37 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "6836544f-1b48-4f8b-afd8-46ead65ffb21",
-                    "path": "<Mouse>/scroll/y",
+                    "name": "1D Axis",
+                    "id": "47ec04e9-6f37-4f9b-8d3c-9cca858298c2",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PlayerScrollSlot",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "9d1f7592-0abf-4234-a224-167b16f28e61",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PlayerScrollSlot",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "95e786c6-b8b0-494e-8a79-67af1f5e37b1",
+                    "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
                     "action": "PlayerScrollSlot",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "",
@@ -208,7 +230,7 @@
                 {
                     "name": "",
                     "id": "0c7baef7-253c-434d-bf86-e5e5569e94b8",
-                    "path": "<Keyboard>/tab",
+                    "path": "<Keyboard>/g",
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
