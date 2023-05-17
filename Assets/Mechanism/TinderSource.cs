@@ -13,6 +13,18 @@ namespace LanternTrip {
 		public new AudioSource audio;
 		public UnityEvent onDeliver;
 
+		enum ConfirmState {
+			Idle, Confirming,
+		}
+		ConfirmState confirmState = ConfirmState.Idle;
+
+		public void ConfirmDelivery() {
+			Animation anim = GameplayManager.instance.ui.slotTrack.selector.GetComponentInChildren<Animation>();
+			if(anim) {
+				anim.Play();
+			}
+		}
+
 		public void Deliver() {
 			if(!isActiveAndEnabled)
 				return;
@@ -23,6 +35,23 @@ namespace LanternTrip {
 			tinder.gameObject.SetActive(false);
 			audio?.Stop();
 			enabled = false;
+		}
+
+		public void OnInteract() {
+			switch(confirmState) {
+				case ConfirmState.Idle:
+					ConfirmDelivery();
+					confirmState = ConfirmState.Confirming;
+					break;
+				case ConfirmState.Confirming:
+					Deliver();
+					confirmState = ConfirmState.Idle;
+					break;
+			}
+		}
+
+		public void OnLeave() {
+			confirmState = ConfirmState.Idle;
 		}
 
 #if UNITY_EDITOR
