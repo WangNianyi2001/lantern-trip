@@ -13,6 +13,18 @@ namespace LanternTrip {
 		public new AudioSource audio;
 		public UnityEvent onDeliver;
 
+		enum ConfirmState {
+			Idle, Confirming,
+		}
+		ConfirmState confirmState = ConfirmState.Idle;
+
+		public void ConfirmDelivery() {
+			Animation anim = GameplayManager.instance.ui.slotTrack.selector.GetComponentInChildren<Animation>();
+			if(anim) {
+				anim.Play();
+			}
+		}
+
 		public void Deliver() {
 			if(!isActiveAndEnabled)
 				return;
@@ -25,6 +37,23 @@ namespace LanternTrip {
 			enabled = false;
 		}
 
+		public void OnInteract() {
+			switch(confirmState) {
+				case ConfirmState.Idle:
+					ConfirmDelivery();
+					confirmState = ConfirmState.Confirming;
+					break;
+				case ConfirmState.Confirming:
+					Deliver();
+					confirmState = ConfirmState.Idle;
+					break;
+			}
+		}
+
+		public void OnLeave() {
+			confirmState = ConfirmState.Idle;
+		}
+
 #if UNITY_EDITOR
 		void EditorUpdate() {
 			if(tinder) {
@@ -32,7 +61,7 @@ namespace LanternTrip {
 				if(renderer) {
 					var material = renderer.sharedMaterial;
 					if(material == null)
-						material = renderer.sharedMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+						material = renderer.sharedMaterial = new Material(Shader.Find("HDRP/Lit"));
 					else if(AssetDatabase.Contains(material))
 						material = renderer.sharedMaterial = new Material(material);
 					Color color = type?.mainColor ?? Color.white;

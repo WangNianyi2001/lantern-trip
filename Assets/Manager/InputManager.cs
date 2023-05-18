@@ -92,6 +92,10 @@ namespace LanternTrip {
 		public void OnPlayerDash(InputValue _) {
 			protagonist?.Dash();
 		}
+
+		public void OnPlayerKick(InputValue _) {
+			protagonist?.Kick();
+		}
 		#endregion
 
 		#region Life cycle

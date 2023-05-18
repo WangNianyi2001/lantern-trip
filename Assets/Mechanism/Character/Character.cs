@@ -12,6 +12,7 @@ namespace LanternTrip {
 		[SerializeField] protected AudioSource stepAudio;
 		public AudioClip[] footstepClips;
 		public AudioClip jumpAudio;
+		public bool compensateSlopeGravity;
 		#endregion
 
 		#region Core members
@@ -72,6 +73,19 @@ namespace LanternTrip {
 			return Mathf.Acos(cos);
 		}
 
+		protected Vector3 CalculateGravityCompensation() {
+			if(!standingPoint.HasValue)
+				return Vector3.zero;
+			ContactPoint contact = standingPoint.Value;
+			float mu = PhysicsUtility.CalculateFrictionCoefficient(contact, true);
+			Vector3 g = Physics.gravity;
+			Vector3 perp = contact.normal.normalized;
+			Vector3 parallel = g.ProjectOntoNormal(perp).normalized;
+			float c = Vector3.Dot(g, perp) * mu + Vector3.Dot(g, parallel);
+			c = -c;
+			return parallel * c;
+		}
+
 		protected virtual Vector3 CalculateWalkingVelocity() {
 			if(state == "Shooting")
 				return Vector3.zero;
@@ -89,14 +103,14 @@ namespace LanternTrip {
 		}
 		protected virtual Vector3 CalculateWalkingForce(Vector3 targetVelocity) {
 			Vector3 deltaVelocity = targetVelocity - rigidbody.velocity;
-			deltaVelocity = deltaVelocity.ProjectOnto(Physics.gravity);
+			deltaVelocity = deltaVelocity.ProjectOntoNormal(Physics.gravity);
 			float magnitude = deltaVelocity.magnitude;
 			magnitude *= movementSettings.walking.accelerationGain;
 			magnitude = Mathf.Min(magnitude, movementSettings.walking.maxAcceleration);
 			return deltaVelocity.normalized * magnitude;
 		}
 		protected virtual Vector3 CalculateExpectedDirection() {
-			Vector3 velocity = rigidbody.velocity.ProjectOnto(Physics.gravity);
+			Vector3 velocity = rigidbody.velocity.ProjectOntoNormal(Physics.gravity);
 			if(velocity.magnitude < .1f)
 				return transform.forward;
 			return velocity.normalized;
@@ -105,9 +119,9 @@ namespace LanternTrip {
 			Vector3 up = Physics.gravity.normalized;
 
 			Vector3 expectedDirection = CalculateExpectedDirection();
-			Vector3 actualDirection = transform.forward.ProjectOnto(up).normalized;
+			Vector3 actualDirection = transform.forward.ProjectOntoNormal(up).normalized;
 			float cosine = Vector3.Dot(expectedDirection, actualDirection);
-			cosine = Mathf.Clamp(cosine, -1f, 1f);	// Prevent overflow
+			cosine = Mathf.Clamp(cosine, -1f, 1f);  // Prevent overflow
 			float deltaZenith = Mathf.Acos(cosine);
 			// Left or right
 			float direction = Mathf.Sign(Vector3.Dot(Vector3.Cross(actualDirection, expectedDirection), up));
@@ -131,6 +145,18 @@ namespace LanternTrip {
 			return hit.HasValue;
 		}
 
+		protected void CompensateSlopeGravity() {
+			if(state != "Walking")
+				return;
+			//Vector3 acceleration = CalculateGravityCompensation();
+			//rigidbody.AddForce(acceleration / rigidbody.mass);
+			if(!standingPoint.HasValue)
+				return;
+			if(inputVelocity.sqrMagnitude > .1f)
+				return;
+			rigidbody.velocity = Vector3.zero;
+		}
+
 		IEnumerator JumpCoroutine() {
 			yield return new WaitForSeconds(movementSettings.jumping.preWaitingTime);
 			float gravity = Physics.gravity.magnitude;
@@ -139,8 +165,8 @@ namespace LanternTrip {
 			float speed = Mathf.Sqrt(2 * gravity * targetHeight);
 			Vector3 jumpingImpulse = transform.up * speed * rigidbody.mass;
 			rigidbody.AddForce(jumpingImpulse, ForceMode.Impulse);
+			yield return new WaitForSeconds(.1f);
 			state = "Freefalling";
-
 		}
 		#endregion
 
@@ -216,6 +242,8 @@ namespace LanternTrip {
 					if(CalculateShouldAutoJump())
 						Jump();
 				}
+				if(compensateSlopeGravity)
+					CompensateSlopeGravity();
 			}
 			if(state != "Dead") {
 				Vector3 zenithTorque = CalculateZenithTorque();

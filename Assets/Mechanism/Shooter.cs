@@ -13,7 +13,7 @@ namespace LanternTrip {
 
 			// Delta components
 			Vector3 delta = position - transform.position;
-			Vector3 dz = delta.ProjectOnto(up);
+			Vector3 dz = delta.ProjectOntoNormal(up);
 			float dy = Vector3.Dot(delta, up);
 
 			// Z velocity

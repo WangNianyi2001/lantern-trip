@@ -14,10 +14,15 @@ namespace LanternTrip {
 		float previousChargeUpValue = 0;
 		bool dashCding = false;
 		Vector3 cachedShootTargetPosition;
+		bool kicking = false;
 		#endregion
 
 		#region Serialized fields
 		public PixelCrushers.DialogueSystem.ProximitySelector selector;
+
+		[Header("Anchors")]
+		public Transform bodyAnchor;
+		public Transform shootingAnchor;
 
 		[Header("Shooting")]
 		public Shooter shooter;
@@ -25,6 +30,7 @@ namespace LanternTrip {
 		public RectTransform shootingUi;
 		public LineRenderer lineRenderer;
 		public LayerMask shootingLayerMask;
+		[Range(0, 1)] public float holdingMovementSpeedDebuff;
 
 		[Header("Death")]
 		[Range(1, 100)] public float deathBurnSpeed;
@@ -44,7 +50,11 @@ namespace LanternTrip {
 
 		#region Internal functions
 		protected override Vector3 CalculateWalkingVelocity() {
-			return base.CalculateWalkingVelocity() * gameplay.speedBonusRate;
+			var v = base.CalculateWalkingVelocity();
+			v *= gameplay.speedBonusRate;
+			if(HoldingBow)
+				v *= holdingMovementSpeedDebuff;
+			return v;
 		}
 
 		protected override void UpdateState() {
@@ -74,12 +84,18 @@ namespace LanternTrip {
 		}
 
 		protected override Vector3 CalculateExpectedDirection() {
-			if(state == "Shooting") {
-				if(!ShootTargetPosition.HasValue)
-					return transform.forward;
-				Vector3 offset = ShootTargetPosition.Value - transform.position;
-				offset = offset.ProjectOnto(transform.up);
-				return offset.normalized;
+			if(HoldingBow) {
+				if(state == "Shooting" && false) {
+					// Deprecated
+					if(!ShootTargetPosition.HasValue)
+						return transform.forward;
+					Vector3 offset = ShootTargetPosition.Value - transform.position;
+					offset = offset.ProjectOntoNormal(transform.up);
+					return offset.normalized;
+				}
+				else {
+					return gameplay.camera.camera.transform.forward.ProjectOntoNormal(Physics.gravity).normalized;
+				}
 			}
 			else
 				return base.CalculateExpectedDirection();
@@ -113,9 +129,7 @@ namespace LanternTrip {
 			Camera cam = gameplay.camera.camera;
 			Ray ray = cam.ScreenPointToRay(gameplay.input.MousePosition);
 			Physics.Raycast(ray, out hit, Mathf.Infinity, shootingLayerMask);
-			if(!hit.transform)
-				ShootTargetPosition = null;
-			else {
+			if(hit.transform) {
 				ShootTargetPosition = hit.point;
 
 				// If charged-up, render expected shooting curve
@@ -146,10 +160,24 @@ namespace LanternTrip {
 			yield return new WaitForSeconds(dashCd);
 			dashCding = false;
 		}
+
+		IEnumerator KickingCoroutine() {
+			string previousState = state;
+			state = "Kicking";
+			kicking = true;
+			animationController.Kicking = true;
+			yield return new WaitWhile(() => kicking);
+			animationController.Kicking = false;
+			state = previousState;
+		}
 		#endregion
 
 		#region Public interfaces
 		public bool CanShoot => HoldingBow && (state == "Walking" || state == "Shooting");
+		public bool ShootingUiVisible {
+			get => shootingUi.gameObject.activeInHierarchy;
+			set => shootingUi.gameObject.SetActive(value);
+		}
 
 		public float ChargeUpSpeed {
 			get => chargeUpSpeed;
@@ -171,15 +199,16 @@ namespace LanternTrip {
 				else
 					chargeUpValue = 0;
 				animationController.ChargingUpValue = chargeUpValue;
+				if(HoldingBow) {
+					var cam = gameplay.camera;
+					cam.Distance = cam.shootingDistance.Lerp(1 - value);
+				}
+				ShootingUiVisible = value > 0;
 			}
 		}
 
 		public Vector3? ShootTargetPosition {
-			get {
-				if(!shootingUi.gameObject.activeInHierarchy)
-					return null;
-				return cachedShootTargetPosition;
-			}
+			get =>  cachedShootTargetPosition;
 			set {
 				if(!HoldingBow || !value.HasValue) 
 					return;
@@ -191,9 +220,15 @@ namespace LanternTrip {
 			get => animationController.HoldingBow;
 			set {
 				animationController.HoldingBow = value;
-				if(value == false)
-					ShootTargetPosition = null;
-				shootingUi.gameObject.SetActive(value);
+				var cam = gameplay.camera;
+				if(value) {
+					cam.Target = shootingAnchor;
+					cam.Distance = cam.shootingDistance.y;
+				}
+				else {
+					cam.Target = bodyAnchor;
+					cam.Distance = cam.followingDistance;
+				}
 			}
 		}
 
@@ -213,6 +248,14 @@ namespace LanternTrip {
 			gameplay.Burn(dashConsuming);
 			StartCoroutine(EnrollDashCd());
 		}
+
+		public void Kick() {
+			StartCoroutine(KickingCoroutine());
+		}
+
+		public void EndKicking() {
+			kicking = false;
+		}
 		#endregion
 
 		#region Life cycle
@@ -221,8 +264,8 @@ namespace LanternTrip {
 
 			base.Start();
 
-			ShootTargetPosition = null;
 			HoldingBow = false;
+			ShootingUiVisible = false;
 
 			shooter.preShoot.AddListener(arrowObj => {
 				var arrow = arrowObj.GetComponent<Arrow>();
