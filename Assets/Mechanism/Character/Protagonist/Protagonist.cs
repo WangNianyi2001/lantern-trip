@@ -14,6 +14,7 @@ namespace LanternTrip {
 		float previousChargeUpValue = 0;
 		bool dashCding = false;
 		Vector3 cachedShootTargetPosition;
+		bool kicking = false;
 		#endregion
 
 		#region Serialized fields
@@ -151,6 +152,16 @@ namespace LanternTrip {
 			yield return new WaitForSeconds(dashCd);
 			dashCding = false;
 		}
+
+		IEnumerator KickingCoroutine() {
+			string previousState = state;
+			state = "Kicking";
+			kicking = true;
+			animationController.Kicking = true;
+			yield return new WaitWhile(() => kicking);
+			animationController.Kicking = false;
+			state = previousState;
+		}
 		#endregion
 
 		#region Public interfaces
@@ -217,6 +228,14 @@ namespace LanternTrip {
 			Rigidbody.MovePosition(Rigidbody.position + transform.forward * distance);
 			gameplay.Burn(dashConsuming);
 			StartCoroutine(EnrollDashCd());
+		}
+
+		public void Kick() {
+			StartCoroutine(KickingCoroutine());
+		}
+
+		public void EndKicking() {
+			kicking = false;
 		}
 		#endregion
 

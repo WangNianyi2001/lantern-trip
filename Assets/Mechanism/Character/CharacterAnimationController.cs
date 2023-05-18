@@ -11,6 +11,7 @@ namespace LanternTrip {
 		public bool Dead = false;
 		public bool HoldingBow = false;
 		public float ChargingUpValue = 0;
+		public bool Kicking = false;
 
 		public CharacterAnimationController(Character character) {
 			this.character = character;
@@ -26,6 +27,7 @@ namespace LanternTrip {
 			animator.SetBool("Dead", Dead);
 			animator.SetBool("Holding Bow", HoldingBow);
 			animator.SetFloat("Charging Up", ChargingUpValue);
+			animator.SetBool("Kicking", Kicking);
 		}
 	}
 }
