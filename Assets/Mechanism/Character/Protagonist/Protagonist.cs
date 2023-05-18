@@ -131,14 +131,19 @@ namespace LanternTrip {
 			Physics.Raycast(ray, out hit, Mathf.Infinity, shootingLayerMask);
 			if(hit.transform) {
 				ShootTargetPosition = hit.point;
+			}
+			else {
+				Vector3 position = cam.transform.position;
+				position += cam.transform.forward * shootingRange.y;
+				ShootTargetPosition = position;
+			}
 
-				// If charged-up, render expected shooting curve
-				if(ChargeUpValue > 0) {
-					var points = YieldShootingCurveCoordinates(shooter.totalTime).ToArray();
-					lineRenderer.positionCount = points.Length;
-					lineRenderer.SetPositions(points);
-					lineRenderer.enabled = true;
-				}
+			// If charged-up, render expected shooting curve
+			if(ChargeUpValue > 0) {
+				var points = YieldShootingCurveCoordinates(shooter.totalTime).ToArray();
+				lineRenderer.positionCount = points.Length;
+				lineRenderer.SetPositions(points);
+				lineRenderer.enabled = true;
 			}
 		}
 
