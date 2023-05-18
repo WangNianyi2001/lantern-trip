@@ -192,17 +192,21 @@ namespace LanternTrip {
 			get => chargeUpValue;
 			set {
 				value = Mathf.Clamp01(value);
-				if(value != 0)
+				var cam = gameplay.camera;
+				if(value != 0) {
 					previousChargeUpValue = value;
+					cam.Target = shootingAnchor;
+				}
+				else {
+					cam.Target = bodyAnchor;
+				}
 				if(CanShoot)
 					chargeUpValue = value;
 				else
 					chargeUpValue = 0;
 				animationController.ChargingUpValue = chargeUpValue;
-				if(HoldingBow) {
-					var cam = gameplay.camera;
+				if(HoldingBow)
 					cam.Distance = cam.shootingDistance.Lerp(1 - value);
-				}
 				ShootingUiVisible = value > 0;
 			}
 		}
@@ -222,11 +226,9 @@ namespace LanternTrip {
 				animationController.HoldingBow = value;
 				var cam = gameplay.camera;
 				if(value) {
-					cam.Target = shootingAnchor;
 					cam.Distance = cam.shootingDistance.y;
 				}
 				else {
-					cam.Target = bodyAnchor;
 					cam.Distance = cam.followingDistance;
 				}
 			}
