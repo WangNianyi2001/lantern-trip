@@ -14,7 +14,7 @@ namespace LanternTrip {
 		PositiveY, NegativeY,
 	}
 
-	[ExecuteAlways]
+	[ExecuteInEditMode]
 	public class CameraManager : ManagerBase {
 		#region Serialized fields
 		public new Camera camera;
@@ -22,6 +22,7 @@ namespace LanternTrip {
 		[SerializeField] CameraMode mode;
 		[Range(0, Mathf.PI / 2)] public float followingZenith;
 		[Range(0, 50)] public float followingDistance;
+		[MinMaxSlider(0, 50)] public Vector2 shootingDistance;
 		[Range(0, 50)] public float orbitalDistance;
 		public bool useRayCast = true;
 		public LayerMask rayCastLayer;
@@ -38,16 +39,20 @@ namespace LanternTrip {
 
 		#region Public interfaces
 		public Vector3 FollowOffset {
-			get => followOffset - AimOffset;
-			set => followOffset = value + AimOffset;
+			get => followOffset;
+			set => followOffset = value;
 		}
-		public Vector3 AimOffset => composer.m_TrackedObjectOffset;
 		public Ray FollowRay {
 			get {
-				var offset = AimOffset;
-				var from = orbitTransposer.FollowTarget.position + offset;
+				var from = orbitTransposer.FollowTarget.position;
 				var direction = Quaternion.Euler(0, Azimuth * 180 / Mathf.PI, 0) * FollowOffset;
 				return new Ray(from, direction);
+			}
+		}
+		public Transform Target {
+			set {
+				vCam.Follow = value;
+				vCam.LookAt = value;
 			}
 		}
 
@@ -65,7 +70,9 @@ namespace LanternTrip {
 		}
 		public float Distance {
 			get => distance;
-			set => distance = value;
+			set {
+				distance = value;
+			}
 		}
 
 		public void SetFollowing(FollowingCameraMode mode) {
@@ -104,7 +111,7 @@ namespace LanternTrip {
 		}
 
 		public void ResetVCam() {
-			vCam.LookAt = vCam.Follow = gameplay.protagonist.transform;
+			vCam.LookAt = vCam.Follow = gameplay.protagonist.bodyAnchor;
 		}
 		#endregion
 

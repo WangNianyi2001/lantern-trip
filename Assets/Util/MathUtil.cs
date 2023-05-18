@@ -34,5 +34,9 @@ namespace LanternTrip {
 		}
 
 		public static bool InRange(float x, float min, float max) => x >= min && x <= max;
+
+		public static float Lerp(this Vector2 range, float t) {
+			return Mathf.Lerp(range.x, range.y, t);
+		}
 	}
 }

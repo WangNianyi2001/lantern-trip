@@ -20,6 +20,10 @@ namespace LanternTrip {
 		#region Serialized fields
 		public PixelCrushers.DialogueSystem.ProximitySelector selector;
 
+		[Header("Anchors")]
+		public Transform bodyAnchor;
+		public Transform shootingAnchor;
+
 		[Header("Shooting")]
 		public Shooter shooter;
 		[MinMaxSlider(1, 20)] public Vector2 shootingRange;
@@ -80,12 +84,18 @@ namespace LanternTrip {
 		}
 
 		protected override Vector3 CalculateExpectedDirection() {
-			if(state == "Shooting") {
-				if(!ShootTargetPosition.HasValue)
-					return transform.forward;
-				Vector3 offset = ShootTargetPosition.Value - transform.position;
-				offset = offset.ProjectOntoNormal(transform.up);
-				return offset.normalized;
+			if(HoldingBow) {
+				if(state == "Shooting" && false) {
+					// Deprecated
+					if(!ShootTargetPosition.HasValue)
+						return transform.forward;
+					Vector3 offset = ShootTargetPosition.Value - transform.position;
+					offset = offset.ProjectOntoNormal(transform.up);
+					return offset.normalized;
+				}
+				else {
+					return gameplay.camera.camera.transform.forward.ProjectOntoNormal(Physics.gravity).normalized;
+				}
 			}
 			else
 				return base.CalculateExpectedDirection();
@@ -187,6 +197,10 @@ namespace LanternTrip {
 				else
 					chargeUpValue = 0;
 				animationController.ChargingUpValue = chargeUpValue;
+				if(HoldingBow) {
+					var cam = gameplay.camera;
+					cam.Distance = cam.shootingDistance.Lerp(1 - value);
+				}
 			}
 		}
 
@@ -207,9 +221,16 @@ namespace LanternTrip {
 			get => animationController.HoldingBow;
 			set {
 				animationController.HoldingBow = value;
-				if(value == false)
+				var cam = gameplay.camera;
+				if(value) {
+					cam.Target = shootingAnchor;
+					cam.Distance = cam.shootingDistance.y;
+				}
+				else {
 					ShootTargetPosition = null;
-				shootingUi.gameObject.SetActive(value);
+					cam.Target = bodyAnchor;
+					cam.Distance = cam.followingDistance;
+				}
 			}
 		}
 
