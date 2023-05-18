@@ -129,9 +129,7 @@ namespace LanternTrip {
 			Camera cam = gameplay.camera.camera;
 			Ray ray = cam.ScreenPointToRay(gameplay.input.MousePosition);
 			Physics.Raycast(ray, out hit, Mathf.Infinity, shootingLayerMask);
-			if(!hit.transform)
-				ShootTargetPosition = null;
-			else {
+			if(hit.transform) {
 				ShootTargetPosition = hit.point;
 
 				// If charged-up, render expected shooting curve
@@ -176,6 +174,10 @@ namespace LanternTrip {
 
 		#region Public interfaces
 		public bool CanShoot => HoldingBow && (state == "Walking" || state == "Shooting");
+		public bool ShootingUiVisible {
+			get => shootingUi.gameObject.activeInHierarchy;
+			set => shootingUi.gameObject.SetActive(value);
+		}
 
 		public float ChargeUpSpeed {
 			get => chargeUpSpeed;
@@ -201,15 +203,12 @@ namespace LanternTrip {
 					var cam = gameplay.camera;
 					cam.Distance = cam.shootingDistance.Lerp(1 - value);
 				}
+				ShootingUiVisible = value > 0;
 			}
 		}
 
 		public Vector3? ShootTargetPosition {
-			get {
-				if(!shootingUi.gameObject.activeInHierarchy)
-					return null;
-				return cachedShootTargetPosition;
-			}
+			get =>  cachedShootTargetPosition;
 			set {
 				if(!HoldingBow || !value.HasValue) 
 					return;
@@ -227,7 +226,6 @@ namespace LanternTrip {
 					cam.Distance = cam.shootingDistance.y;
 				}
 				else {
-					ShootTargetPosition = null;
 					cam.Target = bodyAnchor;
 					cam.Distance = cam.followingDistance;
 				}
@@ -266,8 +264,8 @@ namespace LanternTrip {
 
 			base.Start();
 
-			ShootTargetPosition = null;
 			HoldingBow = false;
+			ShootingUiVisible = false;
 
 			shooter.preShoot.AddListener(arrowObj => {
 				var arrow = arrowObj.GetComponent<Arrow>();
