@@ -160,6 +160,35 @@ namespace LanternTrip {
 			gameplay.RestartLevel();
 		}
 
+		IEnumerator DashingCoroutine() {
+			bool moving = walkingVelocity.magnitude > .1f;
+			var distance = moving ? movingDash : standingDash;
+			distance *= gameplay.speedBonusRate;
+
+			Vector3 direction = transform.forward;
+			float eps = -.1f;
+			Vector3 back = direction * eps;
+			CapsuleCollider capsule = GetComponent<CapsuleCollider>();
+			if(!capsule) {
+				Debug.LogWarning("Collider of protagonist must be a capsule to cast along dashing path!");
+				yield break;
+			}
+			bool castHit = Physics.CapsuleCast(
+				capsule.PointAlongAxis(-1) + back, capsule.PointAlongAxis(1) + back,
+				capsule.radius, direction, distance - eps, shootingLayerMask,
+				QueryTriggerInteraction.Ignore
+			);
+			if(castHit) {
+				Debug.LogWarning("Dashing path is colliding with non-passable collider, aborting dashing!");
+				yield break;
+			}
+
+			Rigidbody.MovePosition(Rigidbody.position + transform.forward * distance);
+			gameplay.Burn(dashConsuming);
+
+			yield return EnrollDashCd();
+		}
+
 		IEnumerator EnrollDashCd() {
 			dashCding = true;
 			yield return new WaitForSeconds(dashCd);
@@ -245,12 +274,7 @@ namespace LanternTrip {
 		public void Dash() {
 			if(dashCding)
 				return;
-			bool moving = walkingVelocity.magnitude > .1f;
-			var distance = moving ? movingDash : standingDash;
-			distance *= gameplay.speedBonusRate;
-			Rigidbody.MovePosition(Rigidbody.position + transform.forward * distance);
-			gameplay.Burn(dashConsuming);
-			StartCoroutine(EnrollDashCd());
+			StartCoroutine(DashingCoroutine());
 		}
 
 		public void Kick() {

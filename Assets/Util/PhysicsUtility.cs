@@ -147,5 +147,24 @@ namespace LanternTrip {
 			}
 			return 1;
 		}
+
+		public static Vector3 PointAlongAxis(this CapsuleCollider capsule, float t) {
+			Vector3 local = Vector3.zero;
+			switch(capsule.direction) {
+				case 0: // X
+					local = Vector3.right;
+					break;
+				case 1: // Y
+					local = Vector3.up;
+					break;
+				case 2:	// Z
+					local = Vector3.forward;
+					break;
+			}
+			local *= capsule.height;
+			local *= t;
+			local += capsule.center;
+			return capsule.transform.localToWorldMatrix.MultiplyPoint(local);
+		}
 	}
 }
