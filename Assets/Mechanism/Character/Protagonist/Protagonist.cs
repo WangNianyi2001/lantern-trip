@@ -189,14 +189,15 @@ namespace LanternTrip {
 			set {
 				value = Mathf.Clamp01(value);
 				chargeUpSpeed = value;
-				if(chargeUpSpeed == 0)
-					chargeUpValue = 0;
+				if(value == 0)
+					ChargeUpValue = 0;
 			}
 		}
 		public float ChargeUpValue {
 			get => chargeUpValue;
 			set {
 				value = Mathf.Clamp01(value);
+				chargeUpValue = value;
 				var cam = gameplay.camera;
 				if(value != 0) {
 					previousChargeUpValue = value;
@@ -205,10 +206,6 @@ namespace LanternTrip {
 				else {
 					cam.Target = bodyAnchor;
 				}
-				if(CanShoot)
-					chargeUpValue = value;
-				else
-					chargeUpValue = 0;
 				animationController.ChargingUpValue = chargeUpValue;
 				if(HoldingBow)
 					cam.Distance = cam.shootingDistance.Lerp(1 - value);
@@ -292,6 +289,10 @@ namespace LanternTrip {
 
 		protected void FixedUpdate() {
 			ChargeUpValue += ChargeUpSpeed * Time.fixedDeltaTime;
+			if(ChargeUpValue > 0 && !HoldingBow) {
+				Debug.Log("Automatically taking out bow");
+				HoldingBow = true;
+			}
 		}
 
 		protected override void OnDie() {
