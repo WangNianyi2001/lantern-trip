@@ -96,6 +96,13 @@ namespace LanternTrip {
 		public void OnPlayerKick(InputValue _) {
 			protagonist?.Kick();
 		}
+
+		public void OnPlayerSwitchProp(InputValue _) {
+			++gameplay.PropIndex;
+		}
+		public void OnPlayerUseProp(InputValue _) {
+			gameplay.UseCurrentProp();
+		}
 		#endregion
 
 		#region Life cycle
