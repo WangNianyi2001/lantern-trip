@@ -112,6 +112,24 @@
                     "processors": "",
                     "interactions": "Press",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "PlayerUseProp",
+                    "type": "Button",
+                    "id": "a4614a36-8bb4-41dc-80e7-be26772db042",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PlayerSwitchProp",
+                    "type": "Button",
+                    "id": "24e5ef41-8554-449a-bbee-100afddb20c1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -310,6 +328,28 @@
                     "processors": "",
                     "groups": "PC",
                     "action": "PlayerKick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "74f375da-f03f-4e22-a9bc-7b9fa024c63a",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "PlayerUseProp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "81f0b7e7-acb4-4f5a-be16-5311568a85a9",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "PlayerSwitchProp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -24,7 +24,7 @@ RenderSettings:
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 4
+  m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0, g: 0, b: 0, a: 1}
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
@@ -1870,6 +1870,10 @@ PrefabInstance:
       propertyPath: m_Value
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2081021156999479587, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2281125334320876300, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2127,9 +2131,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1491284155}
     - target: {fileID: 3049962982857884992, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
+      propertyPath: props.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3049962982857884992, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
       propertyPath: startingCheckpoint
       value: 
       objectReference: {fileID: 1539201987}
+    - target: {fileID: 3049962982857884992, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
+      propertyPath: props.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: b4901a7134dbb274b9a2a6f0a081cfc6, type: 2}
+    - target: {fileID: 3049962982857884992, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
+      propertyPath: props.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 8d7684a1c17b12b4f8ec0f4f09b964c8, type: 2}
     - target: {fileID: 3049962982857884999, guid: 2aab4e804d1b94f4da6a13da8d663d19, type: 3}
       propertyPath: initialDatabase
       value: 
