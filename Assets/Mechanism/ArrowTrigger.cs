@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 namespace LanternTrip {
-	[ExecuteAlways]
+	[ExecuteInEditMode]
 	public class ArrowTrigger : MonoBehaviour {
 		public Tinder type;
 		public Transform ball;
