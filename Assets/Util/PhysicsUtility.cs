@@ -1,9 +1,7 @@
 using UnityEngine;
 
 namespace LanternTrip {
-	public class PhysicsUtility {
-		static bool InRange(float x, float min, float max) => x >= min && x <= max;
-		static float Mod(float x, float modular) => x - Mathf.Floor(x / modular) * modular;
+	public static class PhysicsUtility {
 
 		public struct CircularSector {
 			public Vector3 center;
@@ -22,10 +20,10 @@ namespace LanternTrip {
 			public Vector3 WorldToLocal(Vector3 xyz) {
 				Vector3 localXYZ = worldToLocalTransform.MultiplyPoint(xyz);
 				Vector3 localARH;
-				localARH.z = localXYZ.y;							// height
+				localARH.z = localXYZ.y;                            // height
 				localXYZ.y = 0;
-				localARH.y = localXYZ.magnitude;					// radius
-				localARH.x = Mathf.Atan2(localXYZ.x, localXYZ.z);	// azimuth
+				localARH.y = localXYZ.magnitude;                    // radius
+				localARH.x = Mathf.Atan2(localXYZ.x, localXYZ.z);   // azimuth
 				return localARH;
 			}
 			public Vector3 LocalToWorld(Vector3 local) {
@@ -38,7 +36,7 @@ namespace LanternTrip {
 
 			public bool SweepCast(Vector3 worldPosition, float height) {
 				Vector3 localARH = WorldToLocal(worldPosition);
-				if(!InRange(localARH.z, 0, height))
+				if(!MathUtil.InRange(localARH.z, 0, height))
 					return false;
 				if(localARH.y < 0) {
 					localARH.y = -localARH.y;
@@ -46,7 +44,7 @@ namespace LanternTrip {
 				}
 				if(localARH.y > radius)
 					return false;
-				localARH.x = Mod(localARH.x, Mathf.PI * 2);
+				localARH.x = MathUtil.Mod(localARH.x, Mathf.PI * 2);
 				if(localARH.x > spanAngle)
 					return false;
 				return true;
@@ -108,6 +106,65 @@ namespace LanternTrip {
 					}
 				}
 			}
+		}
+
+		public static int FrictionModeToInt(PhysicMaterialCombine mode) {
+			int i = (int)mode;
+			return (i & 2 >> 1) | (i & 1 << 1);
+		}
+
+		public static PhysicMaterialCombine CombineFrictionMode(PhysicMaterialCombine a, PhysicMaterialCombine b) {
+			int ia = FrictionModeToInt(a), ib = FrictionModeToInt(b);
+			int i = Mathf.Max(ia, ib);
+			i = (i & 2 >> 1) | (i & 1 << 1);
+			return (PhysicMaterialCombine)i;
+		}
+
+		public static float CalculateFrictionCoefficient(this ContactPoint contact, bool dynamic = false) {
+			// Average < Min < Multiply < Max
+			PhysicMaterial
+				a = contact.thisCollider.material,
+				b = contact.otherCollider.material;
+			PhysicMaterialCombine mode = CombineFrictionMode(a.frictionCombine, b.frictionCombine);
+			float fa, fb;
+			if(dynamic) {
+				fa = a.dynamicFriction;
+				fb = b.dynamicFriction;
+			}
+			else {
+				fa = a.staticFriction;
+				fb = b.staticFriction;
+			}
+			switch(mode) {
+				case PhysicMaterialCombine.Average:
+					return (fa + fb) * .5f;
+				case PhysicMaterialCombine.Multiply:
+					return fa * fb;
+				case PhysicMaterialCombine.Minimum:
+					return Mathf.Min(fa, fb);
+				case PhysicMaterialCombine.Maximum:
+					return Mathf.Max(fa, fb);
+			}
+			return 1;
+		}
+
+		public static Vector3 PointAlongAxis(this CapsuleCollider capsule, float t) {
+			Vector3 local = Vector3.zero;
+			switch(capsule.direction) {
+				case 0: // X
+					local = Vector3.right;
+					break;
+				case 1: // Y
+					local = Vector3.up;
+					break;
+				case 2:	// Z
+					local = Vector3.forward;
+					break;
+			}
+			local *= capsule.height;
+			local *= t;
+			local += capsule.center;
+			return capsule.transform.localToWorldMatrix.MultiplyPoint(local);
 		}
 	}
 }

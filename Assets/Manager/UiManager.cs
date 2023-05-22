@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-using System.Collections;
 
 namespace LanternTrip {
 	public class UiManager : ManagerBase {
@@ -12,6 +11,7 @@ namespace LanternTrip {
 		public GameObject selectorPrefab;
 		public GameObject interactionDirectionEntryPrefab;
 		public Text cinderNumberText;
+		public PropUi prop;
 		#endregion
 
 		[NonSerialized] public BonusSlotUI bonusSlot;

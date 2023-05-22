@@ -14,7 +14,6 @@ namespace LanternTrip {
 		PlayerInput playerInput;
 		Vector2 mousePosition = new Vector2();
 		Vector3 rawInputMovement;
-		bool orientingCamera = false;
 		#endregion
 
 		#region Inspector members
@@ -72,9 +71,6 @@ namespace LanternTrip {
 			gameplay.protagonist.ChargeUpSpeed = raw;
 		}
 
-		public void OnPlayerToggleOrientCamera(InputValue value) {
-			orientingCamera = value.Get<float>() > .5f;
-		}
 		public void OnPlayerToggleCameraMode(InputValue _) {
 			switch(gameplay.camera.Mode) {
 				case CameraMode.Orbital:
@@ -91,6 +87,21 @@ namespace LanternTrip {
 			Vector2 raw = value.Get<Vector2>();
 			gameplay.camera.Azimuth += raw.x * Mathf.PI / 180;
 			gameplay.camera.Zenith += raw.y * Mathf.PI / 180;
+		}
+
+		public void OnPlayerDash(InputValue _) {
+			protagonist?.Dash();
+		}
+
+		public void OnPlayerKick(InputValue _) {
+			protagonist?.Kick();
+		}
+
+		public void OnPlayerSwitchProp(InputValue _) {
+			++gameplay.PropIndex;
+		}
+		public void OnPlayerUseProp(InputValue _) {
+			gameplay.UseCurrentProp();
 		}
 		#endregion
 

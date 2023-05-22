@@ -26,6 +26,7 @@ namespace LanternTrip {
 		public Checkpoint startingCheckpoint;
 		public new AudioSource audio;
 		public AudioClip collectTinderAudio;
+		public List<Prop> props;
 		#endregion
 
 		#region Internal members
@@ -34,6 +35,7 @@ namespace LanternTrip {
 		List<Bonus> activeBonuses = new List<Bonus>();
 		int safezoneCounter = 0;
 		int coldzoneCounter = 0;
+		int propIndex = 0;
 		#endregion
 
 		#region Internal methods
@@ -124,7 +126,7 @@ namespace LanternTrip {
 			}
 		}
 
-		public float speedBonusRate = 1;
+		[NonSerialized] public float speedBonusRate = 1;
 		public bool coldDebuffEnabled = true;
 		public bool InCold => coldzoneCounter > 0;
 
@@ -219,6 +221,26 @@ namespace LanternTrip {
 			LoadTinder(settings.respawnGift);
 			SceneLoader.instance.LoadAsync(SceneManager.GetActiveScene().name);
 		}
+
+		public bool HasProp => props.Count > 0;
+		public int PropIndex {
+			get => HasProp ? propIndex : -1;
+			set {
+				propIndex = HasProp ? Mathf.FloorToInt(MathUtil.Mod(value, props.Count)) : -1;
+				ui.prop.gameObject.SetActive(HasProp);
+				ui.prop.Prop = Prop;
+			}
+		}
+		public Prop Prop {
+			get => HasProp ? props[propIndex] : null;
+		}
+		public void UseProp(int index) {
+			Prop prop = props[index];
+			props.RemoveAt(index);
+			PropIndex = PropIndex;
+			prop.onUse?.Invoke();
+		}
+		public void UseCurrentProp() => UseProp(propIndex);
 		#endregion
 
 		#region Life cycle
@@ -248,6 +270,8 @@ namespace LanternTrip {
 			LastCheckpoint?.Restore();
 			camera.ResetVCam();
 			safezoneCounter = 0;
+			PropIndex = PropIndex;
+
 			if(Application.isPlaying) {
 				SceneLoader.instance.gameObject.SetActive(false);
 			}
