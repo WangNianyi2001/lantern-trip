@@ -27,6 +27,7 @@ namespace LanternTrip {
 		public new AudioSource audio;
 		public AudioClip collectTinderAudio;
 		public List<Prop> props;
+		public List<Tinder> tinderTemplates;
 		#endregion
 
 		#region Internal members
@@ -36,6 +37,7 @@ namespace LanternTrip {
 		int safezoneCounter = 0;
 		int coldzoneCounter = 0;
 		int propIndex = 0;
+		bool cheating;
 		#endregion
 
 		#region Internal methods
@@ -241,6 +243,25 @@ namespace LanternTrip {
 			prop.onUse?.Invoke();
 		}
 		public void UseCurrentProp() => UseProp(propIndex);
+
+		public bool Cheating {
+			get => cheating;
+			set {
+				cheating = value;
+				if(value) {
+					protagonist.state = "Flying";
+					protagonist.Rigidbody.useGravity = false;
+					foreach(var tinder in tinderTemplates) {
+						LoadTinder(tinder);
+						ScrollSlot(1);
+					}
+				}
+				else {
+					protagonist.Rigidbody.useGravity = true;
+					protagonist.state = "Freefalling";
+				}
+			}
+		}
 		#endregion
 
 		#region Life cycle
@@ -286,7 +307,7 @@ namespace LanternTrip {
 		void FixedUpdate() {
 			if(!Application.isPlaying)
 				return;
-			if(burning) {
+			if(burning && !cheating) {
 				float burnTime = Time.fixedDeltaTime * burningRate;
 				if(coldDebuffEnabled && InCold) {
 					int redCount = lanternSlots.Where(slot => slot.tinder?.type == Tinder.Type.Red).Count();

@@ -130,6 +130,15 @@
                     "processors": "",
                     "interactions": "Press",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "PlayerCheat",
+                    "type": "Button",
+                    "id": "ef469b38-c5f8-4368-9d4d-8927a53d892d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -350,6 +359,17 @@
                     "processors": "",
                     "groups": "PC",
                     "action": "PlayerSwitchProp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d5eb5db2-5ab6-414a-9253-eac866638259",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "PlayerCheat",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
