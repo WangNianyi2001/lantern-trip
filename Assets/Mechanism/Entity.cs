@@ -49,16 +49,17 @@ namespace LanternTrip {
 
 		public void Shot(Arrow arrow) {
 			float damage = damageMultiplier;
-			if(arrow.Tinder?.type == shotType)
+			bool matched = arrow.Tinder?.type == shotType;
+			if(matched)
 				damage *= 2;
 			TakeDamage(damage);
 			onShot?.Invoke();
-			if(arrow.Tinder?.type == shotType)
+			if(matched)
 				onMatchedShot?.Invoke();
 		}
 		#endregion
 
-		#region Private method
+			#region Private method
 		void UpdateCollision(Collision collision) {
 			ContactPoint lowest = collision.contacts.Aggregate((a, b) => a.point.y < b.point.y ? a : b);
 			contactingPoints[collision.collider] = lowest;

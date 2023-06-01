@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
 using NaughtyAttributes;
+using System;
 
 namespace LanternTrip {
 	[RequireComponent(typeof(PlayerInput))]
@@ -13,7 +14,7 @@ namespace LanternTrip {
 		#region Core members
 		PlayerInput playerInput;
 		Vector2 mousePosition = new Vector2();
-		Vector3 rawInputMovement;
+		[NonSerialized] public Vector3 rawInputMovement;
 		#endregion
 
 		#region Inspector members
@@ -103,6 +104,12 @@ namespace LanternTrip {
 		public void OnPlayerUseProp(InputValue _) {
 			gameplay.UseCurrentProp();
 		}
+
+#if DEBUG
+		public void OnPlayerCheat(InputValue _) {
+			gameplay.Cheating ^= true;
+		}
+		#endif
 		#endregion
 
 		#region Life cycle

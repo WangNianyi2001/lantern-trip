@@ -8,8 +8,8 @@ namespace LanternTrip {
 		public PixelCrushers.TriggerEvent agent;
 		public bool oneTime = false;
 		[SerializeField][Tag] string tagMask;
-		public UnityEvent<Collider> onEnter;
-		public UnityEvent<Collider> onExit;
+		[SerializeField] UnityEvent<Collider> onEnter;
+		[SerializeField] UnityEvent<Collider> onExit;
 
 		public new bool enabled {
 			get => base.enabled;
@@ -34,11 +34,23 @@ namespace LanternTrip {
 			}
 		}
 
+		public void OnEnter(Collider collider) => onEnter?.Invoke(collider);
+		public void OnExit(Collider collider) => onExit?.Invoke(collider);
+
+		private void MessageHandlerHandler(GameObject obj, string message) {
+			if(!isActiveAndEnabled)
+				return;
+			Collider collider = obj?.GetComponent<Collider>();
+			if(!collider)
+				return;
+			SendMessage(message, collider, SendMessageOptions.DontRequireReceiver);
+		}
+
 		protected void Start() {
 			TagMask = tagMask;
 
-			agent.onTriggerEnter.AddListener(obj => onEnter.Invoke(obj.GetComponent<Collider>()));
-			agent.onTriggerExit.AddListener(obj => onExit.Invoke(obj.GetComponent<Collider>()));
+			agent.onTriggerEnter.AddListener(obj => MessageHandlerHandler(obj, "OnEnter"));
+			agent.onTriggerExit.AddListener(obj => MessageHandlerHandler(obj, "OnExit"));
 
 			agent.onTriggerEnter.AddListener(_ => {
 				if(oneTime)

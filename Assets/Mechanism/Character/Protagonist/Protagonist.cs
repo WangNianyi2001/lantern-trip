@@ -19,6 +19,7 @@ namespace LanternTrip {
 
 		#region Serialized fields
 		public PixelCrushers.DialogueSystem.ProximitySelector selector;
+		[Min(1)] public float cheatingSpeedMultiplier;
 
 		[Header("Anchors")]
 		public Transform bodyAnchor;
@@ -243,9 +244,9 @@ namespace LanternTrip {
 		}
 
 		public Vector3? ShootTargetPosition {
-			get =>  cachedShootTargetPosition;
+			get => cachedShootTargetPosition;
 			set {
-				if(!HoldingBow || !value.HasValue) 
+				if(!HoldingBow || !value.HasValue)
 					return;
 				cachedShootTargetPosition = value.Value;
 			}
@@ -304,11 +305,20 @@ namespace LanternTrip {
 		}
 
 		protected new void Update() {
-			base.Update();
+			if(state == "Flying") {
+				animationController.Freefalling = true;
+				Vector3 velocity = gameplay.camera.camera.transform.localToWorldMatrix.MultiplyVector(gameplay.input.rawInputMovement);
+				velocity *= movementSettings.walking.speed;
+				velocity *= cheatingSpeedMultiplier;
+				Rigidbody.velocity = velocity;
+			}
+			else {
+				base.Update();
 
-			lineRenderer.enabled = false;
-			if(CanShoot)
-				DoShootingFrame();
+				lineRenderer.enabled = false;
+				if(CanShoot)
+					DoShootingFrame();
+			}
 		}
 
 		protected void FixedUpdate() {
