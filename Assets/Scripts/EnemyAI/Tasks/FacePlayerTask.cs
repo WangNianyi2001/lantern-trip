@@ -7,6 +7,12 @@ using UnityEngine;
 public class FacePlayerTask : Action
 {
     public SharedGameObject player;
+    public override void OnStart()
+    {
+        if (player.Value == null) return;
+        GetComponent<Enermy>().player = player.Value;
+    }
+
     public override TaskStatus OnUpdate()
     {
         if (player.Value == null) return TaskStatus.Failure;
@@ -14,7 +20,9 @@ public class FacePlayerTask : Action
         dir.y = 0;
         dir = dir / Vector3.Magnitude(dir);
         var angle = Vector3.Dot(transform.right, dir);
-        transform.Rotate(Vector3.up, angle * 115 * Time.deltaTime);
-        return Mathf.Abs(angle) < Mathf.PI / 36 ? TaskStatus.Success : TaskStatus.Running;
+        // transform.Rotate(Vector3.up, angle * 115 * Time.deltaTime);
+        // return Mathf.Abs(angle) < Mathf.PI / 36 ? TaskStatus.Success : TaskStatus.Running;
+        transform.Rotate(Vector3.up, angle);
+        return TaskStatus.Success;
     }
 }
