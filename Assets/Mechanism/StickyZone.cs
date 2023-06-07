@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,6 +19,18 @@ namespace LanternTrip {
 		void OnTriggerExit(Collider c) {
 			if(IsInterested(c.transform))
 				colliders.Remove(c);
+		}
+
+		private void OnCollisionEnter(Collision c)
+		{
+			if(IsInterested(c.transform))
+				colliders.Add(c.collider);
+		}
+
+		private void OnCollisionExit(Collision c)
+		{
+			if(IsInterested(c.transform))
+				colliders.Remove(c.collider);
 		}
 
 		void Start() {
