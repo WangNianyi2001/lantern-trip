@@ -15,7 +15,9 @@ public class SeekAttack : Action
     public SharedGameObject target;
     [BehaviorDesigner.Runtime.Tasks.Tooltip("If target is null then use the target position")]
     public SharedVector3 targetPosition;
-    
+
+    public string AnimTriggerName;
+    public string BlendTreeParamName;
     public float AttackDis;
     public float CD;
     private float cd;
@@ -55,7 +57,7 @@ public class SeekAttack : Action
         // 播放攻击动画
         _timeLine.AddEvent(0, 0, i =>
         {
-            _animator.SetTrigger("Attack");
+            _animator.SetTrigger(AnimTriggerName);
             isAttacking = true;
             string.Format("<color=#ff0000>{0}</color>", "Attack Animation");
         });
@@ -65,7 +67,11 @@ public class SeekAttack : Action
         {
             var colliderObj = GameObject.Instantiate(Resources.Load<GameObject>("SettlementObj"));
             colliderObj.transform.position = transform.position + Vector3.forward * 1.5f;
-            var settlement = colliderObj.AddComponent<SettlementObj>();
+
+            SettlementObj settlement;
+            settlement = colliderObj.GetComponent<SettlementObj>();
+            if (settlement == null)
+                settlement = colliderObj.AddComponent<SettlementObj>();
             
             settlement.Init(radius, settleTime, c =>
             {
@@ -114,6 +120,7 @@ public class SeekAttack : Action
     public override TaskStatus OnUpdate()
     {
         cd -= Time.deltaTime;
+        _animator.SetFloat(BlendTreeParamName, _agent.velocity.magnitude);
 
         RunTimeLine(Time.deltaTime);
         if (isAttacking)
