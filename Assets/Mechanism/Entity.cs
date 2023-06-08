@@ -57,6 +57,26 @@ namespace LanternTrip {
 			if(matched)
 				onMatchedShot?.Invoke();
 		}
+
+		public void AddContactPoints(Dictionary<Collider, ContactPoint> points)
+		{
+			foreach (var kv in points)
+			{
+				contactingPoints.TryAdd(kv.Key, kv.Value);
+			}
+			
+		}
+		public void RemoveContactPoints(Dictionary<Collider, ContactPoint> points)
+		{
+			foreach (var kv in points)
+			{
+				if (contactingPoints.ContainsKey(kv.Key))
+				{
+					contactingPoints.Remove(kv.Key);
+				}
+			}
+			
+		}
 		#endregion
 
 			#region Private method

@@ -22,6 +22,8 @@ namespace LanternTrip {
 		[NonSerialized] public Vector3 walkingVelocity;
 		protected delegate void OnStateTransitDelegate(string from, string to);
 		protected OnStateTransitDelegate OnStateTransit;
+		private bool actualAiring, airing;
+		private ContactPoint lastStandingPoint;
 		#endregion
 
 		#region Core methods
@@ -31,7 +33,7 @@ namespace LanternTrip {
 			switch(state) {
 				case "Walking":
 					// If not standing on any point, freefall
-					if(!standingPoint.HasValue) {
+					if(!StandingPoint.HasValue) {
 						walkingVelocity = Vector3.zero;
 						state = "Freefalling";
 					}
@@ -41,7 +43,7 @@ namespace LanternTrip {
 					animationController.Jumping = false;
 
 					// If landed, land
-					if(standingPoint.HasValue) {
+					if(StandingPoint.HasValue) {
 						// 如果不注释，会导致角色在斜坡上滑落时无法判定落地
 						// float fallingSpeed = Vector3.Dot(rigidbody.velocity, Physics.gravity);
 						// if(fallingSpeed < 0)
@@ -74,9 +76,9 @@ namespace LanternTrip {
 		}
 
 		protected Vector3 CalculateGravityCompensation() {
-			if(!standingPoint.HasValue)
+			if(!StandingPoint.HasValue)
 				return Vector3.zero;
-			ContactPoint contact = standingPoint.Value;
+			ContactPoint contact = StandingPoint.Value;
 			float mu = PhysicsUtility.CalculateFrictionCoefficient(contact, true);
 			Vector3 g = Physics.gravity;
 			Vector3 perp = contact.normal.normalized;
@@ -87,6 +89,7 @@ namespace LanternTrip {
 		}
 
 		protected virtual Vector3 CalculateWalkingVelocity() {
+			// Don't move when shooting
 			if(state == "Shooting")
 				return Vector3.zero;
 			Vector3 targetVelocity = InputVelocity;
@@ -94,20 +97,22 @@ namespace LanternTrip {
 			speed *= movementSettings.walking.speed;
 			targetVelocity = targetVelocity.normalized * speed;
 			// Project onto the tangent plane of the current standing point
-			Vector3 normal = standingPoint.HasValue ? standingPoint.Value.normal : -Physics.gravity;
+			Vector3 normal = airing ? lastStandingPoint.normal : -Physics.gravity;
 			float slopeAngle = SlopeByNormal(normal) / Mathf.PI * 180;
 			if(slopeAngle > movementSettings.walking.maxSlopeAngle)
 				return Vector3.zero;
+			// Make it sloped by terrain
 			targetVelocity = targetVelocity - Vector3.Dot(targetVelocity, normal.normalized) * normal;
 			return targetVelocity;
 		}
 		protected virtual Vector3 CalculateWalkingForce(Vector3 targetVelocity) {
 			Vector3 deltaVelocity = targetVelocity - rigidbody.velocity;
-			deltaVelocity = deltaVelocity.ProjectOntoNormal(Physics.gravity);
 			float magnitude = deltaVelocity.magnitude;
 			magnitude *= movementSettings.walking.accelerationGain;
 			magnitude = Mathf.Min(magnitude, movementSettings.walking.maxAcceleration);
-			return deltaVelocity.normalized * magnitude;
+			var force = deltaVelocity.normalized * magnitude;
+			force = force.ProjectOntoNormal(Physics.gravity);
+			return force;
 		}
 		protected virtual Vector3 CalculateExpectedDirection() {
 			Vector3 velocity = rigidbody.velocity.ProjectOntoNormal(Physics.gravity);
@@ -150,7 +155,7 @@ namespace LanternTrip {
 				return;
 			//Vector3 acceleration = CalculateGravityCompensation();
 			//rigidbody.AddForce(acceleration / rigidbody.mass);
-			if(!standingPoint.HasValue)
+			if(!StandingPoint.HasValue)
 				return;
 			if(inputVelocity.sqrMagnitude > .1f)
 				return;
@@ -168,22 +173,32 @@ namespace LanternTrip {
 			yield return new WaitForSeconds(.1f);
 			state = "Freefalling";
 		}
+
+		private ContactPoint? GetRealStandingPoint() {
+			ContactPoint? result = null;
+			foreach(ContactPoint point in contactingPoints.Values) {
+				float slopeAngle = SlopeByNormal(point.normal) / Mathf.PI * 180;
+				if(slopeAngle > movementSettings.walking.maxSlopeAngle
+					&& slopeAngle < 180 - movementSettings.walking.maxSlopeAngle) {
+					continue;
+				}
+				if(!result.HasValue || point.point.y < result.Value.point.y)
+					result = point;
+			}
+			return result;
+		}
+		IEnumerator AiringCoroutine() {
+			for(float start = Time.timeSinceLevelLoad; Time.timeSinceLevelLoad - start < movementSettings.walking.maxAiringDuration;) {
+				if(!actualAiring)
+					yield break;
+				yield return new WaitForFixedUpdate();
+			}
+			airing = true;
+		}
 		#endregion
 
 		#region Public interfaces
-		public ContactPoint? standingPoint {
-			get {
-				ContactPoint? result = null;
-				foreach(ContactPoint point in contactingPoints.Values) {
-					float slopeAngle = SlopeByNormal(point.normal) / Mathf.PI * 180;
-					if(slopeAngle > movementSettings.walking.maxSlopeAngle)
-						continue;
-					if(!result.HasValue || point.point.y < result.Value.point.y)
-						result = point;
-				}
-				return result;
-			}
-		}
+		public ContactPoint? StandingPoint => airing ? null : lastStandingPoint;
 
 		public void Jump() {
 			if(state != "Walking")
@@ -228,6 +243,16 @@ namespace LanternTrip {
 
 		protected new void Update() {
 			base.Update();
+
+			var standingPoint = GetRealStandingPoint();
+			if(standingPoint != null)
+				lastStandingPoint = standingPoint.Value;
+			actualAiring = StandingPoint == null;
+			if(actualAiring)
+				StartCoroutine(AiringCoroutine());
+			else
+				airing = false;
+
 			var old = state;
 			UpdateState();
 			if(old != state)
@@ -235,6 +260,7 @@ namespace LanternTrip {
 			if(state != "Dead") {
 				walkingVelocity = CalculateWalkingVelocity();
 				Vector3 walkingForce = CalculateWalkingForce(walkingVelocity);
+				Debug.Log(walkingForce);
 				rigidbody.AddForce(walkingForce);
 			}
 			if(state == "Walking") {
@@ -242,7 +268,7 @@ namespace LanternTrip {
 					if(CalculateShouldAutoJump())
 						Jump();
 				}
-				if(compensateSlopeGravity)
+				if(compensateSlopeGravity && !actualAiring)
 					CompensateSlopeGravity();
 			}
 			if(state != "Dead") {

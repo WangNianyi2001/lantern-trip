@@ -4,7 +4,7 @@ using UniRx;
 using UnityEngine;
 
 /// <summary>
-/// 伤害结算物
+/// 伤害结算物，需挂在rigidbody, trigger
 /// </summary>
 public class SettlementObj : MonoBehaviour
 {
@@ -20,12 +20,15 @@ public class SettlementObj : MonoBehaviour
 
     public void Init(float radius, float settleTime, Action<Collider> hitCallback)
     {
+        
         OnHitCallback.Subscribe(hitCallback);
         //增加刚体
-        _rb = gameObject.AddComponent<Rigidbody>();
+        // _rb = gameObject.AddComponent<Rigidbody>();
+        _rb = GetComponent<Rigidbody>();
         _rb.useGravity = false;
         //加碰撞器
-        var c = gameObject.AddComponent<SphereCollider>();
+        // var c = gameObject.AddComponent<SphereCollider>();
+        var c = gameObject.GetComponent<SphereCollider>();
         c.isTrigger = true;
         c.radius = radius;
 
@@ -34,7 +37,11 @@ public class SettlementObj : MonoBehaviour
     }
 
 
-    
+    private void Start()
+    {
+        _rb = GetComponent<Rigidbody>();
+    }
+
     private void Update()
     {
 
