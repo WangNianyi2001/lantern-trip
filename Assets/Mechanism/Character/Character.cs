@@ -176,8 +176,11 @@ namespace LanternTrip {
 				ContactPoint? result = null;
 				foreach(ContactPoint point in contactingPoints.Values) {
 					float slopeAngle = SlopeByNormal(point.normal) / Mathf.PI * 180;
-					if(slopeAngle > movementSettings.walking.maxSlopeAngle)
+					if (slopeAngle > movementSettings.walking.maxSlopeAngle
+					    && slopeAngle < 180 - movementSettings.walking.maxSlopeAngle)
+					{
 						continue;
+					}
 					if(!result.HasValue || point.point.y < result.Value.point.y)
 						result = point;
 				}
