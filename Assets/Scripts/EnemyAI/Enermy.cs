@@ -3,16 +3,37 @@ using System.Collections;
 using System.Collections.Generic;
 using BehaviorDesigner.Runtime;
 using LanternTrip;
+using UniRx;
 using UnityEngine;
 
 public class Enermy : MonoBehaviour
 {
-    public float Hp = 100f;
+    public float fullHp = 100f;
+    public FloatReactiveProperty curHp;
 
+    
     public bool Invincible = false;
 
     public GameObject player;
+
+    public Tinder.Type tinderType;
     
+    
+    private void Start()
+    {
+        curHp.Value = fullHp;
+        curHp.Subscribe(value =>
+        {
+            if (value<=0)
+            {
+                //TODO:
+                GameObject.Destroy(gameObject);
+                Debug.Log("死亡");
+                
+            }
+        });
+    }
+
     private void Update()
     {
         LookAtPlayer();
@@ -32,7 +53,15 @@ public class Enermy : MonoBehaviour
     {
         if (collision.collider.CompareTag("Arrow") && !Invincible)
         {
-            Hp -= 10f;
+            if (tinderType == collision.collider.GetComponent<Arrow>().Tinder.type)
+            {
+                curHp.Value -= 35f;
+            }
+            else
+            {
+                
+                curHp.Value -= 18f;
+            }
         }
     }
 }
