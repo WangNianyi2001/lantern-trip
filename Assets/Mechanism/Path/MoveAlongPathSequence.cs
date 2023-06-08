@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace LanternTrip {
 		#region Serialized fields
 		[Min(0)] public float speed = 1;
 		public float direction = 1;
+		public bool startOnAwake = false;
 		[Expandable] [Instance] public List<MovingPath> paths = new List<MovingPath>();
 		#endregion
 
@@ -79,7 +81,8 @@ namespace LanternTrip {
 			if(Moving)
 				StopMoving();
 			targetIndex = (int)Mathf.Clamp(i, 0, MaxProgress);
-			StartCoroutine(MovingCoroutine());
+			movingCoroutine = StartCoroutine(MovingCoroutine());
+			
 		}
 
 		[ContextMenu("Move To Next")]
@@ -93,10 +96,20 @@ namespace LanternTrip {
 				StopCoroutine(movingCoroutine);
 				movingCoroutine = null;
 			}
+			Debug.Log("Stop Moving");
 		}
 		#endregion
 
 		#region Life cycle
+
+		private void Start()
+		{
+			if (startOnAwake)
+			{
+				MoveToNext();
+			}
+		}
+
 		void OnDisable() {
 			StopMoving();
 		}

@@ -20,6 +20,6 @@ public class CheckHP : Action
         {
             return TaskStatus.Failure;
         }
-        return _enermy.Hp < hpThreshold.Value ? TaskStatus.Success : TaskStatus.Failure;
+        return _enermy.curHp.Value < hpThreshold.Value ? TaskStatus.Success : TaskStatus.Failure;
     }
 }
