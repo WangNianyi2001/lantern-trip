@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UniRx.Triggers;
@@ -8,7 +9,6 @@ using UnityEngine;
 namespace LanternTrip {
 	[RequireComponent(typeof(Rigidbody))]
 	public class StickyZone : MonoBehaviour {
-		Rigidbody rb;
 		HashSet<Collider> colliders = new HashSet<Collider>(16);
 		Vector3 lastPosition;
 		Quaternion lastRotation;
@@ -27,7 +27,6 @@ namespace LanternTrip {
 			// }
 
 			ContactPoint lowest = collision.contacts.Aggregate((a, b) => a.point.y < b.point.y ? a : b);
-			ContactPoint tmp = new ContactPoint();
 			contactingPoints[collision.collider] = lowest;
 		}
 
@@ -56,7 +55,7 @@ namespace LanternTrip {
 			if(IsInterested(c.transform))
 				colliders.Add(c);
 			
-			
+
 		}
 
 		private void OnTriggerStay(Collider c)
@@ -84,71 +83,27 @@ namespace LanternTrip {
 		
 
 		void Start() {
-			rb = GetComponent<Rigidbody>();
 			contactingPoints = new Dictionary<Collider, ContactPoint>();
-			lastPosition = rb.position;
-			lastRotation = rb.rotation;
+			lastPosition = transform.position;
+			lastRotation = transform.rotation;
 
 			SubscribePhysicsOfParent();
 		}
 
 
 
-		// void FixedUpdate() {
-		// 	#region Rotation
-		// 	Quaternion newRotation = rb.rotation;
-		// 	Quaternion deltaRotation = newRotation * Quaternion.Inverse(lastRotation);
-		// 	foreach(var c in colliders) {
-		// 		var rb = c.GetComponent<Rigidbody>();
-		// 		if(rb == null)
-		// 			continue;
-		// 		var offset = rb.position - lastPosition;
-		// 		rb.MovePosition(this.rb.position + deltaRotation * offset);
-		// 		rb.MoveRotation(rb.rotation * deltaRotation);
-		// 	}
-		// 	lastRotation = newRotation;
-		// 	#endregion
-		// 	#region Position
-		// 	Vector3 newPosition = rb.position;
-		// 	Vector3 deltaPosition = newPosition - lastPosition;
-		// 	foreach(var c in colliders) {
-		// 		var rb = c.GetComponent<Rigidbody>();
-		// 		if(rb == null)
-		// 			continue;
-		// 		rb.MovePosition(rb.position + deltaPosition);
-		// 	}
-		// 	lastPosition = newPosition;
-		// 	#endregion
-		// }
-		
-		
 		void FixedUpdate() {
-			#region Rotation
-			Quaternion newRotation = rb.rotation;
-			Quaternion deltaRotation = newRotation * Quaternion.Inverse(lastRotation);
+			Vector3 deltaPosition = transform.position - lastPosition;
+			lastPosition = transform.position;
+			Quaternion deltaRotation = transform.rotation * Quaternion.Inverse(lastRotation);
+			lastRotation = transform.rotation;
 			foreach(var c in colliders) {
 				var rb = c.GetComponent<Rigidbody>();
 				if(rb == null)
 					continue;
-				var offset = rb.position - lastPosition;
-				rb.MovePosition(this.rb.position + deltaRotation * offset);
-				rb.MoveRotation(rb.rotation * deltaRotation);
-			
+				rb.transform.position += deltaRotation * deltaPosition;
+				rb.transform.rotation *= deltaRotation;
 			}
-			lastRotation = newRotation;
-			#endregion
-			#region Position
-			Vector3 newPosition = rb.position;
-			Vector3 deltaPosition = newPosition - lastPosition;
-			foreach(var c in colliders) {
-				var rb = c.GetComponent<Rigidbody>();
-				if(rb == null)
-					continue;
-				// rb.MovePosition(rb.position + deltaPosition);
-				rb.gameObject.transform.Translate(deltaPosition, Space.World);
-			}
-			lastPosition = newPosition;
-			#endregion
 		}
 	}
 }
