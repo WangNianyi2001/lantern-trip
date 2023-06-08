@@ -16,8 +16,8 @@ namespace LanternTrip {
 				Handles.Label(position, state);
 
 				// Standing point
-				if(standingPoint.HasValue) {
-					var point = standingPoint.Value;
+				if(StandingPoint.HasValue) {
+					var point = StandingPoint.Value;
 
 					Gizmos.color = Color.red;
 					Gizmos.DrawSphere(point.point, .1f);
