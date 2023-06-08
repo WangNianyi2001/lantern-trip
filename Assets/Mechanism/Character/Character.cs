@@ -268,8 +268,8 @@ namespace LanternTrip {
 					if(CalculateShouldAutoJump())
 						Jump();
 				}
-				if(compensateSlopeGravity && !actualAiring)
-					CompensateSlopeGravity();
+				//if(compensateSlopeGravity && !actualAiring)
+				//	CompensateSlopeGravity();
 			}
 			if(state != "Dead") {
 				Vector3 zenithTorque = CalculateZenithTorque();
