@@ -5,24 +5,19 @@ using UnityEngine;
 using UnityEditor;
 
 
+using UnityEngine;
+using UnityEditor;
+
 public class EditorTools : EditorWindow
 {
     private Material[] materials;
     private int selectedMaterialIndex = 0;
     private GameObject selectedGameObject;
 
-    [MenuItem("CustomTool/SetMaterialInBatch", true)]
-    private static bool SetMaterialInBatch()   
+    [MenuItem("Tools/Test")]
+    public static void ShowWindow()
     {
-        if (Selection.gameObjects.Length < 0)
-            return false;
-        
-        foreach (var go in Selection.gameObjects)
-        {
-            
-        }
-
-        return true;
+        EditorWindow.GetWindow<EditorTools>("Test Tool");
     }
 
     private void OnGUI()
@@ -48,7 +43,23 @@ public class EditorTools : EditorWindow
 
         if (GUILayout.Button("OK"))
         {
-            selectedGameObject.GetComponent<Renderer>().material = materials[selectedMaterialIndex];
+            // selectedGameObject.GetComponent<Renderer>().material = materials[selectedMaterialIndex];
+            SetMaterialRecursive(selectedGameObject, materials[selectedMaterialIndex]);
+        }
+    }
+
+    private static void SetMaterialRecursive(GameObject obj, Material selectedMaterial)
+    {
+        if (obj.GetComponent<Renderer>() != null)
+        {
+            // 将对象的材质更改为用户选择的材质
+            obj.GetComponent<Renderer>().material = selectedMaterial;
+        }
+
+        // 遍历所有子物体，并递归应用该材质
+        foreach (Transform child in obj.transform)
+        {
+            SetMaterialRecursive(child.gameObject, selectedMaterial);
         }
     }
 }
