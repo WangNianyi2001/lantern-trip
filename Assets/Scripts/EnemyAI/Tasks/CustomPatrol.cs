@@ -28,6 +28,11 @@ public class CustomPatrol : NavMeshMovement
     public override void OnStart()
     {
         base.OnStart();
+        
+        if (waypoints.Value.Count == 0 || waypoints.Value[0] == null)
+        {
+            return;
+        }
 
         // initially move towards the closest waypoint
         float distance = Mathf.Infinity;
@@ -49,9 +54,9 @@ public class CustomPatrol : NavMeshMovement
     // Patrol around the different waypoints specified in the waypoint array. Always return a task status of running. 
     public override TaskStatus OnUpdate()
     {
-        if (waypoints.Value.Count == 0)
+        if (waypoints.Value.Count == 0 || waypoints.Value[0] == null)
         {
-            return TaskStatus.Failure;
+            return TaskStatus.Success;
         }
 
         var _animator = GetComponent<Animator>();

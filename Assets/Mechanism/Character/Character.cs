@@ -260,7 +260,7 @@ namespace LanternTrip {
 			if(state != "Dead") {
 				walkingVelocity = CalculateWalkingVelocity();
 				Vector3 walkingForce = CalculateWalkingForce(walkingVelocity);
-				Debug.Log(walkingForce);
+				// Debug.Log(walkingForce);
 				rigidbody.AddForce(walkingForce);
 			}
 			if(state == "Walking") {
