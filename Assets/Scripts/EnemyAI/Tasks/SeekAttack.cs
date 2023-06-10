@@ -24,12 +24,13 @@ public class SeekAttack : Action
 
     // private Player player;
     private Protagonist player;
+    private Enermy _enermy;
 
     private Animator _animator;
     private NavMeshAgent _agent;
     private TimeLine _timeLine = new TimeLine();
 
-    private bool isAttacking = false;
+    // private bool isAttacking = false;
 
     /// <summary>
     /// 获取目标位置，如果target为空则返回targetPosition
@@ -49,49 +50,51 @@ public class SeekAttack : Action
         return _agent.SetDestination(destination);
     }
 
-    private void InitSkill()
-    {
-        var radius = 5.0f;
-        var settleTime = 0.5f;
-        
-        // 播放攻击动画
-        _timeLine.AddEvent(0, 0, i =>
-        {
-            _animator.SetTrigger(AnimTriggerName);
-            isAttacking = true;
-            string.Format("<color=#ff0000>{0}</color>", "Attack Animation");
-        });
-        
-        // 解算伤害
-        _timeLine.AddEvent(0.5f, 1, i =>
-        {
-            var colliderObj = GameObject.Instantiate(Resources.Load<GameObject>("SettlementObj"));
-            colliderObj.transform.position = transform.position + Vector3.forward * 1.5f;
-
-            SettlementObj settlement;
-            settlement = colliderObj.GetComponent<SettlementObj>();
-            if (settlement == null)
-                settlement = colliderObj.AddComponent<SettlementObj>();
-            
-            settlement.Init(radius, settleTime, c =>
-            {
-                if (!c.CompareTag("Player"))
-                    return;
-                var playerComponent = c.GetComponent<Protagonist>();
-                
-                playerComponent?.TakeDamage(1.0f);
-                Debug.Log("收到怪物上海:: 1.0");
-            });
-            
-            
-        });
-        
-        // 攻击结束
-        _timeLine.AddEvent(3.0f, 1, i =>
-        {
-            isAttacking = false;
-        });
-    }
+    // private void InitSkill()
+    // {
+    //     var radius = 5.0f;
+    //     var settleTime = 0.5f;
+    //     
+    //     // 播放攻击动画
+    //     _timeLine.AddEvent(0, 0, i =>
+    //     {
+    //         _animator.SetTrigger(AnimTriggerName);
+    //         isAttacking = true;
+    //         _agent.isStopped = true;
+    //         string.Format("<color=#ff0000>{0}</color>", "Attack Animation");
+    //     });
+    //     
+    //     // 解算伤害
+    //     _timeLine.AddEvent(0.5f, 1, i =>
+    //     {
+    //         var colliderObj = GameObject.Instantiate(Resources.Load<GameObject>("SettlementObj"));
+    //         colliderObj.transform.position = transform.position + Vector3.forward * 1.5f;
+    //
+    //         SettlementObj settlement;
+    //         settlement = colliderObj.GetComponent<SettlementObj>();
+    //         if (settlement == null)
+    //             settlement = colliderObj.AddComponent<SettlementObj>();
+    //         
+    //         settlement.Init(radius, settleTime, c =>
+    //         {
+    //             if (!c.CompareTag("Player"))
+    //                 return;
+    //             var playerComponent = c.GetComponent<Protagonist>();
+    //             
+    //             playerComponent?.TakeDamage(1.0f);
+    //             Debug.Log("收到怪物上海:: 1.0");
+    //         });
+    //         
+    //         
+    //     });
+    //     
+    //     // 攻击结束
+    //     _timeLine.AddEvent(3.0f, 1, i =>
+    //     {
+    //         isAttacking = false;
+    //         _agent.isStopped = false;
+    //     });
+    // }
     
     public void RunTimeLine(float dt)
     {
@@ -106,11 +109,13 @@ public class SeekAttack : Action
     {
         cd = CD;
         player = target.Value.GetComponent<Protagonist>();
+        _enermy = GetComponent<Enermy>();
+        
         _animator = GetComponent<Animator>();
         _agent = GetComponent<NavMeshAgent>();
         SetDestination(Target());
 
-        InitSkill();
+        // InitSkill();
     }
     
     /// <summary>
@@ -123,13 +128,14 @@ public class SeekAttack : Action
         _animator.SetFloat(BlendTreeParamName, _agent.velocity.magnitude);
 
         RunTimeLine(Time.deltaTime);
-        if (isAttacking)
-        {
-            _agent.isStopped = true;
-            return TaskStatus.Running;
-        }
+        // if (isAttacking)
+        // {
+        //     _agent.isStopped = true;
+        //     return TaskStatus.Running;
+        // }
         
         var dis = Vector3.Magnitude(target.Value.transform.position - transform.position);
+        _agent.isStopped = true;
         if (dis > AttackDis)
         {
             Seek();
@@ -160,8 +166,7 @@ public class SeekAttack : Action
         cd = CD;
         
         
-        
-        _timeLine.Start();
+        _enermy.Attack(AnimTriggerName);
         
         
         
