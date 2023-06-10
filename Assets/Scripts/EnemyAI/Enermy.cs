@@ -44,6 +44,7 @@ public class Enermy : MonoBehaviour
         {
             _animator.SetTrigger("Death");
             _behavior.enabled = false;
+            Invincible = true;
             _timer?.Dispose();_timer2?.Dispose();
             _timer = Observable.Timer(TimeSpan.FromSeconds(3.1f)).Subscribe(_ =>
             {
@@ -53,7 +54,7 @@ public class Enermy : MonoBehaviour
             Debug.Log("死亡");
                 
         }
-        else
+        else if (cur_hp <= fullHp - 0.1f)
         {
             _animator.SetTrigger("Hit");
             _behavior.enabled = false;
