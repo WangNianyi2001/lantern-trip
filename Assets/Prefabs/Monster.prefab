@@ -1714,8 +1714,8 @@ Transform:
   m_GameObject: {fileID: 6907125903474857782}
   m_LocalRotation: {x: -0, y: 0.9999301, z: -0, w: -0.011828194}
   m_LocalPosition: {x: -4.9176793, y: 0, z: 1.7621416}
-  m_LocalScale: {x: 1, y: 1, z: -1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2, y: 2, z: -2}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4386422836059016190}
   m_Father: {fileID: 0}
@@ -1825,9 +1825,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 091ba0f243c779f42b1bda39c36fdf49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Hp: 100
+  fullHp: 100
+  curHp:
+    value: 0
   Invincible: 0
   player: {fileID: 0}
+  tinderType: 0
 --- !u!1 &7127569329182876340
 GameObject:
   m_ObjectHideFlags: 0
