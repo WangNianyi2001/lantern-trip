@@ -6,6 +6,7 @@ using LanternTrip;
 using UniRx;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 public class Enermy : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class Enermy : MonoBehaviour
     public GameObject player;
 
     public Tinder.Type tinderType;
+
+    public UnityEvent onDie;
 
     private Animator _animator;
     private NavMeshAgent _agent;
@@ -48,7 +51,7 @@ public class Enermy : MonoBehaviour
             _timer?.Dispose();_timer2?.Dispose();
             _timer = Observable.Timer(TimeSpan.FromSeconds(3.1f)).Subscribe(_ =>
             {
-                    
+                onDie?.Invoke();
                 GameObject.Destroy(gameObject);
             });
             Debug.Log("死亡");

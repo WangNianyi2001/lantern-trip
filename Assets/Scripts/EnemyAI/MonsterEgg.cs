@@ -10,6 +10,9 @@ using UnityEngine.Formats.Alembic.Importer;
 
 public class MonsterEgg : Entity
 {
+    public float AbcSpeed = 1.0f;
+    public bool spawnActor = true;
+
     private AlembicStreamPlayer _player;
     private GameObject _monster;
     private Enermy _enermy;
@@ -28,16 +31,25 @@ public class MonsterEgg : Entity
         _triggered = true;
 
         // step 1: spawn actor
-        _monster = Resources.Load<GameObject>("Monster_Blue");
+        if (spawnActor) SpawnActor();
+        
+        // step 2: play crush animation
+        StartCoroutine(Crushing());
+        
+    }
+
+    void SpawnActor()
+    {
+        _monster = Resources.Load<GameObject>("Monster_" + shotType.ToString());
+        if (_monster == null)
+        {
+            return;
+        }
 
         _enermy = _monster.GetComponent<Enermy>();
  
         _monster.transform.position = transform.position;
         GameObject.Instantiate(_monster);
-        
-        // step 2: play crush animation
-        StartCoroutine(Crushing());
-        
     }
 
     IEnumerator Crushing()
@@ -46,7 +58,7 @@ public class MonsterEgg : Entity
         while (_player.CurrentTime <= _player.EndTime - 0.1f)
         {
             
-            _player.CurrentTime += Time.deltaTime;
+            _player.CurrentTime += Time.deltaTime * AbcSpeed;
             yield return null;
         }
 
