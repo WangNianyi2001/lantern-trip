@@ -137,7 +137,6 @@ namespace LanternTrip {
 				rb.transform.position = P0 + Q0 * L0;
 				// rotation: Q1 = Q0 * R1   i.e.   R_1 = Rsz^-1 * Rrb = Rsz'^-1 * Rrb'
 				rb.transform.rotation = Q0 * R1;
-				// rb.transform.rotation = transform.rotation * Quaternion.Inverse(lastRotation) * rb.transform.rotation;
 			}
 			
 			lastPosition = transform.position;
