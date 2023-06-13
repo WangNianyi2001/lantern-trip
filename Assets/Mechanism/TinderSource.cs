@@ -8,7 +8,7 @@ namespace LanternTrip {
 	[RequireComponent(typeof(Entity))]
 	[ExecuteAlways]
 	public class TinderSource : MonoBehaviour {
-		public Tinder type;
+		[SerializeField] private Tinder type;
 		public Transform tinder;
 		public new AudioSource audio;
 		public UnityEvent onDeliver;
@@ -54,26 +54,29 @@ namespace LanternTrip {
 			confirmState = ConfirmState.Idle;
 		}
 
+		public Tinder Type {
+			get => type;
+			set {
+				if(tinder) {
+					var renderer = tinder?.GetComponentInChildren<MeshRenderer>();
+					if(renderer) {
+						var material = renderer.sharedMaterial;
+						if(material == null)
+							material = renderer.sharedMaterial = new Material(Shader.Find("HDRP/Lit"));
+						else if(AssetDatabase.Contains(material))
+							material = renderer.sharedMaterial = new Material(material);
+						Color color = type?.mainColor ?? Color.white;
+						material.color = color;
+					}
+				}
+			}
+		}
+
 #if UNITY_EDITOR
 		void EditorUpdate() {
-			if(tinder) {
-				var renderer = tinder?.GetComponentInChildren<MeshRenderer>();
-				if(renderer) {
-					var material = renderer.sharedMaterial;
-					if(material == null)
-						material = renderer.sharedMaterial = new Material(Shader.Find("HDRP/Lit"));
-					else if(AssetDatabase.Contains(material))
-						material = renderer.sharedMaterial = new Material(material);
-					Color color = type?.mainColor ?? Color.white;
-					material.color = color;
-				}
-				if(audio)
-					audio.playOnAwake = true;
-			}
-			else {
-				if(audio)
-					audio.playOnAwake = false;
-			}
+			Type = Type;
+			if(audio)
+				audio.playOnAwake = !!tinder;
 		}
 #endif
 

@@ -126,7 +126,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1842518052501470100}
   m_LocalRotation: {x: 0, y: 0.9999301, z: -0, w: -0.011824221}
-  m_LocalPosition: {x: -12.968216, y: 1.2166893, z: 1.6112583}
+  m_LocalPosition: {x: -2.138749, y: 1.1262927, z: 3.8819947}
   m_LocalScale: {x: 1, y: 1, z: -1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -173,7 +173,7 @@ MonoBehaviour:
   logTaskChanges: 0
   group: 0
   resetValuesOnRestart: 0
-  externalBehavior: {fileID: 0}
+  externalBehavior: {fileID: 11400000, guid: b664fb037f9c6e949add967dd4823de1, type: 2}
   mBehaviorSource:
     behaviorName: Behavior
     behaviorDescription: 
@@ -241,6 +241,9 @@ MonoBehaviour:
   Invincible: 0
   player: {fileID: 0}
   tinderType: 4
+  onDie:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!136 &1842518052501470125
 CapsuleCollider:
   m_ObjectHideFlags: 0
