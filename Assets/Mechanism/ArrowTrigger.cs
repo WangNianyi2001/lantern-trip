@@ -1,5 +1,9 @@
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace LanternTrip {
 	[ExecuteInEditMode]
@@ -8,8 +12,14 @@ namespace LanternTrip {
 		public Transform ball;
 		public Entity target;
 		public UnityEvent onMatchShot;
+		public static float delay = .2f;
 
-		public void OnMatchedShot() => onMatchShot?.Invoke();
+		protected IEnumerator OnMatchedShotCoroutine() {
+			yield return new WaitForSeconds(delay);
+			onMatchShot?.Invoke();
+		}
+
+		public void OnMatchedShot() => StartCoroutine(OnMatchedShotCoroutine());
 
 		protected void Start() {
 			if(!Application.isPlaying)
@@ -18,19 +28,26 @@ namespace LanternTrip {
 		}
 
 		protected void EditorUpdate() {
+#if UNITY_EDITOR
 			var color = type?.mainColor ?? Color.grey;
 
 			if(ball) {
 				var renderer = ball.GetComponent<Renderer>();
 				if(renderer?.sharedMaterial) {
-					var newMat = new Material(renderer.sharedMaterial);
-					newMat.color = color;
-					renderer.sharedMaterial = newMat;
+					var guids = AssetDatabase.FindAssets("t:GameSettings");
+					if(guids.Length > 0) {
+						var path = AssetDatabase.GUIDToAssetPath(guids[0]);
+						var settings = AssetDatabase.LoadAssetAtPath<GameSettings>(path);
+						var newMat = new Material(settings.arrowTriggerMaterial);
+						newMat.color = color;
+						renderer.sharedMaterial = newMat;
+					}
 				}
 			}
 			if(target) {
 				target.shotType = type?.type ?? Tinder.Type.Invalid;
 			}
+#endif
 		}
 
 		protected void Update() {
