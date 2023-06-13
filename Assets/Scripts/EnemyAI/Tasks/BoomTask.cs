@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using BehaviorDesigner.Runtime;
@@ -7,6 +8,7 @@ using NaughtyAttributes.Test;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
+using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
 public class BoomTask : Action
 {
@@ -28,12 +30,42 @@ public class BoomTask : Action
         bomb.OnTriggerEnterAsObservable()
             .Subscribe(collider =>
             {
-                if (collider.CompareTag("Player"))
+                // 直接造成伤害
+                // if (collider.CompareTag("Player"))
+                // {
+                //     var protagonist = collider.GetComponent<Protagonist>();
+                //     if (protagonist != null) protagonist.TakeDamage(1.0f);
+                //     GameObject.Destroy(bomb);
+                //
+                // }
+                
+                // 爆炸
+                if (!collider.CompareTag("Enemy"))
                 {
-                    var protagonist = collider.GetComponent<Protagonist>();
-                    if (protagonist != null) protagonist.TakeDamage(1.0f);
-                    GameObject.Destroy(bomb);
+                    var radius = 5.0f;
+                    var settleTime = 0.5f;
+                    
+                    // 生成伤害结算物
+                    
+                    var colliderObj = GameObject.Instantiate(Resources.Load<GameObject>("SettlementObj"));
+                    colliderObj.transform.position = bomb.transform.position;
+                    
+                    SettlementObj settlement;
+                    settlement = colliderObj.GetComponent<SettlementObj>();
+                    if (settlement == null) settlement = colliderObj.AddComponent<SettlementObj>();
+                    
+                    settlement.Init(radius, settleTime, c =>
+                    {
+                        if (!c.CompareTag("Player")) 
+                            return; 
+                        var playerComponent = c.GetComponent<Protagonist>();
+                        
+                        playerComponent?.TakeDamage(1.0f); 
+                        Debug.Log("收到怪物上海:: 1.0");
 
+                    });
+                    GameObject.Destroy(bomb);
+                        
                 }
             });
         bomb.UpdateAsObservable()

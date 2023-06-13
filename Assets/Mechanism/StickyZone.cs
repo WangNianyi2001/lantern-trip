@@ -16,7 +16,7 @@ namespace LanternTrip {
 	
 		protected Dictionary<Collider, ContactPoint> contactingPoints = new Dictionary<Collider, ContactPoint>();
 
-		bool IsInterested(Transform t) => !(transform.IsChildOf(t) || t.IsChildOf(transform));
+		bool IsNotInterested(Transform t) => !(transform.IsChildOf(t) || t.IsChildOf(transform));
 		
 		
 		#region Private Function
@@ -53,31 +53,29 @@ namespace LanternTrip {
 
 		#region Physics
 		void OnTriggerEnter(Collider c) {
-			if(IsInterested(c.transform))
+			if(IsNotInterested(c.transform) && c.GetComponent<Entity>() != null)
 				colliders.Add(c);
-			
-
 		}
 
 		private void OnTriggerStay(Collider c)
 		{
+			if(IsNotInterested(c.transform) && c.GetComponent<Entity>() != null)
+				colliders.Add(c);
 			// add a enduring contact point to the entity
 			var entity = c.GetComponent<Entity>();
 			if (entity != null)
 			{
 				entity.AddContactPoints(contactingPoints);
-
 			}
 		}
 
 		void OnTriggerExit(Collider c) {
-			if(IsInterested(c.transform))
+			if(IsNotInterested(c.transform) && c.GetComponent<Entity>() != null)
 				colliders.Remove(c);
 			var entity = c.GetComponent<Entity>();
 			if (entity != null)
 			{
 				entity.RemoveContactPoints(contactingPoints);
-
 			}
 		}
 		#endregion
@@ -119,7 +117,7 @@ namespace LanternTrip {
 			Vector3 P0 = transform.position;
 			Quaternion Q0 = transform.rotation * Quaternion.Inverse(lastRotation); // delta rotation 
 			
-			
+			Debug.Log(colliders.Count);
 			foreach(var c in colliders) {
 				var rb = c.GetComponent<Rigidbody>();
 				if(rb == null)
