@@ -12,7 +12,12 @@ using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
 public class BoomTask : Action
 {
+    public bool isTracer = false;
+
+    public float projectileSpeed = 1.0f;
+
     public SharedGameObject target;
+    public Vector3 targetOffset = Vector3.up;
     public GameObject bombPrefab;
     public Transform oriPos;
     public override void OnStart()
@@ -21,12 +26,16 @@ public class BoomTask : Action
         {
             return;
         }
-        var targetPos = target.Value.transform.position;
+        var targetPos = target.Value.transform.position + targetOffset;
         var originPos = new Vector3(transform.position.x, oriPos.position.y + 1, transform.position.z);
         var dir = targetPos - originPos;
 
         var bomb = GameObject.Instantiate(bombPrefab);
         bomb.transform.position = originPos;
+        var timer = Observable.Timer(TimeSpan.FromSeconds(15.0f)).Subscribe(_ =>
+        {
+            GameObject.Destroy(bomb);
+        });
         bomb.OnTriggerEnterAsObservable()
             .Subscribe(collider =>
             {
@@ -40,7 +49,7 @@ public class BoomTask : Action
                 // }
                 
                 // 爆炸
-                if (!collider.CompareTag("Enemy"))
+                if (!collider.CompareTag("Enemy") && !collider.CompareTag("SettlementObj"))
                 {
                     var radius = 5.0f;
                     var settleTime = 0.5f;
@@ -64,6 +73,7 @@ public class BoomTask : Action
                         Debug.Log("收到怪物上海:: 1.0");
 
                     });
+                    timer.Dispose();
                     GameObject.Destroy(bomb);
                         
                 }
@@ -71,7 +81,11 @@ public class BoomTask : Action
         bomb.UpdateAsObservable()
             .Subscribe(_ =>
             {
-                bomb.transform.Translate(dir * Time.deltaTime);
+                if (isTracer)
+                {
+                    Trace(bomb, targetPos, projectileSpeed);
+                }else
+                    bomb.transform.Translate(dir * projectileSpeed * Time.deltaTime);
             });
         
         base.OnStart();
@@ -80,5 +94,28 @@ public class BoomTask : Action
     public override TaskStatus OnUpdate()
     {
         return TaskStatus.Success;
+    }
+
+    private void Trace(GameObject Bullet, Vector3 targetPos, float speed = 1.0f, float turnSpeed = 1.0f)
+    {
+        
+            // 计算目标位置
+            Vector3 targetPosition = target.Value.transform.position + targetOffset;;
+
+            // 插值计算当前位置与目标位置之间的新位置
+            // Bullet.transform.position = Vector3.Lerp(Bullet.transform.position, targetPosition, Time.deltaTime * speed);
+            
+            // var dir = (targetPosition - Bullet.transform.position).normalized;
+            var dir = targetPosition - Bullet.transform.position;
+            Bullet.transform.Translate(dir * speed * 6.66f * Time.deltaTime);
+    
+            // 根据目标位置计子弹应该旋转的角度
+            Vector3 direction = targetPosition - Bullet.transform.position;
+            if (direction != Vector3.zero)
+            {
+                Quaternion rotation = Quaternion.LookRotation(direction);
+                Bullet.transform.rotation = Quaternion.Slerp(Bullet.transform.rotation, rotation, Time.deltaTime * turnSpeed);
+            }
+
     }
 }

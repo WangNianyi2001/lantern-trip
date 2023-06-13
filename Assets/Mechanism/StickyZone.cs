@@ -117,7 +117,6 @@ namespace LanternTrip {
 			Vector3 P0 = transform.position;
 			Quaternion Q0 = transform.rotation * Quaternion.Inverse(lastRotation); // delta rotation 
 			
-			Debug.Log(colliders.Count);
 			foreach(var c in colliders) {
 				var rb = c.GetComponent<Rigidbody>();
 				if(rb == null)
