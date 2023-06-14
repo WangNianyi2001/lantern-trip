@@ -1,6 +1,5 @@
 ﻿#if UNITY_EDITOR
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEditor;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
@@ -9,8 +8,13 @@ using System.Linq;
 namespace LanternTrip {
 	public partial class ArrowTrigger : MonoBehaviour {
 		private Scene scene;
+		private Tinder lastType;
 
-		protected void EditorUpdate() {
+		protected void UpdateTinderType() {
+			if(lastType == type)
+				return;
+
+			lastType = type;
 			var color = type?.mainColor ?? Color.grey;
 
 			if(ball) {
@@ -29,6 +33,10 @@ namespace LanternTrip {
 			if(target) {
 				target.shotType = type?.type ?? Tinder.Type.Invalid;
 			}
+		}
+
+		protected void EditorUpdate() {
+			UpdateTinderType();
 		}
 
 		[ContextMenu("InfectOtherInstancesInScene", true)]
