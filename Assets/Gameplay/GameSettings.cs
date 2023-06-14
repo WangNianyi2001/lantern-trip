@@ -11,5 +11,6 @@ namespace LanternTrip {
 		public Tinder respawnGift;
 		[Scene] public string mainScene;
 		[Scene] public string gameOverScene;
+		public Material arrowTriggerMaterial;
 	}
 }
