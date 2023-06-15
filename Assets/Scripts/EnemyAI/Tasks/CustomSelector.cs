@@ -145,11 +145,11 @@ public class CustomSelector : Composite
                 // 存入List
                 int index = m;
                 
-                if (childrenExecutionOrder.Contains(index))
-                {
-                    i++;
-                    continue;
-                }
+                // if (childrenExecutionOrder.Contains(index))
+                // {
+                //     i++;
+                //     continue;
+                // }
                 childrenExecutionOrder.Push(index);
             }
         }

@@ -31,8 +31,8 @@ Transform:
   m_GameObject: {fileID: 8554590512587867516}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7918593342671080070}
   - {fileID: 5953520692759862564}
@@ -124,6 +124,10 @@ PrefabInstance:
     - target: {fileID: 1874306178, guid: 2aaebda2e72265243b8a6982c21d8b9e, type: 3}
       propertyPath: m_TagString
       value: SettlementObj
+      objectReference: {fileID: 0}
+    - target: {fileID: 29272012032699745, guid: 2aaebda2e72265243b8a6982c21d8b9e, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 29272012032699746, guid: 2aaebda2e72265243b8a6982c21d8b9e, type: 3}
       propertyPath: m_RootOrder

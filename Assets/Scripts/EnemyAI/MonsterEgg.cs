@@ -30,6 +30,12 @@ public class MonsterEgg : Entity
         }
         _triggered = true;
 
+        var collider = GetComponent<Collider>();
+        collider.isTrigger = true;
+        var rb = GetComponent<Rigidbody>();
+        rb.useGravity = false;
+        rb.isKinematic = true;
+
         // step 1: spawn actor
         if (spawnActor) SpawnActor();
         
@@ -46,15 +52,16 @@ public class MonsterEgg : Entity
             return;
         }
 
-        _enermy = _monster.GetComponent<Enermy>();
- 
+        _monster = GameObject.Instantiate(_monster);
         _monster.transform.position = transform.position;
-        GameObject.Instantiate(_monster);
+
+        _enermy = _monster.GetComponent<Enermy>();
+        _enermy.Invincible = true;
+        _enermy.GetComponent<BehaviorTree>().enabled = false;
     }
 
     IEnumerator Crushing()
     {
-        _enermy.Invincible = true;
         while (_player.CurrentTime <= _player.EndTime - 0.1f)
         {
             
@@ -63,6 +70,7 @@ public class MonsterEgg : Entity
         }
 
         _enermy.Invincible = false;
+        _enermy.GetComponent<BehaviorTree>().enabled = true;
         GameObject.Destroy(gameObject);
     }
 }

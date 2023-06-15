@@ -13,6 +13,7 @@ public class Enermy : MonoBehaviour
     public float fullHp = 100f;
     public FloatReactiveProperty curHp;
 
+    public float onHitTimeSpan = 2.5f;
     
     public bool Invincible = false;
 
@@ -62,7 +63,7 @@ public class Enermy : MonoBehaviour
             _animator.SetTrigger("Hit");
             _behavior.enabled = false;
             _timer?.Dispose();_timer2?.Dispose();
-            _timer = Observable.Timer(TimeSpan.FromSeconds(2.5f)).Subscribe(_ =>
+            _timer = Observable.Timer(TimeSpan.FromSeconds(onHitTimeSpan)).Subscribe(_ =>
             {
                 _behavior.enabled = true;
             });

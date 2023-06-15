@@ -42,8 +42,9 @@ public class BoomTask : Action
         {
             oriTrans = transform;
         }
+
         var targetPos = target.Value.transform.position + targetOffset;
-        var originPos = new Vector3(transform.position.x, oriTrans.position.y, transform.position.z) + oriOffset;
+        var originPos = new Vector3(transform.position.x, oriTrans.position.y, transform.position.z) + oriOffset * (transform.localScale).y;
         var dir = (targetPos - originPos).normalized;
 
         
@@ -82,7 +83,6 @@ public class BoomTask : Action
                 // 爆炸
                 if (collider.CompareTag("Player") || collider.CompareTag("Obstacle"))
                 {
-                    Debug.Log(collider.name);
                     
                     var radius = 5.0f;
                     var settleTime = 0.5f;
@@ -133,7 +133,7 @@ public class BoomTask : Action
         return TaskStatus.Success;
     }
 
-    private void Trace(GameObject Bullet, Vector3 targetPos, float speed = 1.0f, float turnSpeed = 1.0f)
+    private void Trace(GameObject bullet, Vector3 targetPos, float speed = 1.0f, float turnSpeed = 1.0f)
     {
         
             // 计算目标位置
@@ -146,19 +146,42 @@ public class BoomTask : Action
 
             var dis = (transform.position - targetPos).magnitude;
             
-            var offset = targetPosition - Bullet.transform.position;
+            var offset = targetPosition - bullet.transform.position;
             var dir = offset.normalized;
             var x = offset.magnitude;
-            var f = math.remap(0, dis, 1f, 10f, x);
+            var f = math.remap(0, dis, 1.5f, 15f, x);
             
-            Bullet.transform.Translate(dir * speed * f * Time.deltaTime);
+            bullet.transform.Translate(dir * speed * f * Time.deltaTime);
+            
+            
+            // Random Rotation
+            // 随机生成旋转轴和角度
+            Vector3 axis = UnityEngine.Random.insideUnitSphere;
+            float angle = UnityEngine.Random.Range(0, 180);
+
+            // 创建旋转四元数
+            Quaternion q = Quaternion.AngleAxis(angle, axis);
+
+            // 计算当前物体到目标朝向的向量
+            Vector3 toTarget = dir;
+
+            // 计算当前物体朝向参考点的权重，使其更有可能朝向参考点旋转
+            float weight = Vector3.Dot(bullet.transform.forward, toTarget);
+
+            // 对角度进行加权
+            angle *= Mathf.Lerp(0.5f, 1.0f, weight);
+
+            // 应用旋转
+            // bullet.transform.rotation = Quaternion.RotateTowards(bullet.transform.rotation, q, rotateSpeed * Time.deltaTime);
+            bullet.transform.rotation = q;
+    
     
             // 根据目标位置计子弹应该旋转的角度
-            Vector3 direction = targetPosition - Bullet.transform.position;
+            Vector3 direction = targetPosition - bullet.transform.position;
             if (direction != Vector3.zero)
             {
                 Quaternion rotation = Quaternion.LookRotation(direction);
-                Bullet.transform.rotation = Quaternion.Slerp(Bullet.transform.rotation, rotation, Time.deltaTime * turnSpeed);
+                bullet.transform.rotation = Quaternion.Slerp(bullet.transform.rotation, rotation, Time.deltaTime * turnSpeed);
             }
 
     }
