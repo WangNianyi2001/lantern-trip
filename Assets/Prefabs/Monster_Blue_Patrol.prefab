@@ -110,9 +110,9 @@ GameObject:
   - component: {fileID: 5167109674978983530}
   - component: {fileID: 1842518052501470125}
   - component: {fileID: 1842518052501470103}
-  - component: {fileID: 1592375385}
+  - component: {fileID: -1423835370918491906}
   m_Layer: 8
-  m_Name: Monster_Blue
+  m_Name: Monster_Blue_Patrol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -228,7 +228,7 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 1.5, z: 0.42}
   m_TimeToStationary: 0.5
---- !u!114 &1592375385
+--- !u!114 &-1423835370918491906
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -247,7 +247,7 @@ MonoBehaviour:
   logTaskChanges: 0
   group: 0
   resetValuesOnRestart: 0
-  externalBehavior: {fileID: 11400000, guid: 74c1a8f0bb2c8f547a112841b46df917, type: 2}
+  externalBehavior: {fileID: 11400000, guid: b664fb037f9c6e949add967dd4823de1, type: 2}
   mBehaviorSource:
     behaviorName: Behavior
     behaviorDescription: 
@@ -256,7 +256,7 @@ MonoBehaviour:
       parentIndex: 
       startIndex: 
       variableStartIndex: 
-      JSONSerialization: '{"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"PlayerGO","IsShared":true}]}'
+      JSONSerialization: 
       fieldSerializationData:
         typeName: []
         fieldNameHash: 
@@ -265,7 +265,7 @@ MonoBehaviour:
         unityObjects: []
         byteData: 
         byteDataArray: 
-      Version: 1.7.4
+      Version: 
   gizmoViewMode: 2
   showBehaviorDesignerGizmo: 1
 --- !u!1 &2337890025801722826

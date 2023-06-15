@@ -48,6 +48,7 @@ public class Enermy : MonoBehaviour
         {
             _animator.SetTrigger("Death");
             _behavior.enabled = false;
+            _agent.isStopped = true;
             Invincible = true;
             _timer?.Dispose();_timer2?.Dispose();
             _timer = Observable.Timer(TimeSpan.FromSeconds(3.1f)).Subscribe(_ =>
@@ -62,10 +63,12 @@ public class Enermy : MonoBehaviour
         {
             _animator.SetTrigger("Hit");
             _behavior.enabled = false;
+            _agent.isStopped = true;
             _timer?.Dispose();_timer2?.Dispose();
             _timer = Observable.Timer(TimeSpan.FromSeconds(onHitTimeSpan)).Subscribe(_ =>
             {
                 _behavior.enabled = true;
+                _agent.isStopped = false;
             });
         }
     }

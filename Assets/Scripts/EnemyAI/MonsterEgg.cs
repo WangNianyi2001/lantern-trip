@@ -43,9 +43,16 @@ public class MonsterEgg : Entity
         StartCoroutine(Crushing());
         
     }
+    
+    private Tinder.Type GetRandomTinderType()
+    {
+        int r = UnityEngine.Random.Range(0, (int)Tinder.Type.End - 1);
+        return (Tinder.Type)r;
+    }
 
     void SpawnActor()
     {
+        shotType = shotType == Tinder.Type.Invalid ? GetRandomTinderType() : shotType;
         _monster = Resources.Load<GameObject>("Monster_" + shotType.ToString());
         if (_monster == null)
         {
