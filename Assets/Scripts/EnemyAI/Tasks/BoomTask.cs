@@ -8,6 +8,7 @@ using NaughtyAttributes.Test;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
+using Unity.Mathematics;
 using Action = BehaviorDesigner.Runtime.Tasks.Action;
 
 public class BoomTask : Action
@@ -18,25 +19,56 @@ public class BoomTask : Action
 
     public SharedGameObject target;
     public Vector3 targetOffset = Vector3.up;
+    
     public GameObject bombPrefab;
-    public Transform oriPos;
+    public GameObject sparklePrefab;
+    
+    public Transform oriTrans;
+    public Vector3 oriOffset = Vector3.up;
+
+
+    private int projectileId = 0;
+    private Dictionary<int, IDisposable> triggerEnters = new Dictionary<int, IDisposable>(15);
+    private Dictionary<int, IDisposable> updates = new Dictionary<int, IDisposable>(15);
     public override void OnStart()
     {
         if (bombPrefab == null)
         {
+            Debug.LogError("Please Set Projectile Prefab");
             return;
         }
-        var targetPos = target.Value.transform.position + targetOffset;
-        var originPos = new Vector3(transform.position.x, oriPos.position.y + 1, transform.position.z);
-        var dir = targetPos - originPos;
 
+        if (oriTrans == null)
+        {
+            oriTrans = transform;
+        }
+
+        var targetPos = target.Value.transform.position + targetOffset;
+        var originPos = new Vector3(transform.position.x, oriTrans.position.y, transform.position.z) + oriOffset * (transform.localScale).y;
+        var dir = (targetPos - originPos).normalized;
+
+        
+        
+        
         var bomb = GameObject.Instantiate(bombPrefab);
+        var projectile = bomb.GetComponent<Projectile>();
+        projectile.Id = projectileId++;     // 分配 id
+        
         bomb.transform.position = originPos;
         var timer = Observable.Timer(TimeSpan.FromSeconds(15.0f)).Subscribe(_ =>
         {
             GameObject.Destroy(bomb);
         });
-        bomb.OnTriggerEnterAsObservable()
+        updates.TryAdd(projectile.Id, bomb.UpdateAsObservable()
+            .Subscribe(_ =>
+            {
+                if (isTracer)
+                {
+                    Trace(bomb, targetPos, projectileSpeed);
+                }else
+                    bomb.transform.Translate(dir * projectileSpeed * 6.66f * Time.deltaTime);
+            }));
+        triggerEnters.TryAdd(projectile.Id, bomb.OnTriggerEnterAsObservable()
             .Subscribe(collider =>
             {
                 // 直接造成伤害
@@ -49,13 +81,13 @@ public class BoomTask : Action
                 // }
                 
                 // 爆炸
-                if (!collider.CompareTag("Enemy") && !collider.CompareTag("SettlementObj"))
+                if (collider.CompareTag("Player") || collider.CompareTag("Obstacle"))
                 {
+                    
                     var radius = 5.0f;
                     var settleTime = 0.5f;
                     
                     // 生成伤害结算物
-                    
                     var colliderObj = GameObject.Instantiate(Resources.Load<GameObject>("SettlementObj"));
                     colliderObj.transform.position = bomb.transform.position;
                     
@@ -71,22 +103,27 @@ public class BoomTask : Action
                         
                         playerComponent?.TakeDamage(1.0f); 
                         Debug.Log("收到怪物上海:: 1.0");
-
+                    
                     });
-                    timer.Dispose();
-                    GameObject.Destroy(bomb);
-                        
+
+                    var sparkle = GameObject.Instantiate(sparklePrefab);
+                    sparkle.transform.position = bomb.transform.position;
+                    
+                    Observable.Timer(TimeSpan.FromSeconds(1.5f)).Subscribe(_ =>
+                    {
+                        GameObject.Destroy(sparkle);
+                        GameObject.Destroy(bomb);
+                    });
+                    var id = bomb.GetComponent<Projectile>().Id;
+                    
+                    triggerEnters[id].Dispose();
+                    updates[id].Dispose();
+                    
+                    triggerEnters.Remove(id);
+                    updates.Remove(id);
                 }
-            });
-        bomb.UpdateAsObservable()
-            .Subscribe(_ =>
-            {
-                if (isTracer)
-                {
-                    Trace(bomb, targetPos, projectileSpeed);
-                }else
-                    bomb.transform.Translate(dir * projectileSpeed * Time.deltaTime);
-            });
+            }));
+
         
         base.OnStart();
     }
@@ -96,7 +133,7 @@ public class BoomTask : Action
         return TaskStatus.Success;
     }
 
-    private void Trace(GameObject Bullet, Vector3 targetPos, float speed = 1.0f, float turnSpeed = 1.0f)
+    private void Trace(GameObject bullet, Vector3 targetPos, float speed = 1.0f, float turnSpeed = 1.0f)
     {
         
             // 计算目标位置
@@ -106,15 +143,45 @@ public class BoomTask : Action
             // Bullet.transform.position = Vector3.Lerp(Bullet.transform.position, targetPosition, Time.deltaTime * speed);
             
             // var dir = (targetPosition - Bullet.transform.position).normalized;
-            var dir = targetPosition - Bullet.transform.position;
-            Bullet.transform.Translate(dir * speed * 6.66f * Time.deltaTime);
+
+            var dis = (transform.position - targetPos).magnitude;
+            
+            var offset = targetPosition - bullet.transform.position;
+            var dir = offset.normalized;
+            var x = offset.magnitude;
+            var f = math.remap(0, dis, 1.5f, 15f, x);
+            
+            bullet.transform.Translate(dir * speed * f * Time.deltaTime);
+            
+            
+            // Random Rotation
+            // 随机生成旋转轴和角度
+            Vector3 axis = UnityEngine.Random.insideUnitSphere;
+            float angle = UnityEngine.Random.Range(0, 180);
+
+            // 创建旋转四元数
+            Quaternion q = Quaternion.AngleAxis(angle, axis);
+
+            // 计算当前物体到目标朝向的向量
+            Vector3 toTarget = dir;
+
+            // 计算当前物体朝向参考点的权重，使其更有可能朝向参考点旋转
+            float weight = Vector3.Dot(bullet.transform.forward, toTarget);
+
+            // 对角度进行加权
+            angle *= Mathf.Lerp(0.5f, 1.0f, weight);
+
+            // 应用旋转
+            // bullet.transform.rotation = Quaternion.RotateTowards(bullet.transform.rotation, q, rotateSpeed * Time.deltaTime);
+            bullet.transform.rotation = q;
+    
     
             // 根据目标位置计子弹应该旋转的角度
-            Vector3 direction = targetPosition - Bullet.transform.position;
+            Vector3 direction = targetPosition - bullet.transform.position;
             if (direction != Vector3.zero)
             {
                 Quaternion rotation = Quaternion.LookRotation(direction);
-                Bullet.transform.rotation = Quaternion.Slerp(Bullet.transform.rotation, rotation, Time.deltaTime * turnSpeed);
+                bullet.transform.rotation = Quaternion.Slerp(bullet.transform.rotation, rotation, Time.deltaTime * turnSpeed);
             }
 
     }

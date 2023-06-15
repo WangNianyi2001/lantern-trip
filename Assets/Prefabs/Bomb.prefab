@@ -14,9 +14,10 @@ GameObject:
   - component: {fileID: -194172716738839187}
   - component: {fileID: 5197889909289498961}
   - component: {fileID: 956696440480503165}
+  - component: {fileID: 2532448459505319097}
   m_Layer: 0
   m_Name: Bomb
-  m_TagString: Untagged
+  m_TagString: SettlementObj
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30,11 +31,12 @@ Transform:
   m_GameObject: {fileID: 8554590512587867516}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7918593342671080070}
   - {fileID: 5953520692759862564}
+  - {fileID: 4364768007561229225}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -99,6 +101,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2532448459505319097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8554590512587867516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 364db481a9eed6042abcaec69d17a7f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Id: 0
 --- !u!1001 &5978767354940780614
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -106,6 +121,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5852355917860245211}
     m_Modifications:
+    - target: {fileID: 1874306178, guid: 2aaebda2e72265243b8a6982c21d8b9e, type: 3}
+      propertyPath: m_TagString
+      value: SettlementObj
+      objectReference: {fileID: 0}
+    - target: {fileID: 29272012032699745, guid: 2aaebda2e72265243b8a6982c21d8b9e, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 29272012032699746, guid: 2aaebda2e72265243b8a6982c21d8b9e, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -132,7 +155,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 29272012032699746, guid: 2aaebda2e72265243b8a6982c21d8b9e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.304
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 29272012032699746, guid: 2aaebda2e72265243b8a6982c21d8b9e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -170,12 +193,151 @@ PrefabInstance:
       propertyPath: m_Name
       value: Projectile
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 29272012032699751, guid: 2aaebda2e72265243b8a6982c21d8b9e, type: 3}
+      propertyPath: m_TagString
+      value: SettlementObj
+      objectReference: {fileID: 0}
+    - target: {fileID: 1622476669994180286, guid: 2aaebda2e72265243b8a6982c21d8b9e, type: 3}
+      propertyPath: m_TagString
+      value: SettlementObj
+      objectReference: {fileID: 0}
+    - target: {fileID: 2535169328872236399, guid: 2aaebda2e72265243b8a6982c21d8b9e, type: 3}
+      propertyPath: m_TagString
+      value: SettlementObj
+      objectReference: {fileID: 0}
+    - target: {fileID: 2535169330485275065, guid: 2aaebda2e72265243b8a6982c21d8b9e, type: 3}
+      propertyPath: m_TagString
+      value: SettlementObj
+      objectReference: {fileID: 0}
+    - target: {fileID: 4399413324503216417, guid: 2aaebda2e72265243b8a6982c21d8b9e, type: 3}
+      propertyPath: m_TagString
+      value: SettlementObj
+      objectReference: {fileID: 0}
+    - target: {fileID: 4399413326005427354, guid: 2aaebda2e72265243b8a6982c21d8b9e, type: 3}
+      propertyPath: m_TagString
+      value: SettlementObj
+      objectReference: {fileID: 0}
+    - target: {fileID: 4399413326270740647, guid: 2aaebda2e72265243b8a6982c21d8b9e, type: 3}
+      propertyPath: m_TagString
+      value: SettlementObj
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 271798440, guid: 2aaebda2e72265243b8a6982c21d8b9e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2aaebda2e72265243b8a6982c21d8b9e, type: 3}
 --- !u!4 &5953520692759862564 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 29272012032699746, guid: 2aaebda2e72265243b8a6982c21d8b9e, type: 3}
   m_PrefabInstance: {fileID: 5978767354940780614}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7467591431103815570
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 5852355917860245211}
+    m_Modifications:
+    - target: {fileID: 2292044823261275786, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_TagString
+      value: SettlementObj
+      objectReference: {fileID: 0}
+    - target: {fileID: 3054690016525515413, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_TagString
+      value: SettlementObj
+      objectReference: {fileID: 0}
+    - target: {fileID: 3832139732711106261, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_TagString
+      value: SettlementObj
+      objectReference: {fileID: 0}
+    - target: {fileID: 3832139734304369648, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_TagString
+      value: SettlementObj
+      objectReference: {fileID: 0}
+    - target: {fileID: 4360372295166480443, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_TagString
+      value: SettlementObj
+      objectReference: {fileID: 0}
+    - target: {fileID: 6571019826502963234, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_TagString
+      value: SettlementObj
+      objectReference: {fileID: 0}
+    - target: {fileID: 6571019827582643251, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_BoundingSphereOverride.w
+      value: -3.8040076e+10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6571019827582643251, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_BoundingSphereOverride.x
+      value: 6.12e-43
+      objectReference: {fileID: 0}
+    - target: {fileID: 6571019827582643251, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_BoundingSphereOverride.y
+      value: 36.666668
+      objectReference: {fileID: 0}
+    - target: {fileID: 6571019827582643251, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_BoundingSphereOverride.z
+      value: 11.333333
+      objectReference: {fileID: 0}
+    - target: {fileID: 6571019827582643259, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6571019827582643259, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6571019827582643259, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6571019827582643259, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6571019827582643259, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6571019827582643259, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6571019827582643259, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6571019827582643259, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6571019827582643259, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6571019827582643259, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6571019827582643259, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6571019827582643262, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_Name
+      value: Projectile_Snow
+      objectReference: {fileID: 0}
+    - target: {fileID: 6571019827582643262, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_TagString
+      value: SettlementObj
+      objectReference: {fileID: 0}
+    - target: {fileID: 8759615749208670787, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+      propertyPath: m_TagString
+      value: SettlementObj
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+--- !u!4 &4364768007561229225 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6571019827582643259, guid: e1561d52d4911f049a257c858d0ae854, type: 3}
+  m_PrefabInstance: {fileID: 7467591431103815570}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7669286901694836077
 PrefabInstance:
@@ -247,6 +409,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: c1de0cf76a1be734ba5330c7c934c4ea, type: 3}
       propertyPath: m_Name
       value: ball
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c1de0cf76a1be734ba5330c7c934c4ea, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c1de0cf76a1be734ba5330c7c934c4ea, type: 3}
+      propertyPath: m_TagString
+      value: SettlementObj
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c1de0cf76a1be734ba5330c7c934c4ea, type: 3}

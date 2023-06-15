@@ -2824,7 +2824,7 @@ GameObject:
   - component: {fileID: 1300250243}
   - component: {fileID: 1300250241}
   - component: {fileID: 1300250242}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MonsterEgg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3024,14 +3024,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageMultiplier: 1
-  shotType: 4
+  shotType: 0
   onDie:
     m_PersistentCalls:
       m_Calls: []
   onShot:
-    m_PersistentCalls:
-      m_Calls: []
-  onMatchedShot:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1300250242}
@@ -3046,7 +3043,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onMatchedShot:
+    m_PersistentCalls:
+      m_Calls: []
   deathY: -100
+  AbcSpeed: 1
+  spawnActor: 1
 --- !u!1 &2728883819259523276
 GameObject:
   m_ObjectHideFlags: 0

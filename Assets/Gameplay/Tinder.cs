@@ -8,7 +8,9 @@ namespace LanternTrip {
 			Invalid = 0,
 			Red = 1,
 			Green = 2,
-			Blue = 4
+			Blue = 3,
+			
+			End
 		}
 		public Type type;
 		public Color mainColor;

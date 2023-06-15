@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4811602026390843874}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lowerarm_ik_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3989277802515703999}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: hand_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2147261933656518098}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ik_fk_switch_joints_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,12 +106,12 @@ GameObject:
   m_Component:
   - component: {fileID: 5660620300903320709}
   - component: {fileID: 5167109674978983534}
-  - component: {fileID: 5167109674978983529}
   - component: {fileID: 5167109674978983531}
   - component: {fileID: 5167109674978983530}
   - component: {fileID: 1842518052501470125}
   - component: {fileID: 1842518052501470103}
-  m_Layer: 0
+  - component: {fileID: 1592375385}
+  m_Layer: 8
   m_Name: Monster_Blue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1842518052501470100}
   m_LocalRotation: {x: 0, y: 0.9999301, z: -0, w: -0.011824221}
-  m_LocalPosition: {x: -2.138749, y: 1.1262927, z: 3.8819947}
+  m_LocalPosition: {x: -5.079528, y: 1.1749349, z: 4.091416}
   m_LocalScale: {x: 1, y: 1, z: -1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -154,53 +154,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &5167109674978983529
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1842518052501470100}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d7b55c7ecdb49a4a89fa5e6f9022861, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startWhenEnabled: 1
-  asynchronousLoad: 0
-  pauseWhenDisabled: 0
-  restartWhenComplete: 0
-  logTaskChanges: 0
-  group: 0
-  resetValuesOnRestart: 0
-  externalBehavior: {fileID: 11400000, guid: b664fb037f9c6e949add967dd4823de1, type: 2}
-  mBehaviorSource:
-    behaviorName: Behavior
-    behaviorDescription: 
-    mTaskData:
-      types: []
-      parentIndex: 
-      startIndex: 
-      variableStartIndex: 
-      JSONSerialization: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(875.008545,-98.84191)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Repeater","NodeData":{"Offset":"(-87.36844,190.000015)"},"ID":1,"Name":"Repeater","Instant":true,"SharedIntcount":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":null,"Int32mValue":0},"SharedBoolrepeatForever":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"SharedBoolendOnFailure":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(0,120.000015)"},"ID":2,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-120,100)"},"ID":3,"Name":"Sequence","Instant":true,"AbortTypeabortType":"LowerPriority","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Movement.CanSeeObject","NodeData":{"Offset":"(-200,110)"},"ID":4,"Name":"Can
-        See Object","Instant":true,"BooleanusePhysics2D":false,"SharedGameObjecttargetObject":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":null},"SharedGameObjectListtargetObjects":{"Type":"BehaviorDesigner.Runtime.SharedGameObjectList","Name":null,"List`1mValue":[]},"SharedStringtargetTag":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":null,"StringmValue":"Player"},"LayerMaskobjectLayerMask":0,"Int32maxCollisionCount":200,"LayerMaskignoreLayerMask":4,"SharedFloatfieldOfViewAngle":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":181.9},"SharedFloatviewDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":12.5},"SharedVector3offset":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":null,"Vector3mValue":"(0,0,0)"},"SharedVector3targetOffset":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":null,"Vector3mValue":"(0,0,0)"},"SharedFloatangleOffset2D":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":0},"SharedBooluseTargetBone":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"HumanBodyBonestargetBone":"Hips","SharedBooldrawDebugRay":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"SharedBooldisableAgentColliderLayer":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"SharedGameObjectreturnedObject":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"PlayerGO","IsShared":true}},{"Type":"FacePlayerTask","NodeData":{"Offset":"(-46.3247681,114.824768)"},"ID":5,"Name":"Face
-        Player Task","Instant":true,"SharedGameObjectplayer":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"PlayerGO","IsShared":true}},{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(70,110)"},"ID":6,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-186.6666,140)"},"ID":7,"Name":"Sequence","Instant":true,"AbortTypeabortType":"LowerPriority","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Inverter","NodeData":{"Offset":"(-140,100)"},"ID":8,"Name":"Inverter","Instant":true,"Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Movement.WithinDistance","NodeData":{"Offset":"(0,99.99994)"},"ID":9,"Name":"Within
-        Distance","Instant":true,"BooleanusePhysics2D":false,"SharedGameObjecttargetObject":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"PlayerGO","IsShared":true},"SharedStringtargetTag":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":null,"StringmValue":""},"LayerMaskobjectLayerMask":0,"Int32maxCollisionCount":200,"SharedFloatmagnitude":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":25},"SharedBoollineOfSight":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"LayerMaskignoreLayerMask":4,"SharedVector3offset":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":null,"Vector3mValue":"(0,0,0)"},"SharedVector3targetOffset":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":null,"Vector3mValue":"(0,0,0)"},"SharedBooldrawDebugRay":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"SharedGameObjectreturnedObject":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":null}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Log","NodeData":{"Offset":"(-30,100)"},"ID":10,"Name":"Log","Instant":true,"SharedStringtext":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":null,"StringmValue":"\u53d1\u73b0\u76ee\u6807"},"SharedBoollogError":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"SharedBoollogTime":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false}},{"Type":"BehaviorDesigner.Runtime.Tasks.Unity.UnityAnimator.SetFloatParameter","NodeData":{"Offset":"(92.7868652,99.21301)"},"ID":11,"Name":"Set
-        Float Parameter","Instant":true,"SharedGameObjecttargetGameObject":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":null},"SharedStringparamaterName":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":null,"StringmValue":"Speed"},"SharedFloatfloatValue":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":0},"BooleansetOnce":false},{"Type":"BehaviorDesigner.Runtime.Tasks.Wait","NodeData":{"Offset":"(229.999908,110)"},"ID":12,"Name":"Wait","Instant":true,"SharedFloatwaitTime":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":1},"SharedBoolrandomWait":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"SharedFloatrandomWaitMin":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":1},"SharedFloatrandomWaitMax":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":1}}]},{"Type":"SeekAttack","NodeData":{"Offset":"(120,130)"},"ID":13,"Name":"Seek
-        Attack","Instant":true,"SharedGameObjecttarget":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"PlayerGO","IsShared":true},"SharedVector3targetPosition":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":null,"Vector3mValue":"(0,0,0)"},"StringAnimTriggerName":"Attack1","StringBlendTreeParamName":"Speed","SingleAttackDis":3,"SingleCD":3}]}]},{"Type":"CustomPatrol","NodeData":{"Offset":"(214.6753,111.824738)"},"ID":14,"Name":"Custom
-        Patrol","Instant":true,"SharedBoolrandomPatrol":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"SharedFloatwaypointPauseDuration":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":0},"SharedGameObjectListwaypoints":{"Type":"BehaviorDesigner.Runtime.SharedGameObjectList","Name":null,"List`1mValue":[null,null]},"StringBlendTreeParamName":"Speed","SharedFloatspeed":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":1.5},"SharedFloatangularSpeed":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":120},"SharedFloatarriveDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":1},"SharedBoolstopOnTaskEnd":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"SharedBoolupdateRotation":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true}}]}]},"DetachedTasks":[{"Type":"BehaviorDesigner.Runtime.Tasks.Log","NodeData":{"Offset":"(1145.78918,103.684235)"},"ID":15,"Name":"Log","Instant":true,"SharedStringtext":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":null,"StringmValue":"See
-        Player"},"SharedBoollogError":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"SharedBoollogTime":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false}},{"Type":"BehaviorDesigner.Runtime.Tasks.Movement.Patrol","NodeData":{"Offset":"(1380,330)"},"ID":16,"Name":"Patrol","Instant":true,"SharedBoolrandomPatrol":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":false},"SharedFloatwaypointPauseDuration":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":0},"SharedGameObjectListwaypoints":{"Type":"BehaviorDesigner.Runtime.SharedGameObjectList","Name":null,"List`1mValue":[null,null]},"SharedFloatspeed":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":1.5},"SharedFloatangularSpeed":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":120},"SharedFloatarriveDistance":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":1},"SharedBoolstopOnTaskEnd":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true},"SharedBoolupdateRotation":{"Type":"BehaviorDesigner.Runtime.SharedBool","Name":null,"BooleanmValue":true}}],"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"PlayerGO","IsShared":true}]}'
-      fieldSerializationData:
-        typeName: []
-        fieldNameHash: 
-        startIndex: 
-        dataPosition: 
-        unityObjects: []
-        byteData: 
-        byteDataArray: 
-      Version: 1.7.4
-  gizmoViewMode: 2
-  showBehaviorDesignerGizmo: 1
 --- !u!195 &5167109674978983531
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -210,7 +163,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 1842518052501470100}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 2
   m_Speed: 1.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -238,9 +191,10 @@ MonoBehaviour:
   fullHp: 100
   curHp:
     value: 0
+  onHitTimeSpan: 2.5
   Invincible: 0
   player: {fileID: 0}
-  tinderType: 4
+  tinderType: 3
   onDie:
     m_PersistentCalls:
       m_Calls: []
@@ -254,7 +208,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 1.01
+  m_Radius: 2
   m_Height: 3.4775949
   m_Direction: 1
   m_Center: {x: 0, y: 1.2387934, z: 0}
@@ -274,6 +228,46 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 1.5, z: 0.42}
   m_TimeToStationary: 0.5
+--- !u!114 &1592375385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1842518052501470100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d7b55c7ecdb49a4a89fa5e6f9022861, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startWhenEnabled: 1
+  asynchronousLoad: 0
+  pauseWhenDisabled: 0
+  restartWhenComplete: 0
+  logTaskChanges: 0
+  group: 0
+  resetValuesOnRestart: 0
+  externalBehavior: {fileID: 11400000, guid: 74c1a8f0bb2c8f547a112841b46df917, type: 2}
+  mBehaviorSource:
+    behaviorName: Behavior
+    behaviorDescription: 
+    mTaskData:
+      types: []
+      parentIndex: 
+      startIndex: 
+      variableStartIndex: 
+      JSONSerialization: '{"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"PlayerGO","IsShared":true}]}'
+      fieldSerializationData:
+        typeName: []
+        fieldNameHash: 
+        startIndex: 
+        dataPosition: 
+        unityObjects: []
+        byteData: 
+        byteDataArray: 
+      Version: 1.7.4
+  gizmoViewMode: 2
+  showBehaviorDesignerGizmo: 1
 --- !u!1 &2337890025801722826
 GameObject:
   m_ObjectHideFlags: 0
@@ -283,7 +277,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1871001560944483437}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lowerarm_ik_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -315,7 +309,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 457278497633467157}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lowerarm_fk_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -347,7 +341,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1609769667785685311}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: hand__fk_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -378,7 +372,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8999540510235506838}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: upperarm_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -410,7 +404,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3629220108144277245}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: upperarm_fk_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -442,7 +436,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8790421003834397338}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: upperarm_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -474,7 +468,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8652156297276081596}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: upperarm_fk_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -506,7 +500,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6444963011395282664}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: hips
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -540,7 +534,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5852263343691015828}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: hand_ik_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -572,7 +566,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6965681011840091344}
   - component: {fileID: 9210116010787401055}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Golem_Feet_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -687,7 +681,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6119969624821619505}
   - component: {fileID: 441764441452629677}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Golem_Arm_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -802,7 +796,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8605145788900631755}
   - component: {fileID: 279577560831508545}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Golem_Arm_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -916,7 +910,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7426068550430478542}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: clavicle_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -949,7 +943,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7645021262145347734}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ik_fk_switch_joints_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -982,7 +976,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4651448854399134920}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1015,7 +1009,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5885104794490652823}
   - component: {fileID: 6054641609376870281}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Golem_Leg_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1130,7 +1124,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4830368860046271225}
   - component: {fileID: 7946226759362422306}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Golem_Feet_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1244,7 +1238,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1476688704673027260}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: calf_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1276,7 +1270,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2637022069314229004}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: thigh_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1308,7 +1302,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4796137128191359052}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: hand_fk_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1339,7 +1333,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5947596240608738842}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: foot_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1370,7 +1364,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8781982478478410651}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: hand_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1402,7 +1396,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4564773084841933183}
   - component: {fileID: 7681652029167446915}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Golem_Grass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1516,7 +1510,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2428437616993524828}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: spine_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1548,7 +1542,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 117839759225759015}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: spine_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1581,7 +1575,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2552149804960102575}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: upperarm_ik_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1613,7 +1607,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8121680991920289838}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: clavicle_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1646,7 +1640,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2267048320735782854}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: thigh_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1678,7 +1672,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9160053567028964769}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lowerarm_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1711,7 +1705,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5537499752533522212}
   - component: {fileID: 6358063601458619841}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Golem_Flowers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1825,7 +1819,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 364351615472454879}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lowerarm_fk_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1857,7 +1851,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4113120532065478218}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: hand_ik_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1888,7 +1882,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 565899995339108212}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: upperarm_ik_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1921,7 +1915,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5839706625444999862}
   - component: {fileID: 810934723622057066}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Golem_Leg_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2036,7 +2030,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5522003625451812533}
   - component: {fileID: 3667555756803546932}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Golem_Wrist_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2151,7 +2145,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8833052374322456412}
   - component: {fileID: 3203575017083567398}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: golem_body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2205,7 +2199,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1264504942774267407}
   - component: {fileID: 7227606740022717329}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Golem_Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2320,7 +2314,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3032298778152758976}
   - component: {fileID: 6812194353229297810}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Golem_Wrist_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2434,7 +2428,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6318582169719567329}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: MESH
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2476,7 +2470,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 633030917267179629}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: foot_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2507,7 +2501,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9015470090266164359}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: calf_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2539,7 +2533,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8919217669716549374}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: lowerarm_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
