@@ -144,8 +144,13 @@ public class CustomSelector : Composite
                 
                 // 存入List
                 int index = m;
-                childrenExecutionOrder.Push(index);
                 
+                if (childrenExecutionOrder.Contains(index))
+                {
+                    i++;
+                    continue;
+                }
+                childrenExecutionOrder.Push(index);
             }
         }
     }
