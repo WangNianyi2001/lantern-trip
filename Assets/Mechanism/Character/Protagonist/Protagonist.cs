@@ -3,6 +3,7 @@ using NaughtyAttributes;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
+using Unity.Mathematics;
 
 namespace LanternTrip {
 	public partial class Protagonist : Character {
@@ -15,6 +16,8 @@ namespace LanternTrip {
 		bool dashCding = false;
 		Vector3 cachedShootTargetPosition;
 		bool kicking = false;
+
+		private Vector3 cameraForwardPosition;
 		#endregion
 
 		#region Serialized fields
@@ -130,14 +133,19 @@ namespace LanternTrip {
 			Camera cam = gameplay.camera.camera;
 			Ray ray = cam.ScreenPointToRay(gameplay.input.MousePosition);
 			Physics.Raycast(ray, out hit, Mathf.Infinity, shootingLayerMask);
-			if(hit.transform) {
-				ShootTargetPosition = hit.point;
-			}
-			else {
-				Vector3 position = cam.transform.position;
-				position += cam.transform.forward * shootingRange.y;
-				ShootTargetPosition = position;
-			}
+			// if(hit.transform) {
+			// 	ShootTargetPosition = hit.point;
+			// }
+			// else {
+			// 	Vector3 position = cam.transform.position;
+			// 	position += cam.transform.forward * shootingRange.y;
+			// 	ShootTargetPosition = position;
+			// }
+			
+
+			cameraForwardPosition = cam.transform.position + cam.transform.forward * shootingRange.y;
+			ShootTargetPosition = cameraForwardPosition;
+
 
 			// If charged-up, render expected shooting curve
 			if(ChargeUpValue > 0) {
@@ -269,7 +277,8 @@ namespace LanternTrip {
 		public void Shoot() {
 			if(!gameplay.Burn(1))
 				return;
-			shooter.Shoot(ClampedShootTargetPosition);
+			shooter.Shoot(cameraForwardPosition);
+			// shooter.Shoot(math.remap(shootingRange.x, shootingRange.y, 0, 1, ChargeUpValue));
 		}
 
 		public void Dash() {

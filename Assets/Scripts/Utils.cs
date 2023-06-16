@@ -80,5 +80,29 @@ public static class Utils
     }
     return points;
 }
-}
+    
 
+    /// <summary>
+    /// 设置物体的重力加速度
+    /// </summary>
+    public static void SetGravity(this GameObject obj, Vector3 val)
+    {
+        var c = obj.GetComponent<GravityControl>();
+        if (c == null)
+            c = obj.AddComponent<GravityControl>();
+ 
+        c.Set(val);
+    }
+    /// <summary>
+    /// 获取物体的重力加速度
+    /// </summary>
+    public static Vector3 GetGravity(this GameObject obj)
+    {
+        var c = obj.GetComponent<GravityControl>();
+        if (c == null)
+            return Physics.gravity;
+        else
+            return c.Get();
+    }
+    
+}
