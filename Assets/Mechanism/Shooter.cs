@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
@@ -36,35 +37,30 @@ namespace LanternTrip {
 			Rigidbody rb = projectile.GetComponent<Rigidbody>();
 			if(!rb)
 				rb = projectile.AddComponent<Rigidbody>();
-			rb.velocity = CalculateInitialVelocityByTargetPosition(position);
+			// rb.velocity = CalculateInitialVelocityByTargetPosition(position);
+			rb.velocity = CalculateInitialVelocityByDistance(position);
 			projectile.SetGravity(projectileGravity2);
 		}
 
 		
-		public Vector3 CalculateInitialVelocityByShootingRange(float shootingRange)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="position">Target Position</param>
+		/// <returns></returns>
+		public Vector3 CalculateInitialVelocityByDistance(Vector3 position)
 		{
-			Vector3 res = Vector3.zero;
-			
-			GameplayManager gameplay = GameplayManager.instance;
-			Camera cam = gameplay.camera.camera;
-			res = cam.transform.forward * (0.5f + 0.5f) * 100.0f;
+			// Delta components
+			Vector3 delta = position - transform.position;
+			var dir = delta.normalized;
 
+			// Combine to get final result
+
+			var res = dir * 30.0f;
+			var factor = math.sqrt( math.max(1.0f, math.min(25.0f, delta.magnitude)));
+			res *= factor;
 			return res;
 		}
 		
-		/// <summary>
-		/// Calculate Initial Velocity By Shooting Range (remap to (0,1))
-		/// </summary>
-		/// <param name="shootingRange"></param>
-		public void Shoot(float shootingRange)
-		{
-			var projectile = Instantiate(projectilePrefab, transform.position, transform.rotation);
-			preShoot?.Invoke(projectile);
-			Rigidbody rb = projectile.GetComponent<Rigidbody>();
-			if(!rb)
-				rb = projectile.AddComponent<Rigidbody>();
-			rb.velocity = CalculateInitialVelocityByShootingRange(shootingRange);
-			projectile.SetGravity(projectileGravity2);
-		}
 	}
 }

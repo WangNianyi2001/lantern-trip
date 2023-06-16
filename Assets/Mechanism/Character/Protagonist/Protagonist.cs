@@ -30,7 +30,7 @@ namespace LanternTrip {
 
 		[Header("Shooting")]
 		public Shooter shooter;
-		[MinMaxSlider(1, 20)] public Vector2 shootingRange;
+		[MinMaxSlider(1, 200)] public Vector2 shootingRange;
 		public RectTransform shootingUi;
 		public LineRenderer lineRenderer;
 		public LayerMask shootingLayerMask;
@@ -131,20 +131,19 @@ namespace LanternTrip {
 			// Try getting & setting shoot target position
 			RaycastHit hit;
 			Camera cam = gameplay.camera.camera;
-			Ray ray = cam.ScreenPointToRay(gameplay.input.MousePosition);
+			// Ray ray = cam.ScreenPointToRay(gameplay.input.MousePosition);
+			Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
 			Physics.Raycast(ray, out hit, Mathf.Infinity, shootingLayerMask);
-			// if(hit.transform) {
-			// 	ShootTargetPosition = hit.point;
-			// }
-			// else {
-			// 	Vector3 position = cam.transform.position;
-			// 	position += cam.transform.forward * shootingRange.y;
-			// 	ShootTargetPosition = position;
-			// }
+		
+			cameraForwardPosition = cam.transform.position + cam.transform.forward * shootingRange.y * 3.0f;
+			if(hit.transform) {
+				ShootTargetPosition = hit.point;
+			}
+			else {
+				ShootTargetPosition = cameraForwardPosition;
+			}
 			
-
-			cameraForwardPosition = cam.transform.position + cam.transform.forward * shootingRange.y;
-			ShootTargetPosition = cameraForwardPosition;
+			
 
 
 			// If charged-up, render expected shooting curve
@@ -277,7 +276,7 @@ namespace LanternTrip {
 		public void Shoot() {
 			if(!gameplay.Burn(1))
 				return;
-			shooter.Shoot(cameraForwardPosition);
+			shooter.Shoot(ShootTargetPosition.Value);
 			// shooter.Shoot(math.remap(shootingRange.x, shootingRange.y, 0, 1, ChargeUpValue));
 		}
 
