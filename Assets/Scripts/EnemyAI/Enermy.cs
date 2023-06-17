@@ -23,12 +23,12 @@ public class Enermy : MonoBehaviour
 
     public UnityEvent onDie;
 
-    private Animator _animator;
-    private NavMeshAgent _agent;
-    private BehaviorTree _behavior;
+    protected Animator _animator;
+    protected NavMeshAgent _agent;
+    protected BehaviorTree _behavior;
 
-    private IDisposable _timer;
-    private IDisposable _timer2;
+    protected IDisposable _timer;
+    protected IDisposable _timer2;
     
     
     public void LookAtPlayer()
@@ -118,7 +118,7 @@ public class Enermy : MonoBehaviour
     }
     
     
-    private void Start()
+    protected void Start()
     {
         _animator = GetComponent<Animator>();
         _agent = GetComponent<NavMeshAgent>();
@@ -131,7 +131,7 @@ public class Enermy : MonoBehaviour
         });
     }
 
-    private void Update()
+    protected void Update()
     {
         LookAtPlayer();
     }

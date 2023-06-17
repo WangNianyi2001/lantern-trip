@@ -96,7 +96,7 @@ namespace LanternTrip {
 				StopCoroutine(movingCoroutine);
 				movingCoroutine = null;
 			}
-			Debug.Log("Stop Moving");
+			// Debug.Log("Stop Moving");
 		}
 		#endregion
 
