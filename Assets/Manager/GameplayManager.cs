@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Collections;
 
 namespace LanternTrip {
-	[ExecuteAlways]
+	[ExecuteInEditMode]
 	[RequireComponent(typeof(InputManager))]
 	public class GameplayManager : ManagerBase {
 		#region Static members
