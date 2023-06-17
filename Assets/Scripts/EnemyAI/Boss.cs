@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using BehaviorDesigner.Runtime;
 using LanternTrip;
 using UnityEngine;
 using UniRx;
+using UnityEngine.AI;
 
 public class Boss : Enermy
 {
@@ -13,12 +15,15 @@ public class Boss : Enermy
     public float particleUpdateDeltaTime = 1.0f;
     void Start()
     {
-        curHp.Value = fullHp;
         Invincible = true;
+        _animator = GetComponent<Animator>();
+        _agent = GetComponent<NavMeshAgent>();
+        _behavior = GetComponent<BehaviorTree>();
         
-        Observable.Interval(TimeSpan.FromSeconds(particleUpdateDeltaTime)).Subscribe(_ =>
+        curHp.Value = fullHp;
+        curHp.Subscribe(value =>
         {
-            ResetParticle();
+            OnAttack(value);
         });
     }
 
@@ -26,6 +31,38 @@ public class Boss : Enermy
     {
         int r = UnityEngine.Random.Range(0, (int)Tinder.Type.End - 1);
         return (Tinder.Type)r;
+    }
+    
+    private void OnAttack(float cur_hp)
+    {
+        // Die
+        if (cur_hp<=0)
+        {
+            // _animator.SetTrigger("Death");
+            // _behavior.enabled = false;
+            // _agent.isStopped = true;
+            // Invincible = true;
+            // _timer?.Dispose();_timer2?.Dispose();
+            // _timer = Observable.Timer(TimeSpan.FromSeconds(2.1f)).Subscribe(_ =>
+            // {
+            //     onDie?.Invoke();
+            //     GameObject.Destroy(gameObject);
+            // });
+            // Debug.Log("死亡");
+                
+        }
+        else if (cur_hp <= fullHp - 0.1f)
+        {
+            // _animator.SetTrigger("Hit");
+            // _behavior.enabled = false;
+            // _agent.isStopped = true;
+            // _timer?.Dispose();_timer2?.Dispose();
+            // _timer = Observable.Timer(TimeSpan.FromSeconds(onHitTimeSpan)).Subscribe(_ =>
+            // {
+            //     _behavior.enabled = true;
+            //     _agent.isStopped = false;
+            // });
+        }
     }
     
     void ResetParticle()
