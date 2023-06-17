@@ -43,7 +43,7 @@ namespace LanternTrip {
 					animationController.Jumping = false;
 
 					// If landed, land
-					if(StandingPoint.HasValue) {
+					if(!airing && StandingPoint.HasValue) {
 						// 如果不注释，会导致角色在斜坡上滑落时无法判定落地
 						// float fallingSpeed = Vector3.Dot(rigidbody.velocity, Physics.gravity);
 						// if(fallingSpeed < 0)
@@ -53,6 +53,7 @@ namespace LanternTrip {
 					break;
 				case "Jumping":
 					animationController.Jumping = true;
+					state = "Freefalling";
 					break;
 				case "Landing":
 					animationController.Freefalling = false;
@@ -170,8 +171,6 @@ namespace LanternTrip {
 			float speed = Mathf.Sqrt(2 * gravity * targetHeight);
 			Vector3 jumpingImpulse = transform.up * speed * rigidbody.mass;
 			rigidbody.AddForce(jumpingImpulse, ForceMode.Impulse);
-			yield return new WaitForSeconds(.1f);
-			state = "Freefalling";
 		}
 
 		private ContactPoint? GetRealStandingPoint() {
@@ -247,7 +246,7 @@ namespace LanternTrip {
 			var standingPoint = GetRealStandingPoint();
 			if(standingPoint != null)
 				lastStandingPoint = standingPoint.Value;
-			actualAiring = StandingPoint == null;
+			actualAiring = standingPoint == null;
 			if(actualAiring)
 				StartCoroutine(AiringCoroutine());
 			else
