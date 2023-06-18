@@ -30,6 +30,11 @@ namespace LanternTrip {
 			playerInput.ActivateInput();
 		}
 
+		public void DiscardPlayerControl()
+		{
+			playerInput.DeactivateInput();
+		}
+
 		public Vector2 MousePosition => mousePosition;
 		#endregion
 
