@@ -8,6 +8,8 @@ namespace LanternTrip {
 		[Range(.1f, 5f)] public float totalTime;
 		public GameObject projectilePrefab;
 		public UnityEvent<GameObject> preShoot;
+
+		public float arrowSpeed = 30.0f;
 		public Vector3 projectileGravity2 = new Vector3(0.0f, -3.0f, 0.0f);
 
 		public Vector3 CalculateInitialVelocityByTargetPosition(Vector3 position) {
@@ -56,7 +58,7 @@ namespace LanternTrip {
 
 			// Combine to get final result
 
-			var res = dir * 30.0f;
+			var res = dir * arrowSpeed;
 			var factor = math.sqrt( math.max(1.0f, math.min(25.0f, delta.magnitude)));
 			res *= factor;
 			return res;
