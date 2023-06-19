@@ -25,7 +25,12 @@ public class Boss : Enermy
         {
             OnAttack(value);
         });
+        
+        
+        
     }
+
+    
 
     private Tinder.Type GetRandomTinderType()
     {
