@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Collections;
 
 namespace LanternTrip {
-	[ExecuteAlways]
+	[ExecuteInEditMode]
 	[RequireComponent(typeof(InputManager))]
 	public class GameplayManager : ManagerBase {
 		#region Static members
@@ -104,7 +104,11 @@ namespace LanternTrip {
 
 		IEnumerator ConversationCoroutine(PixelCrushers.DialogueSystem.ConversationController controller) {
 			yield return new WaitUntil(() => !controller.isActive);
-			ResumePhysics();
+			// ResumePhysics();
+			// mute input
+			input.GainPlayerControl();
+			// show cursor
+			Cursor.lockState = CursorLockMode.Locked;
 		}
 		#endregion
 
@@ -202,7 +206,13 @@ namespace LanternTrip {
 		public void ResumePhysics() => Time.timeScale = 1;
 
 		public void StartConversation(string name) {
-			PausePhysics();
+			// PausePhysics();
+			
+			// mute input
+			input.DiscardPlayerControl();
+			// show cursor
+			Cursor.lockState = CursorLockMode.Confined;
+
 			ds.StartConversation(name);
 			StartCoroutine(ConversationCoroutine(ds.ConversationController));
 		}

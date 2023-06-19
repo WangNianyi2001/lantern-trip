@@ -34,6 +34,7 @@ namespace LanternTrip {
 		CinemachineOrbitalTransposer orbitTransposer;
 		CinemachineComposer composer;
 		float distance;
+		float azimuth, currentAzimuth;
 		Vector3 followOffset;
 		#endregion
 
@@ -61,12 +62,8 @@ namespace LanternTrip {
 			set => FollowOffset = new Vector3(0, Mathf.Sin(value), -Mathf.Cos(value)) * Distance;
 		}
 		public float Azimuth {
-			get => orbitTransposer.m_XAxis.Value * Mathf.PI / 180;
-			set {
-				var xAxis = orbitTransposer.m_XAxis;
-				xAxis.Value = value * 180 / Mathf.PI;
-				orbitTransposer.m_XAxis = xAxis;
-			}
+			get => azimuth;
+			set => azimuth = value;
 		}
 		public float Distance {
 			get => distance;
@@ -150,11 +147,11 @@ namespace LanternTrip {
 		}
 
 		void FixedUpdate() {
-			orbitTransposer.m_FollowOffset = Vector3.Lerp(
-				orbitTransposer.m_FollowOffset,
-				followOffset,
-				1 - Mathf.Exp(-Time.fixedDeltaTime / damp)
-			);
+			float t = 1 - Mathf.Exp(-Time.fixedDeltaTime / damp);
+			orbitTransposer.m_FollowOffset = Vector3.Lerp(orbitTransposer.m_FollowOffset, followOffset, t);
+
+			currentAzimuth = Mathf.Lerp(currentAzimuth, Azimuth, t);
+			orbitTransposer.m_XAxis.Value = MathUtil.Mod(currentAzimuth * 180 / Mathf.PI, 360);
 		}
 
 		private void OnDrawGizmos() {
