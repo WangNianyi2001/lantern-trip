@@ -25,9 +25,12 @@ public class Boss : Enermy
         {
             OnAttack(value);
         });
-        
-        
-        
+
+
+        Observable.Interval(TimeSpan.FromSeconds(particleUpdateDeltaTime)).Subscribe(_ =>
+        {
+            ResetParticle();
+        });
     }
 
     
