@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.Events;
 using NaughtyAttributes;
+using UniRx;
+using System;
 
 namespace LanternTrip {
 	public class Trigger : MonoBehaviour {
@@ -10,6 +12,8 @@ namespace LanternTrip {
 		[SerializeField][Tag] string tagMask;
 		[SerializeField] UnityEvent<Collider> onEnter;
 		[SerializeField] UnityEvent<Collider> onExit;
+
+		[SerializeField] float delay = 0.0f;
 
 		public new bool enabled {
 			get => base.enabled;
@@ -34,7 +38,13 @@ namespace LanternTrip {
 			}
 		}
 
-		public void OnEnter(Collider collider) => onEnter?.Invoke(collider);
+		public void OnEnter(Collider collider) {
+			Observable.Timer(TimeSpan.FromSeconds(delay)).Subscribe(_ =>
+			{
+                onEnter?.Invoke(collider);
+            });
+            
+        }
 		public void OnExit(Collider collider) => onExit?.Invoke(collider);
 
 		private void MessageHandlerHandler(GameObject obj, string message) {
