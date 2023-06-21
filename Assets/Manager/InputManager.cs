@@ -39,6 +39,10 @@ namespace LanternTrip {
 		#endregion
 
 		#region Input handlers
+		public void OnTogglePause() {
+			gameplay.Paused ^= true;
+		}
+
 		public void OnPlayerMove(InputValue value) {
 			if(protagonist == null)
 				return;
@@ -121,6 +125,7 @@ namespace LanternTrip {
 		void Start() {
 			// Get component references
 			playerInput = GetComponent<PlayerInput>();
+			playerInput.actions.FindActionMap("Pause").Enable();
 
 			// Initialize main game
 			GainPlayerControl();

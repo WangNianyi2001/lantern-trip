@@ -38,6 +38,7 @@ namespace LanternTrip {
 		int coldzoneCounter = 0;
 		int propIndex = 0;
 		bool cheating;
+		bool paused = false;
 		#endregion
 
 		#region Internal methods
@@ -272,6 +273,19 @@ namespace LanternTrip {
 				}
 			}
 		}
+
+		public bool Paused {
+			get => paused;
+			set {
+				paused = value;
+				Time.fixedDeltaTime = value ? Mathf.Infinity : 1 / settings.fps;
+				PauseUi pauseUi = ui.pause;
+				if(pauseUi) {
+					if(pauseUi.gameObject.activeSelf ^ value)
+						pauseUi.gameObject.SetActive(value);
+				}
+			}
+		}
 		#endregion
 
 		#region Life cycle
@@ -312,6 +326,7 @@ namespace LanternTrip {
 			if(!Application.isPlaying)
 				return;
 			Reset();
+			Paused = Paused;
 		}
 
 		void FixedUpdate() {
