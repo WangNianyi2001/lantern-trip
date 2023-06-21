@@ -12,12 +12,13 @@ namespace LanternTrip {
 		public GameObject interactionDirectionEntryPrefab;
 		public Text cinderNumberText;
 		public PropUi prop;
+		public DashUi dash;
 		#endregion
 
 		[NonSerialized] public BonusSlotUI bonusSlot;
 
 		#region Life cycle
-		private void Start() {
+		protected void Start() {
 			foreach(Transform t in slotTrack.transform)
 				Destroy(t.gameObject);
 
@@ -29,6 +30,12 @@ namespace LanternTrip {
 				gameplay.lanternSlots[i] = new LanternSlot(Instantiate(lanternSlotUIPrefab, slotTrack.transform).GetComponent<LanternSlotUI>());
 
 			slotTrack.Current = gameplay.lanternSlots[0];
+		}
+
+		protected void Update() {
+			if(dash) {
+				dash.CdProgress = gameplay.protagonist?.dashCdProgress ?? 0;
+			}
 		}
 		#endregion
 	}

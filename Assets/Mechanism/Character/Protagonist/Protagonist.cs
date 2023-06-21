@@ -3,7 +3,7 @@ using NaughtyAttributes;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
-using Unity.Mathematics;
+using System;
 
 namespace LanternTrip {
 	public partial class Protagonist : Character {
@@ -18,6 +18,7 @@ namespace LanternTrip {
 		bool kicking = false;
 
 		private Vector3 cameraForwardPosition;
+		[NonSerialized] public float dashCdProgress = 1;
 		#endregion
 
 		#region Serialized fields
@@ -199,7 +200,13 @@ namespace LanternTrip {
 
 		IEnumerator EnrollDashCd() {
 			dashCding = true;
-			yield return new WaitForSeconds(dashCd);
+			dashCdProgress = 0;
+			float start = Time.time;
+			for(float now; (now = Time.time) - start < dashCd;) {
+				dashCdProgress = (now - start) / dashCd;
+				yield return new WaitForFixedUpdate();
+			}
+			dashCdProgress = 1;
 			dashCding = false;
 		}
 
