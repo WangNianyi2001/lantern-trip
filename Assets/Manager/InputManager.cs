@@ -36,6 +36,14 @@ namespace LanternTrip {
 		}
 
 		public Vector2 MousePosition => mousePosition;
+
+		public bool Enabled
+		{
+			set {
+				enabled = value;
+				playerInput.enabled = value;
+			}
+		}
 		#endregion
 
 		#region Input handlers
