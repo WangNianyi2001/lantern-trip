@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
+using static UnityEngine.Rendering.DebugUI;
 
 namespace LanternTrip {
 	[ExecuteInEditMode]
@@ -38,6 +39,7 @@ namespace LanternTrip {
 		int coldzoneCounter = 0;
 		int propIndex = 0;
 		bool cheating;
+		bool paused = false;
 		#endregion
 
 		#region Internal methods
@@ -272,6 +274,24 @@ namespace LanternTrip {
 				}
 			}
 		}
+
+		public bool Paused {
+			get => paused;
+			set {
+				paused = value;
+				Time.fixedDeltaTime = value ? Mathf.Infinity : 1 / settings.fps;
+				ui.pause.gameObject.SetActive(value);
+				Cursor.lockState = value ? CursorLockMode.None : CursorLockMode.Locked;
+			}
+		}
+
+		public void StartGame() {
+			camera.vCam.enabled = true;
+			input.enabled = true;
+			protagonist.enabled = true;
+			ui.pause.gameObject.SetActive(true);
+			Paused = false;
+		}
 		#endregion
 
 		#region Life cycle
@@ -312,6 +332,10 @@ namespace LanternTrip {
 			if(!Application.isPlaying)
 				return;
 			Reset();
+			Paused = Paused;
+			ui.pause.gameObject.SetActive(false);
+			input.enabled = false;
+			protagonist.enabled = false;
 		}
 
 		void FixedUpdate() {
