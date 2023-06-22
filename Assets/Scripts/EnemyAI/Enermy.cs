@@ -46,7 +46,6 @@ public class Enermy : MonoBehaviour
         // Die
         if (cur_hp<=0)
         {
-            _animator.SetTrigger("Death");
             _behavior.enabled = false;
             _agent.isStopped = true;
             Invincible = true;
@@ -55,8 +54,8 @@ public class Enermy : MonoBehaviour
             {
                 onDie?.Invoke();
                 GameObject.Destroy(gameObject);
+                Debug.Log("Boss死亡");
             });
-            Debug.Log("死亡");
                 
         }
         else if (cur_hp <= fullHp - 0.1f)
