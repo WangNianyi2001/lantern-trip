@@ -45,6 +45,7 @@ namespace LanternTrip {
 		public void SetCheckpoint(Checkpoint point) => gameplay.LastCheckpoint = point;
 		public void RestartLevel() => gameplay.RestartLevel();
 
+		public void Start() => gameplay.StartGame();
 		public void Pause() => gameplay.Paused = true;
 		public void Resume() => gameplay.Paused = false;
 		public void Quit() {

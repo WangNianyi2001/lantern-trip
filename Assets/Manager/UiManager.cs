@@ -13,7 +13,7 @@ namespace LanternTrip {
 		public Text cinderNumberText;
 		public PropUi prop;
 		public DashUi dash;
-		public PauseUi pause;
+		public Transform pause;
 		#endregion
 
 		[NonSerialized] public BonusSlotUI bonusSlot;
