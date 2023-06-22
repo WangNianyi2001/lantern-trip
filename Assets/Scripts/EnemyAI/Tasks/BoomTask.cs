@@ -101,7 +101,7 @@ public class BoomTask : Action
                             return; 
                         var playerComponent = c.GetComponent<Protagonist>();
                         
-                        playerComponent?.TakeDamage(1.0f); 
+                        playerComponent?.TakeDamage(isTracer ? 5.0f : 1.0f); 
                         Debug.Log("收到怪物上海:: 1.0");
                     
                     });

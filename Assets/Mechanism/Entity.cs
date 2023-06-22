@@ -9,8 +9,8 @@ namespace LanternTrip {
 		#region Core members
 		protected new Rigidbody rigidbody;
 		protected Dictionary<Collider, ContactPoint> contactingPoints = new Dictionary<Collider, ContactPoint>();
-		private float hp;
-		private bool undead;
+		[SerializeField] private float hp;
+		[SerializeField] private bool undead;
 		private bool dead = false;
 		#endregion
 
@@ -28,7 +28,7 @@ namespace LanternTrip {
 		public IEnumerable<ContactPoint> ContactingPoints => contactingPoints.Values;
 
 		public float Hp {
-			get => Undead ? hp : Mathf.Infinity;
+			get => Undead ? Mathf.Infinity : hp;
 			set {
 				hp = value;
 				if(Undead)
@@ -114,6 +114,7 @@ namespace LanternTrip {
 		protected virtual void OnDie() {
 			dead = true;
 			onDie?.Invoke();
+			Debug.Log("Protagnist Die");
 		}
 		#endregion
 	}
