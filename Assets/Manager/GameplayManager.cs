@@ -226,6 +226,7 @@ namespace LanternTrip {
 		}
 
 		public void RestartLevel() {
+			Paused = false;
 			if(Cinder <= settings.respawnCinderCost) {
 				SceneLoader.instance.LoadAsync(settings.gameOverScene);
 				Destroy(gameObject);
@@ -279,8 +280,8 @@ namespace LanternTrip {
 			get => paused;
 			set {
 				paused = value;
-				input.Enabled = value;
-				Time.fixedDeltaTime = value ? Mathf.Infinity : 1 / settings.fps;
+				input.Enabled = !value;
+				Time.timeScale = value ? 0 : 1;
 				ui.pause.gameObject.SetActive(value);
 				Cursor.lockState = value ? CursorLockMode.None : CursorLockMode.Locked;
 			}
@@ -288,9 +289,6 @@ namespace LanternTrip {
 
 		public void StartGame() {
 			camera.vCam.enabled = true;
-			input.Enabled = true;
-			protagonist.enabled = true;
-			ui.pause.gameObject.SetActive(true);
 			Paused = false;
 		}
 		#endregion
@@ -325,7 +323,8 @@ namespace LanternTrip {
 			PropIndex = PropIndex;
 
 			if(Application.isPlaying) {
-				SceneLoader.instance.gameObject.SetActive(false);
+				if(SceneLoader.instance)	// Might be null (no scene loader present in current scene)
+					SceneLoader.instance.gameObject.SetActive(false);
 			}
 		}
 
@@ -333,11 +332,9 @@ namespace LanternTrip {
 			if(!Application.isPlaying)
 				return;
 			Reset();
-			Paused = Paused;
+			Time.fixedDeltaTime = 1 / settings.fps;
+			Paused = true;
 			ui.pause.gameObject.SetActive(false);
-			input.Enabled = false;
-			Debug.Log("what thefu");
-			protagonist.enabled = false;
 		}
 
 		void FixedUpdate() {
