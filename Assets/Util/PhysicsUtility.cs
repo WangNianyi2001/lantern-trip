@@ -123,8 +123,10 @@ namespace LanternTrip {
 		public static float CalculateFrictionCoefficient(this ContactPoint contact, bool dynamic = false) {
 			// Average < Min < Multiply < Max
 			PhysicMaterial
-				a = contact.thisCollider.material,
-				b = contact.otherCollider.material;
+				a = contact.thisCollider?.material,
+				b = contact.otherCollider?.material;
+			if(a == null || b == null)
+				return 0.0f;
 			PhysicMaterialCombine mode = CombineFrictionMode(a.frictionCombine, b.frictionCombine);
 			float fa, fb;
 			if(dynamic) {
