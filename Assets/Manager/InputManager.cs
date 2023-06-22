@@ -26,6 +26,7 @@ namespace LanternTrip {
 
 		#region Public interfaces
 		public void GainPlayerControl() {
+			playerInput.enabled = true;
 			playerInput.SwitchCurrentActionMap("Player");
 			playerInput.ActivateInput();
 		}
