@@ -41,8 +41,13 @@ namespace LanternTrip {
 		public bool Enabled
 		{
 			set {
-				enabled = value;
-				playerInput.enabled = value;
+				InputActionMap map = playerInput.actions.FindActionMap("Protagonist");
+				if(map != null) {
+					if(value)
+						map.Enable();
+					else
+						map.Disable();
+				}
 			}
 		}
 		#endregion
