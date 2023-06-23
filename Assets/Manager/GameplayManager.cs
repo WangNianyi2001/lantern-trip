@@ -148,9 +148,12 @@ namespace LanternTrip {
 				Debug.LogWarning("Tinder to load is null");
 				return false;
 			}
-			if(currentLanterSlot == null)
+			var slot = currentLanterSlot;
+			if(slot == null)
 				return false;
-			currentLanterSlot.Load(tinder, true);
+			if(slot.tinder != null)
+				slot = lanternSlots.FirstOrDefault(s => s.tinder == null) ?? slot;
+			slot.Load(tinder, true);
 			PlaySfx(collectTinderAudio);
 			ActivateSatisfiedBonus();
 			return true;
@@ -227,13 +230,15 @@ namespace LanternTrip {
 
 		public void RestartLevel() {
 			Paused = false;
-			if(Cinder <= settings.respawnCinderCost) {
-				SceneLoader.instance.LoadGameOver();
-				Destroy(gameObject);
-				return;
-			}
+			// No fail
+			//if(Cinder <= settings.respawnCinderCost) {
+			//	SceneLoader.instance.LoadGameOver();
+			//	Destroy(gameObject);
+			//	return;
+			//}
 			Cinder -= settings.respawnCinderCost;
-			LoadTinder(settings.respawnGift);
+			foreach(var gift in settings.respawnGifts)
+				LoadTinder(gift);
 			SceneLoader.instance.ReloadCurrent();
 		}
 
@@ -298,20 +303,20 @@ namespace LanternTrip {
 			if(!Application.isPlaying)
 				return;
 
-			//if(instance != null && instance != this) {
-			//	Debug.Log("Gameplay instance is not self, destroying.");
-			//	Destroy(gameObject);
-			//	return;
-			//}
+			if(instance != null && instance != this) {
+				Debug.Log("Gameplay instance is not self, destroying.");
+				Destroy(gameObject);
+				return;
+			}
 
 			instance = this;
-			//DontDestroyOnLoad(gameObject);
-			//var name = SceneManager.GetActiveScene().name;
-			//SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => {
-			//	if(scene.name != name)
-			//		return;
-			//	Reset();
-			//};
+			DontDestroyOnLoad(gameObject);
+			var name = SceneManager.GetActiveScene().name;
+			SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => {
+				if(scene.name != name)
+					return;
+				Reset();
+			};
 		}
 
 		void Reset() {
