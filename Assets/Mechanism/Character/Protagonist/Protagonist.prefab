@@ -84,6 +84,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1db06959deeca74499642f65b31cbaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hp: 0
+  undead: 0
   damageMultiplier: 1
   shotType: 0
   onDie:
@@ -351,6 +353,7 @@ MonoBehaviour:
   preShoot:
     m_PersistentCalls:
       m_Calls: []
+  arrowSpeed: 30
   projectileGravity2: {x: 0, y: -50, z: 0}
 --- !u!1 &2645087768824675070
 GameObject:

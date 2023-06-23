@@ -146,6 +146,8 @@ namespace LanternTrip {
 		}
 
 		protected void FixedUpdate() {
+			if(!gameplay.protagonist)
+				return;
 			// Movement
 			Vector3 v = rawInputMovement;
 			Quaternion q = Quaternion.identity;

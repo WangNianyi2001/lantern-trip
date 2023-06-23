@@ -10,7 +10,7 @@ namespace LanternTrip {
 		public List<Bonus> bonuses;
 		[Min(0)] public int respawnCinderCost;
 		public Tinder respawnGift;
-		[Scene] public string mainScene;
+		[Scene] public string[] mainScene;
 		[Scene] public string gameOverScene;
 		public Material arrowTriggerMaterial;
 	}

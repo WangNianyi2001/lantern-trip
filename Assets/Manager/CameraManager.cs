@@ -108,7 +108,9 @@ namespace LanternTrip {
 		}
 
 		public void ResetVCam() {
-			vCam.LookAt = vCam.Follow = gameplay.protagonist.bodyAnchor;
+			if(vCam && gameplay.protagonist) {
+				vCam.LookAt = vCam.Follow = gameplay.protagonist.bodyAnchor;
+			}
 		}
 		#endregion
 
@@ -127,6 +129,8 @@ namespace LanternTrip {
 				ResetVCam();
 				return;
 			}
+			if(!gameplay.protagonist)
+				return;
 
 			// Lock zenith
 			float z = Zenith * 180 / Mathf.PI;
@@ -156,6 +160,8 @@ namespace LanternTrip {
 
 		private void OnDrawGizmos() {
 			if(!Application.isPlaying)
+				return;
+			if(!gameplay.protagonist)
 				return;
 			Gizmos.DrawRay(FollowRay);
 		}
