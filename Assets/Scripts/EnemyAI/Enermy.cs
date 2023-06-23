@@ -31,7 +31,7 @@ public class Enermy : MonoBehaviour
     protected IDisposable _timer2;
     
     
-    public void LookAtPlayer()
+    protected void LookAtPlayer()
     {
         if (player == null) return;
         var dir = (player.transform.position - transform.position);
@@ -49,20 +49,20 @@ public class Enermy : MonoBehaviour
             _behavior.enabled = false;
             _agent.isStopped = true;
             Invincible = true;
+            _animator.SetTrigger("Death");
             _timer?.Dispose();_timer2?.Dispose();
             _timer = Observable.Timer(TimeSpan.FromSeconds(3.1f)).Subscribe(_ =>
             {
                 onDie?.Invoke();
                 GameObject.Destroy(gameObject);
-                Debug.Log("Boss死亡");
             });
                 
         }
         else if (cur_hp <= fullHp - 0.1f)
         {
-            _animator.SetTrigger("Hit");
             _behavior.enabled = false;
             _agent.isStopped = true;
+            _animator.SetTrigger("Hit");
             _timer?.Dispose();_timer2?.Dispose();
             _timer = Observable.Timer(TimeSpan.FromSeconds(onHitTimeSpan)).Subscribe(_ =>
             {
@@ -132,7 +132,7 @@ public class Enermy : MonoBehaviour
 
     protected void Update()
     {
-        LookAtPlayer();
+        // LookAtPlayer();
     }
 
 

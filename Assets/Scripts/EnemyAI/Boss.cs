@@ -33,7 +33,11 @@ public class Boss : Enermy
         });
     }
 
-    
+    private void LateUpdate()
+    {
+        LookAtPlayer();
+    }
+
 
     private Tinder.Type GetRandomTinderType()
     {
