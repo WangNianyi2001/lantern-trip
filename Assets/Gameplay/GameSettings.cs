@@ -9,7 +9,7 @@ namespace LanternTrip {
 		public uint lanternSlotCount;
 		public List<Bonus> bonuses;
 		[Min(0)] public int respawnCinderCost;
-		public Tinder respawnGift;
+		public Tinder[] respawnGifts;
 		[Scene] public string[] mainScene;
 		[Scene] public string gameOverScene;
 		public Material arrowTriggerMaterial;
