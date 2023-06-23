@@ -149,14 +149,12 @@ namespace LanternTrip {
 			var slot = currentLanterSlot;
 			if(slot == null)
 				return false;
-			if(slot.tinder != null) {
-				if(slot.tinder == tinder) {
-					slot.timeLeft += tinder.timeSpan;
-				}
-				else {
-					slot = lanternSlots.FirstOrDefault(s => s.tinder == null) ?? slot;
-					slot.Load(tinder, true);
-				}
+			if(slot.tinder == tinder) {
+				slot.timeLeft += tinder.timeSpan;
+			}
+			else {
+				slot = lanternSlots.FirstOrDefault(s => s.tinder == null) ?? slot;
+				slot.Load(tinder, true);
 			}
 			PlaySfx(collectTinderAudio);
 			ActivateSatisfiedBonus();
