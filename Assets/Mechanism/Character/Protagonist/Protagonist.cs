@@ -310,6 +310,7 @@ namespace LanternTrip {
 
 			HoldingBow = false;
 			ShootingUiVisible = false;
+			Hp = gameplay.settings.protagonistInitialHp;
 
 			shooter.preShoot.AddListener(arrowObj => {
 				var arrow = arrowObj.GetComponent<Arrow>();

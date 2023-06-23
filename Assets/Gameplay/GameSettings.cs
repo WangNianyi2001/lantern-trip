@@ -13,5 +13,6 @@ namespace LanternTrip {
 		[Scene] public string[] mainScene;
 		[Scene] public string gameOverScene;
 		public Material arrowTriggerMaterial;
+		public float protagonistInitialHp;
 	}
 }
