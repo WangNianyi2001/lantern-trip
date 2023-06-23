@@ -15,7 +15,7 @@ public class Boss : Enermy
     public float particleUpdateDeltaTime = 1.0f;
     void Start()
     {
-        Invincible = true;
+        Invincible = false;
         _animator = GetComponent<Animator>();
         _agent = GetComponent<NavMeshAgent>();
         _behavior = GetComponent<BehaviorTree>();
@@ -33,7 +33,11 @@ public class Boss : Enermy
         });
     }
 
-    
+    private void LateUpdate()
+    {
+        LookAtPlayer();
+    }
+
 
     private Tinder.Type GetRandomTinderType()
     {
@@ -46,31 +50,31 @@ public class Boss : Enermy
         // Die
         if (cur_hp<=0)
         {
-            // _animator.SetTrigger("Death");
-            // _behavior.enabled = false;
-            // _agent.isStopped = true;
-            // Invincible = true;
-            // _timer?.Dispose();_timer2?.Dispose();
-            // _timer = Observable.Timer(TimeSpan.FromSeconds(2.1f)).Subscribe(_ =>
-            // {
-            //     onDie?.Invoke();
-            //     GameObject.Destroy(gameObject);
-            // });
-            // Debug.Log("死亡");
-                
+            _animator.SetTrigger("Death");
+            _behavior.enabled = false;
+            Invincible = true;
+            _timer?.Dispose(); _timer2?.Dispose();
+            _timer = Observable.Timer(TimeSpan.FromSeconds(5.1f)).Subscribe(_ =>
+            {
+                onDie?.Invoke();
+                GameObject.Destroy(gameObject);
+            });
+            Debug.Log("死亡");
+
         }
         else if (cur_hp <= fullHp - 0.1f)
         {
-            // _animator.SetTrigger("Hit");
-            // _behavior.enabled = false;
-            // _agent.isStopped = true;
-            // _timer?.Dispose();_timer2?.Dispose();
-            // _timer = Observable.Timer(TimeSpan.FromSeconds(onHitTimeSpan)).Subscribe(_ =>
-            // {
-            //     _behavior.enabled = true;
-            //     _agent.isStopped = false;
-            // });
+            //_animator.SetTrigger("Hit");
+            //_behavior.enabled = false;
+            //_agent.isStopped = true;
+            //_timer?.Dispose(); _timer2?.Dispose();
+            //_timer = Observable.Timer(TimeSpan.FromSeconds(onHitTimeSpan)).Subscribe(_ =>
+            //{
+            //    _behavior.enabled = true;
+            //    _agent.isStopped = false;
+            //});
         }
+        Debug.Log("Boss on attack");
     }
     
     void ResetParticle()

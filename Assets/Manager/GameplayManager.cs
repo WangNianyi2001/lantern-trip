@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
+using static UnityEngine.Rendering.DebugUI;
 
 namespace LanternTrip {
 	[ExecuteInEditMode]
@@ -38,6 +39,7 @@ namespace LanternTrip {
 		int coldzoneCounter = 0;
 		int propIndex = 0;
 		bool cheating;
+		bool paused = false;
 		#endregion
 
 		#region Internal methods
@@ -224,14 +226,15 @@ namespace LanternTrip {
 		}
 
 		public void RestartLevel() {
+			Paused = false;
 			if(Cinder <= settings.respawnCinderCost) {
-				SceneLoader.instance.LoadAsync(settings.gameOverScene);
+				SceneLoader.instance.LoadGameOver();
 				Destroy(gameObject);
 				return;
 			}
 			Cinder -= settings.respawnCinderCost;
 			LoadTinder(settings.respawnGift);
-			SceneLoader.instance.LoadAsync(SceneManager.GetActiveScene().name);
+			SceneLoader.instance.ReloadCurrent();
 		}
 
 		public bool HasProp => props.Count > 0;
@@ -272,6 +275,22 @@ namespace LanternTrip {
 				}
 			}
 		}
+
+		public bool Paused {
+			get => paused;
+			set {
+				paused = value;
+				input.Enabled = !value;
+				Time.timeScale = value ? 0 : 1;
+				ui.pause.gameObject.SetActive(value);
+				Cursor.lockState = value ? CursorLockMode.None : CursorLockMode.Locked;
+			}
+		}
+
+		public void StartGame() {
+			camera.vCam.enabled = true;
+			Paused = false;
+		}
 		#endregion
 
 		#region Life cycle
@@ -279,20 +298,20 @@ namespace LanternTrip {
 			if(!Application.isPlaying)
 				return;
 
-			if(instance != null && instance != this) {
-				Debug.Log("Gameplay instance is not self, destroying.");
-				Destroy(gameObject);
-				return;
-			}
+			//if(instance != null && instance != this) {
+			//	Debug.Log("Gameplay instance is not self, destroying.");
+			//	Destroy(gameObject);
+			//	return;
+			//}
 
 			instance = this;
-			DontDestroyOnLoad(gameObject);
-			var name = SceneManager.GetActiveScene().name;
-			SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => {
-				if(scene.name != name)
-					return;
-				Reset();
-			};
+			//DontDestroyOnLoad(gameObject);
+			//var name = SceneManager.GetActiveScene().name;
+			//SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => {
+			//	if(scene.name != name)
+			//		return;
+			//	Reset();
+			//};
 		}
 
 		void Reset() {
@@ -304,7 +323,8 @@ namespace LanternTrip {
 			PropIndex = PropIndex;
 
 			if(Application.isPlaying) {
-				SceneLoader.instance.gameObject.SetActive(false);
+				if(SceneLoader.instance)	// Might be null (no scene loader present in current scene)
+					SceneLoader.instance.gameObject.SetActive(false);
 			}
 		}
 
@@ -312,6 +332,9 @@ namespace LanternTrip {
 			if(!Application.isPlaying)
 				return;
 			Reset();
+			Time.fixedDeltaTime = 1 / settings.fps;
+			Paused = true;
+			ui.pause.gameObject.SetActive(false);
 		}
 
 		void FixedUpdate() {
@@ -341,6 +364,8 @@ namespace LanternTrip {
 				EditorUpdate();
 				return;
 			}
+			if(protagonist == null)
+				protagonist = FindObjectOfType<Protagonist>();
 		}
 		#endregion
 	}

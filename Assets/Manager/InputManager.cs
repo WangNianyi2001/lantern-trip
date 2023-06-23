@@ -26,6 +26,7 @@ namespace LanternTrip {
 
 		#region Public interfaces
 		public void GainPlayerControl() {
+			playerInput.enabled = true;
 			playerInput.SwitchCurrentActionMap("Player");
 			playerInput.ActivateInput();
 		}
@@ -36,9 +37,21 @@ namespace LanternTrip {
 		}
 
 		public Vector2 MousePosition => mousePosition;
+
+		public bool Enabled
+		{
+			set {
+				enabled = value;
+				playerInput.enabled = value;
+			}
+		}
 		#endregion
 
 		#region Input handlers
+		public void OnTogglePause() {
+			gameplay.Paused ^= true;
+		}
+
 		public void OnPlayerMove(InputValue value) {
 			if(protagonist == null)
 				return;
@@ -114,20 +127,27 @@ namespace LanternTrip {
 		public void OnPlayerCheat(InputValue _) {
 			gameplay.Cheating ^= true;
 		}
-		#endif
+#endif
 		#endregion
 
 		#region Life cycle
-		void Start() {
+		protected void OnEnable() {
 			// Get component references
 			playerInput = GetComponent<PlayerInput>();
+			playerInput.actions.FindActionMap("Pause").Enable();
 
 			// Initialize main game
 			GainPlayerControl();
 			Cursor.lockState = CursorLockMode.Locked;
 		}
 
-		void FixedUpdate() {
+		protected void OnDisable() {
+			Cursor.lockState = CursorLockMode.None;
+		}
+
+		protected void FixedUpdate() {
+			if(!gameplay.protagonist)
+				return;
 			// Movement
 			Vector3 v = rawInputMovement;
 			Quaternion q = Quaternion.identity;

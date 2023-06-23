@@ -42,11 +42,11 @@ namespace LanternTrip {
 		[Range(0, 5)] public float deathTime;
 
 		[Header("Dash")]
-		[Tooltip("Dash Ò»´ÎÏûºÄµÄÈ¼ÉÕ»ğÖÖÊı")]
+		[Tooltip("Dash ä¸€æ¬¡æ¶ˆè€—çš„ç‡ƒçƒ§ç«ç§æ•°")]
 		[Min(0)] public float dashConsuming;
-		[Tooltip("ÒÆ¶¯ÖĞ dash ¾àÀë")]
+		[Tooltip("ç§»åŠ¨ä¸­ dash è·ç¦»")]
 		[Range(0, 10)] public float movingDash;
-		[Tooltip("¾²Ö¹Ê± dash ¾àÀë")]
+		[Tooltip("é™æ­¢æ—¶ dash è·ç¦»")]
 		[Range(-5, 5)] public float standingDash;
 		[Min(0)] public float dashCd;
 

@@ -1,5 +1,8 @@
-using System.Linq;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+using System.Linq;
 
 namespace LanternTrip {
 	[CreateAssetMenu(menuName = "LanternTrip/GameplayAgent")]
@@ -40,5 +43,17 @@ namespace LanternTrip {
 		public void SetFollowingCamera(FollowingCameraMode mode) => gameplay.camera.SetFollowing(mode);
 
 		public void SetCheckpoint(Checkpoint point) => gameplay.LastCheckpoint = point;
+		public void RestartLevel() => gameplay.RestartLevel();
+
+		public void Start() => gameplay.StartGame();
+		public void Pause() => gameplay.Paused = true;
+		public void Resume() => gameplay.Paused = false;
+		public void Quit() {
+#if UNITY_EDITOR
+			EditorApplication.isPlaying = false;
+#else
+			Application.Quit();
+#endif
+		}
 	}
 }
