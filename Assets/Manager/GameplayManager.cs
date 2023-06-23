@@ -144,16 +144,20 @@ namespace LanternTrip {
 		/// <summary>Try to load given type of tinder into first empty lantern and start burning.</summary>
 		/// <returns>`true` if succeed, `false` otherwise.</returns>
 		public bool LoadTinder(Tinder tinder) {
-			if(tinder == null) {
-				Debug.LogWarning("Tinder to load is null");
+			if(tinder == null)
 				return false;
-			}
 			var slot = currentLanterSlot;
 			if(slot == null)
 				return false;
-			if(slot.tinder != null)
-				slot = lanternSlots.FirstOrDefault(s => s.tinder == null) ?? slot;
-			slot.Load(tinder, true);
+			if(slot.tinder != null) {
+				if(slot.tinder == tinder) {
+					slot.timeLeft += tinder.timeSpan;
+				}
+				else {
+					slot = lanternSlots.FirstOrDefault(s => s.tinder == null) ?? slot;
+					slot.Load(tinder, true);
+				}
+			}
 			PlaySfx(collectTinderAudio);
 			ActivateSatisfiedBonus();
 			return true;
