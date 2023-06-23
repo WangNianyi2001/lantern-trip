@@ -6,6 +6,7 @@ namespace LanternTrip {
 	public class BgmPlayer : MonoBehaviour {
 		public AudioClip[] tracks;
 		[Min(0)] public float fadeTime;
+		public bool loop = true;
 
 		List<AudioSource> currentPlaying = new List<AudioSource>();
 		Dictionary<AudioSource, Coroutine> playingCoroutines = new Dictionary<AudioSource, Coroutine>();
@@ -17,6 +18,7 @@ namespace LanternTrip {
 			var source = obj.AddComponent<AudioSource>();
 			source.playOnAwake = false;
 			source.clip = clip;
+			source.loop = loop;
 			return source;
 		}
 
