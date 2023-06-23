@@ -95,7 +95,7 @@ public class Car : MonoBehaviour
     {
         while (carSpeed <= maxSpeed)
         {
-            carSpeed += Time.deltaTime * 3.0f;
+            carSpeed += Time.deltaTime * 3.6f;
             DollyCart.m_Speed = carSpeed;
             yield return null;
         }
