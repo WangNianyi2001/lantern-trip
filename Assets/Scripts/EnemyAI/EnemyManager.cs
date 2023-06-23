@@ -45,18 +45,23 @@ public class EnemyManager : MonoBehaviour
 
         foreach (var enemyi in enemys)
         {
-            if (enemyi.curHp.Value > 0f)
+            if (enemyi.curHp.Value > -1.0f)
             {
-                return;
+                return; // 小怪还活着，则返回
             }
         }
 
         foreach (var enemyGroupi in _enemyManagers)
         {
-            if (!enemyGroupi._isTriggered) 
+            if (!enemyGroupi._isTriggered) // 有子物体没触发，则返回
             { 
                 return;
             }
+        }
+
+        if (_isTriggered) // 若本体已经触发了，则返回
+        {
+            return;
         }
 
         _isTriggered = true;
