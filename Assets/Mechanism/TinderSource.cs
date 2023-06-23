@@ -38,6 +38,10 @@ namespace LanternTrip {
 		}
 
 		public void OnInteract() {
+			Deliver();
+			confirmState = ConfirmState.Idle;
+			return;
+			// No need to confirm anymore
 			switch(confirmState) {
 				case ConfirmState.Idle:
 					ConfirmDelivery();
