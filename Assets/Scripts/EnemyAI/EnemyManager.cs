@@ -7,33 +7,59 @@ using UnityEngine.Events;
 public class EnemyManager : MonoBehaviour
 {
     public UnityEvent onAce;
-    private List<Enermy> enemys;
+    private List<Enermy> enemys = new List<Enermy>(8);
+    private List<EnemyManager> _enemyManagers = new List<EnemyManager>(8);
+
+    private bool _isTriggered = false;
     // Start is called before the first frame update
     void Start()
     {
         for (int i = 0; i < transform.childCount; i++)
         {
-            enemys.Add(transform.GetChild(i).GetComponent<Enermy>());
+            var go = transform.GetChild(i);
+            var childEnemy = go.GetComponent<Enermy>();
+            var childEnemyGroup = go.GetComponent<EnemyManager>();
+            if (childEnemy)
+            {
+                enemys.Add(childEnemy);
+            }
+            if (childEnemyGroup)
+            {
+                _enemyManagers.Add(childEnemyGroup);
+            }
         }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (_isTriggered)
+        {
+            return;
+        }
         CheckAce();
     }
 
     void CheckAce()
     {
-        int i;
-        for (i = 0; i < enemys.Count ; i++)
+
+        foreach (var enemyi in enemys)
         {
-            if (enemys[i].curHp.Value > 0f)
+            if (enemyi.curHp.Value > 0f)
             {
                 return;
             }
         }
 
+        foreach (var enemyGroupi in _enemyManagers)
+        {
+            if (!enemyGroupi._isTriggered) 
+            { 
+                return;
+            }
+        }
+
+        _isTriggered = true;
         onAce?.Invoke();
         Debug.Log("怪全死了");
     }
