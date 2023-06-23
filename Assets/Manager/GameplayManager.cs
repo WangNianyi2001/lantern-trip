@@ -228,13 +228,13 @@ namespace LanternTrip {
 		public void RestartLevel() {
 			Paused = false;
 			if(Cinder <= settings.respawnCinderCost) {
-				SceneLoader.instance.LoadAsync(settings.gameOverScene);
+				SceneLoader.instance.LoadGameOver();
 				Destroy(gameObject);
 				return;
 			}
 			Cinder -= settings.respawnCinderCost;
 			LoadTinder(settings.respawnGift);
-			SceneLoader.instance.LoadAsync(SceneManager.GetActiveScene().name);
+			SceneLoader.instance.ReloadCurrent();
 		}
 
 		public bool HasProp => props.Count > 0;
@@ -298,20 +298,20 @@ namespace LanternTrip {
 			if(!Application.isPlaying)
 				return;
 
-			if(instance != null && instance != this) {
-				Debug.Log("Gameplay instance is not self, destroying.");
-				Destroy(gameObject);
-				return;
-			}
+			//if(instance != null && instance != this) {
+			//	Debug.Log("Gameplay instance is not self, destroying.");
+			//	Destroy(gameObject);
+			//	return;
+			//}
 
 			instance = this;
-			DontDestroyOnLoad(gameObject);
-			var name = SceneManager.GetActiveScene().name;
-			SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => {
-				if(scene.name != name)
-					return;
-				Reset();
-			};
+			//DontDestroyOnLoad(gameObject);
+			//var name = SceneManager.GetActiveScene().name;
+			//SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) => {
+			//	if(scene.name != name)
+			//		return;
+			//	Reset();
+			//};
 		}
 
 		void Reset() {
@@ -364,6 +364,8 @@ namespace LanternTrip {
 				EditorUpdate();
 				return;
 			}
+			if(protagonist == null)
+				protagonist = FindObjectOfType<Protagonist>();
 		}
 		#endregion
 	}

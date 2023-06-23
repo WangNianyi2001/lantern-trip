@@ -7,7 +7,7 @@ using UnityEngine.Events;
 public class EnemyManager : MonoBehaviour
 {
     public UnityEvent onAce;
-    private List<Enermy> enemys;
+    private List<Enermy> enemys = new List<Enermy>();
     // Start is called before the first frame update
     void Start()
     {
