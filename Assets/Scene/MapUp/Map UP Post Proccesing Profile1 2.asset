@@ -426,6 +426,7 @@ MonoBehaviour:
   - {fileID: 5679457971005091572}
   - {fileID: -3898135583692872755}
   - {fileID: 8256521134220493529}
+  - {fileID: 1742235121065835357}
 --- !u!114 &673421845231353007
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -453,6 +454,46 @@ MonoBehaviour:
     m_Value: 255
   reflectionProbeIntensityMultiplier:
     m_OverrideState: 1
+    m_Value: 1
+--- !u!114 &1742235121065835357
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f086a068d4c5889438831b3ae9afc11c, type: 3}
+  m_Name: Tonemapping
+  m_EditorClassIdentifier: 
+  active: 1
+  mode:
+    m_OverrideState: 1
+    m_Value: 1
+  toeStrength:
+    m_OverrideState: 0
+    m_Value: 0
+  toeLength:
+    m_OverrideState: 0
+    m_Value: 0.5
+  shoulderStrength:
+    m_OverrideState: 0
+    m_Value: 0
+  shoulderLength:
+    m_OverrideState: 0
+    m_Value: 0.5
+  shoulderAngle:
+    m_OverrideState: 0
+    m_Value: 0
+  gamma:
+    m_OverrideState: 0
+    m_Value: 1
+  lutTexture:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+  lutContribution:
+    m_OverrideState: 0
     m_Value: 1
 --- !u!114 &3346290773963819232
 MonoBehaviour:
@@ -669,13 +710,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d08ce26990eb1a4a9177b860541e702, type: 3}
   m_Name: Exposure
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   mode:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 2
   meteringMode:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 2
   luminanceSource:
     m_OverrideState: 0
     m_Value: 1
@@ -684,10 +725,10 @@ MonoBehaviour:
     m_Value: 0
   compensation:
     m_OverrideState: 0
-    m_Value: 0
+    m_Value: 1.1
   limitMin:
     m_OverrideState: 1
-    m_Value: 8
+    m_Value: 7
   limitMax:
     m_OverrideState: 1
     m_Value: 12
@@ -715,8 +756,8 @@ MonoBehaviour:
         inWeight: 0.33333334
         outWeight: 0.13309726
       - serializedVersion: 3
-        time: 20
-        value: 20
+        time: 19.875
+        value: 15.896225
         inSlope: 0.8580619
         outSlope: 0.8580619
         tangentMode: 0
